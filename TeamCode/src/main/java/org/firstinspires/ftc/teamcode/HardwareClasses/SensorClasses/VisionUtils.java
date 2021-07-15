@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses;
 
-import org.firstinspires.ftc.utilities.RingBuffer;
-import org.firstinspires.ftc.utilities.RingBufferOwen;
 import org.opencv.core.MatOfPoint;
-import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +10,8 @@ import static org.opencv.imgproc.Imgproc.contourArea;
 
 public class VisionUtils {
     
-    private static final RingBuffer<Double> distanceBuffer = new RingBuffer<>(4, 0.0);
-
+    //private static final RingBuffer<Double> distanceBuffer = new RingBuffer<>(4, 0.0);
+    /*
     public static OpenCvCamera webcam;
     public static double IMG_WIDTH = 320;
     public static double IMG_HEIGHT = 240;
@@ -22,13 +19,15 @@ public class VisionUtils {
     public static final double RING_HEIGHT = 20;
     public static final double TOWER_HEIGHT = 230;
     
-    public static double PS_LEFT_DIST = 41;
+    public static double PS_LEFT_DIST = 40;
     public static double PS_CENTER_DIST = 63.5;
-    public static double PS_RIGHT_DIST = 80.5;
+    public static double PS_RIGHT_DIST = 81;
+
+     */
     
-    private static double distanceSum = 0;
+    //private static double distanceSum = 0;
     
-    public static double SHOOTER_OFFSET_DISTANCE = 12;
+    //public static double SHOOTER_OFFSET_DISTANCE = 12;
     
     
     public static double getDistance2Tower(double yValue) {

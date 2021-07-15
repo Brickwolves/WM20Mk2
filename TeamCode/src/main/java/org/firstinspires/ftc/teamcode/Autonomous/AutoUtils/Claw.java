@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous.AutoUtils;
 
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.Utils;
 
 public class Claw {
 

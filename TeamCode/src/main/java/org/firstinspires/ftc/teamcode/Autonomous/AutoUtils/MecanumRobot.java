@@ -1,20 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous.AutoUtils;
 
-import android.util.Log;
-
-import com.qualcomm.robotcore.hardware.*;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.IMU;
-import org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.DashConstants;
-import org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.SyncTask;
-import org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.Utils;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import static android.os.SystemClock.sleep;
 import static org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.Utils.convertInches2Ticks;
 import static org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.Utils.map;
-import static org.firstinspires.ftc.teamcode.Autonomous.AutoUtils.Utils.telemetry;
 
 public class MecanumRobot implements Robot {
 

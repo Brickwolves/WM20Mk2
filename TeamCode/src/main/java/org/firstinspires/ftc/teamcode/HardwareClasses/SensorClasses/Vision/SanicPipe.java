@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses;
+package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -12,22 +12,24 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.*;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.MAX_Cb;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.MAX_Cr;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.MAX_Y;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.MIN_Cb;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.MIN_Cr;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.MIN_Y;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.blur;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.dilate_const;
-import static org.firstinspires.ftc.utilities.Dash_RingFinder.erode_const;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.IMG_WIDTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.RING_HEIGHT;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.findNWidestContours;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.getDistance2Tower;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.pixels2Degrees;
+import static java.lang.StrictMath.tan;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.MAX_Cb;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.MAX_Cr;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.MIN_Cb;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.MIN_Cr;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.MIN_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.blur;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.dilate_const;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.erode_const;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_RingFinder.horizonLineRatio;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.AXES;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.BACK_WEBCAM_HEIGHT;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.IMG_HEIGHT;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.IMG_WIDTH;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.pixels2Degrees;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.sortRectsByMaxOption;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.webcam_front;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
@@ -43,19 +45,20 @@ import static org.opencv.imgproc.Imgproc.line;
 import static org.opencv.imgproc.Imgproc.putText;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
-public class RingFinderPipeline extends OpenCvPipeline
+public class SanicPipe extends OpenCvPipeline
 {
+    private boolean viewportPaused;
 
     // Constants
     private int ring_count = 0;
     private double degrees_error = 0;
+    private Rect ringRect = new Rect(0, 0, 0, 0);
 
     // Init mats here so we don't repeat
     private Mat modified = new Mat();
     private Mat output = new Mat();
     private Mat hierarchy = new Mat();
     private List<MatOfPoint> contours;
-    private MatOfPoint widest_rect;
 
     // Thresholding values
     Scalar MIN_YCrCb, MAX_YCrCb;
@@ -68,6 +71,7 @@ public class RingFinderPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
+        webcam_front.resumeViewport();
 
         // Get height and width
         IMG_HEIGHT = input.rows();
@@ -97,49 +101,55 @@ public class RingFinderPipeline extends OpenCvPipeline
         dilate(modified, modified, new Mat(dilate_const, dilate_const, CV_8U));
 
         // Find contours
-        List<MatOfPoint> contours = new ArrayList<>();
+        contours = new ArrayList<>();
         findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+
+        // Retrive all rects
+        List<Rect> rects = new ArrayList<>();
+        for (int i=0; i < contours.size(); i++){
+            Rect rect = boundingRect(contours.get(i));
+            rects.add(rect);
+        }
 
         // Check if we have detected any orange objects and assume ring_count is 0
         ring_count = 0;
-        if (contours.size() > 0) {
+        if (rects.size() > 0) {
 
             // Retrieve widest (closest) rect
-            List<MatOfPoint> widest_contours = findNWidestContours(3, contours);
-            MatOfPoint widest_contour = widest_contours.get(0);
-            Rect widest_rect = boundingRect(widest_contour);
+            List<Rect> widest_rects = sortRectsByMaxOption(3, VisionUtils.RECT_OPTION.WIDTH, rects);
+            Rect widest_rect = widest_rects.get(0);
+            ringRect = widest_rect;
 
             // Calculate error
             int center_x = widest_rect.x + (widest_rect.width / 2);
             int center_y = widest_rect.y + (widest_rect.height / 2);
             Point center = new Point(center_x, center_y);
             double pixel_error = (IMG_WIDTH / 2) - center_x;
-            degrees_error = pixels2Degrees(pixel_error);
+            degrees_error = pixels2Degrees(pixel_error, AXES.X); //JAMIE HAD TO ADD THIS
 
             // Update ring count
             ring_count = (widest_rect.height < (0.5 * widest_rect.width)) ? 1 : 4;
 
-            // Get distance to ring
-            
-
-            // Box 3 closest rings
-            for (MatOfPoint cnt : widest_contours){
-                Rect rect = boundingRect(cnt);
+            /* Box 3 closest rings
+            for (Rect rect : widest_rects){
                 rectangle(output, rect, color, thickness);
             }
+             */
+
 
 
             /*
 
                             L O G G I N G
 
-                                                       */
+             */
 
             // Log center
             //String coords = "(" + center_x + ", " + center_y + ")";
             //putText(output, coords, center, font, 0.5, color);
 
             // Log data on screen
+            rectangle(output, widest_rect, color, thickness);
             Point text_center = new Point(5, IMG_HEIGHT - 50);
             putText(output, "Degree Error: " + degrees_error, text_center, font, 0.4, new Scalar(255, 255, 0));
             putText(output, "Pixel Error: " + pixel_error, new Point(5, IMG_HEIGHT - 40), font, 0.4, new Scalar(255, 255, 0));
@@ -152,7 +162,7 @@ public class RingFinderPipeline extends OpenCvPipeline
             Utils.multTelemetry.addData("IMU Angle", RingFinder.imu.getAngle());
             //Utils.multTelemetry.addData("Distance2Object", distance2Ring);
             Utils.multTelemetry.update();
-             */
+            */
         }
 
         // Release all captures
@@ -161,6 +171,15 @@ public class RingFinderPipeline extends OpenCvPipeline
 
         // Return altered image
         return output;
+
+    }
+
+    public double getDistance2Ring(){
+        double pixelsSubtendedByRing = ringRect.y + ringRect.height;
+        double radiansSubtendedByRing = pixelsSubtendedByRing * (0.75 / 240);
+        double outputDistance = BACK_WEBCAM_HEIGHT / tan(radiansSubtendedByRing) * 100;
+        double correctedDistance =  (1.03855 * outputDistance) + 1.51779;
+        return correctedDistance;
     }
 
     public void releaseAllCaptures(){
@@ -171,8 +190,6 @@ public class RingFinderPipeline extends OpenCvPipeline
                 cnt.release();
             }
         }
-
-        if (widest_rect != null) widest_rect.release();
     }
 
     public int getRingCount(){
@@ -180,13 +197,13 @@ public class RingFinderPipeline extends OpenCvPipeline
     }
 
     public double getRingAngle(){
-        return degrees_error;
+        return (degrees_error > 0) ? (degrees_error - 10) : (degrees_error + 15);
     }
 
-    /*@Override
+    @Override
     public void onViewportTapped() {
         viewportPaused = !viewportPaused;
-        if (viewportPaused)     webcam.pauseViewport();
-        else                    webcam.resumeViewport();
-    }*/
+        if (viewportPaused)     webcam_front.pauseViewport();
+        else                    webcam_front.resumeViewport();
+    }
 }

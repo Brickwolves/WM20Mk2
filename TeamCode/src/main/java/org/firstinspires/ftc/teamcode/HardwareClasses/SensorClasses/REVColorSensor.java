@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 public class REVColorSensor {

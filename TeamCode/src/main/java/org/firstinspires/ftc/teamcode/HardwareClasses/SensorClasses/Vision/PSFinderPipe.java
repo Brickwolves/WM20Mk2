@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses;
+package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -12,20 +12,20 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.blur;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.dilate_const;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.erode_const;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.MAX_Cb;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.MAX_Cr;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.MAX_Y;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.MIN_Cb;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.MIN_Cr;
-import static org.firstinspires.ftc.utilities.Dash_PSFinder.MIN_Y;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.IMG_WIDTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.findNLargestContours;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.findNLeftMostContours;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.pixels2Degrees;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AimBot.blur;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AimBot.dilate_const;
+import static org.firstinspires.ftc.teamcode.DashConstants.Dash_AimBot.erode_const;
+import static org.firstinspires.ftc.teamcode.DashConstants.Deprecated.Dash_PSFinder.MAX_Cb;
+import static org.firstinspires.ftc.teamcode.DashConstants.Deprecated.Dash_PSFinder.MAX_Cr;
+import static org.firstinspires.ftc.teamcode.DashConstants.Deprecated.Dash_PSFinder.MAX_Y;
+import static org.firstinspires.ftc.teamcode.DashConstants.Deprecated.Dash_PSFinder.MIN_Cb;
+import static org.firstinspires.ftc.teamcode.DashConstants.Deprecated.Dash_PSFinder.MIN_Cr;
+import static org.firstinspires.ftc.teamcode.DashConstants.Deprecated.Dash_PSFinder.MIN_Y;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.IMG_HEIGHT;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.IMG_WIDTH;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.pixels2Degrees;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.sortRectsByMaxOption;
+import static org.firstinspires.ftc.teamcode.Vision.VisionUtils.sortRectsByMinOption;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
@@ -33,7 +33,6 @@ import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
 import static org.opencv.imgproc.Imgproc.GaussianBlur;
 import static org.opencv.imgproc.Imgproc.RETR_TREE;
 import static org.opencv.imgproc.Imgproc.boundingRect;
-import static org.opencv.imgproc.Imgproc.contourArea;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.dilate;
 import static org.opencv.imgproc.Imgproc.erode;
@@ -41,20 +40,18 @@ import static org.opencv.imgproc.Imgproc.findContours;
 import static org.opencv.imgproc.Imgproc.putText;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
-public class PSAimPipeline extends OpenCvPipeline {
+public class PSFinderPipe extends OpenCvPipeline {
     private boolean viewportPaused;
 
 
     private double degree_error = 0;
     private double[] ps_errors = {0, 0, 0};
     private int n_ps_found = 0;
-    public boolean arePSFound;
 
     // Init mats here so we don't repeat
     private Mat modified = new Mat();
     private Mat output = new Mat();
     private Mat hierarchy = new Mat();
-    private List<MatOfPoint> largest_contours;
     private List<MatOfPoint> contours;
 
     // Thresholding values
@@ -66,7 +63,7 @@ public class PSAimPipeline extends OpenCvPipeline {
     private int font = FONT_HERSHEY_COMPLEX;
 
     public enum PS {
-        LEFT, CENTER, RIGHT
+        LEFT, MIDDLE, RIGHT
     }
 
     public double getPSError(PS ps){
@@ -75,7 +72,7 @@ public class PSAimPipeline extends OpenCvPipeline {
             switch (ps){
                 case LEFT:
                     return ps_errors[0];
-                case CENTER:
+                case MIDDLE:
                     return ps_errors[1];
                 case RIGHT:
                     return ps_errors[2];
@@ -109,62 +106,31 @@ public class PSAimPipeline extends OpenCvPipeline {
         erode(modified, modified, new Mat(erode_const, erode_const, CV_8U));
         dilate(modified, modified, new Mat(dilate_const, dilate_const, CV_8U));
 
-
         // Find contours of goal
         contours = new ArrayList<>();
         findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-    
-        ArrayList<Integer> indexes2Remove = new ArrayList<>();
+
+        // Remove unnecessary contours (screen size and rings)
+        List<Rect> rects = new ArrayList<>();
         for (int i=0; i < contours.size(); i++){
             Rect rect = boundingRect(contours.get(i));
-            if (rect.width > rect.height) indexes2Remove.add(i);
+            if (rect.height > rect.width) rects.add(rect);
         }
-        for (int i =0; i < indexes2Remove.size(); i++){
-            int index1 = indexes2Remove.get(i);
-            if (contours.size() > 0) contours.remove(index1);
-            else return output;
-        
-            // adjust other indexes that move down
-            for (int j=0; j < indexes2Remove.size(); j++){
-                int index2 = indexes2Remove.get(j);
-                if (index1 < index2) indexes2Remove.set(j, index2 - 1);
-            }
-        }
-        
-        if (contours.size() == 0) return output;
-
-        // Remove contour if it's the size of the FREAKING SCREEN
-        int removeI = 0;
-        boolean screenContourFound = false;
-        for (int i=0; i < contours.size(); i++){
-            if (contourArea(contours.get(i)) > 1000){
-                removeI = i;
-                screenContourFound = true;
-            }
-        }
-        if (screenContourFound) contours.remove(removeI);
-
-        if (contours.size() == 0){
-            arePSFound = false;
-            return output;
-        }else{
-            arePSFound = true;
-        }
-
+        if (rects.size() == 0) return output;
 
         // Retrieve powershot contours
-        largest_contours = findNLargestContours(3, contours);
-
-        n_ps_found = largest_contours.size();
+        rects = sortRectsByMaxOption(3, VisionUtils.RECT_OPTION.AREA, rects);
 
         // Sort the contours from left to right
-        largest_contours = findNLeftMostContours(3, largest_contours);
+        rects = sortRectsByMinOption(3, VisionUtils.RECT_OPTION.X, rects);
+
+        // count power shots detected
+        n_ps_found = rects.size();
 
         int c = 0;
-        for (MatOfPoint cnt : largest_contours){
+        for (Rect rect : rects){
 
             // Get and Draw PowerShot Rectangle
-            Rect rect = boundingRect(cnt);
             rectangle(output, rect, color, thickness);
 
             // Find center
@@ -174,7 +140,7 @@ public class PSAimPipeline extends OpenCvPipeline {
 
             // Calculate error
             double pixel_error = (IMG_WIDTH / 2) - center_x;
-            degree_error = pixels2Degrees(pixel_error);
+            degree_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X) + 5;
             ps_errors[c] = degree_error;
 
             // Visually identify power shots
@@ -184,7 +150,6 @@ public class PSAimPipeline extends OpenCvPipeline {
             c++;
         }
 
-        return output;
 
 
         /*
@@ -194,17 +159,20 @@ public class PSAimPipeline extends OpenCvPipeline {
          */
 
 
-        /*
-        // Release all captures
+        /* Release all captures
         input.release();
         releaseAllCaptures();
+         */
 
         // Return altered image
         return output;
 
-         */
 
 
+    }
+
+    public double getNumPowerShots(){
+        return n_ps_found;
     }
 
     private Rect[] sortRectsByX(Rect[] rects){
@@ -232,10 +200,6 @@ public class PSAimPipeline extends OpenCvPipeline {
         return betaI;
     }
 
-    public double getDegreeError(){
-        return degree_error;
-    }
-
     public void releaseAllCaptures(){
         modified.release();
         hierarchy.release();
@@ -249,7 +213,7 @@ public class PSAimPipeline extends OpenCvPipeline {
     @Override
     public void onViewportTapped() {
         viewportPaused = !viewportPaused;
-        if (viewportPaused)  VisionUtils.webcam.pauseViewport();
-        else                VisionUtils.webcam.resumeViewport();
+        if (viewportPaused)  VisionUtils.webcam_front.pauseViewport();
+        else                VisionUtils.webcam_front.resumeViewport();
     }
 }
