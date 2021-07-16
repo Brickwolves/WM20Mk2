@@ -20,9 +20,9 @@ public class Wobble {
     
     
     public static void init(){
-        gripperRight = hardwareMap().get(Servo.class, "wobblegripperright");
-        gripperLeft = hardwareMap().get(Servo.class, "wobblegripperleft");
-        lifter = hardwareMap().get(Servo.class, "wobblearm");
+        gripperRight = hardwareMap.get(Servo.class, "wobblegripperright");
+        gripperLeft = hardwareMap.get(Servo.class, "wobblegripperleft");
+        lifter = hardwareMap.get(Servo.class, "wobblearm");
         gripperLeft.setDirection(Servo.Direction.REVERSE);
     
         currentArmState = ArmState.FOLD;

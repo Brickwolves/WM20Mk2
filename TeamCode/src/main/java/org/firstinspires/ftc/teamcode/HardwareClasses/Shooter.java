@@ -59,11 +59,11 @@ public class Shooter {
     
     
     public static void init() {
-        shooterFront = hardwareMap().get(DcMotor.class, "shooterfront");
-        shooterBack = hardwareMap().get(DcMotor.class, "shooterback");
-        feeder = hardwareMap().get(Servo.class, "feeder");
-        feederLock = hardwareMap().get(Servo.class, "feederlock");
-        turret = hardwareMap().get(Servo.class, "turret");
+        shooterFront = hardwareMap.get(DcMotor.class, "shooterfront");
+        shooterBack = hardwareMap.get(DcMotor.class, "shooterback");
+        feeder = hardwareMap.get(Servo.class, "feeder");
+        feederLock = hardwareMap.get(Servo.class, "feederlock");
+        turret = hardwareMap.get(Servo.class, "turret");
     
         
         shooterFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

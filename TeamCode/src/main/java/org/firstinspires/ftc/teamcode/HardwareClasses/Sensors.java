@@ -4,9 +4,13 @@ package org.firstinspires.ftc.teamcode.HardwareClasses;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Camera;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.WebcamExample;
 import org.firstinspires.ftc.teamcode.utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
+import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import static java.lang.Math.abs;
@@ -16,7 +20,7 @@ import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 public class Sensors {
 	
 	public static Gyro gyro = new Gyro();
-	public static Camera frontCamera, backCamera;
+	public static CameraV2 frontCamera, backCamera;
 	//public static REVColorSensor hopperColor;
 	private static long currentTimeMillis;
 	
@@ -32,21 +36,20 @@ public class Sensors {
 	
 	
 	public static void init(Alliance alliance){
-		
-		int cameraMonitorViewId = hardwareMap().appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap().appContext.getPackageName());
-		
-		WebcamName frontCamName = hardwareMap().get(WebcamName.class, "Front Camera");
-		OpenCvWebcam frontWebcam = OpenCvCameraFactory.getInstance().createWebcam(frontCamName, cameraMonitorViewId);
-		
-		WebcamName backCamName = hardwareMap().get(WebcamName.class, "Back Camera");
-		OpenCvWebcam backWebcam = OpenCvCameraFactory.getInstance().createWebcam(backCamName);
-		
+
+
+		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+		OpenCvCamera frontWebcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Front Camera"), cameraMonitorViewId);
+		OpenCvCamera backWebcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Back Camera"), cameraMonitorViewId);
+
+
+
 		//ColorSensor hopperColorSensor = hardwareMap().get(ColorSensor.class, "hoppercolor");
 		
 		Sensors.alliance = alliance;
 		gyro.init(alliance);
-		frontCamera = new Camera(frontWebcam);
-		backCamera = new Camera(backWebcam);
+		frontCamera = new CameraV2(frontWebcam);
+		backCamera = new CameraV2(backWebcam);
 		//hopperColor = new REVColorSensor(hopperColorSensor);
 	}
 	

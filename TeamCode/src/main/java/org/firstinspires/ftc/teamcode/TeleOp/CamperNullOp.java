@@ -53,7 +53,7 @@ public class CamperNullOp extends OpMode {
 
   @Override
   public void init() {
-    Utils.setHardwareMap(hardwareMap);
+    Utils.setOpMode(this);
     
     frontLeft = hardwareMap.get(DcMotor.class, "frontleft");
     frontRight = hardwareMap.get(DcMotor.class, "frontright");

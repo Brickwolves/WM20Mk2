@@ -16,7 +16,7 @@ public class IMU {
 
     public IMU(String deviceName) {
         
-        imu = hardwareMap().get(BNO055IMU.class, deviceName);
+        imu = hardwareMap.get(BNO055IMU.class, deviceName);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         imu.initialize(parameters);
 

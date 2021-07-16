@@ -49,11 +49,11 @@ public class Intake {
     
     
     public static void init(){
-        intakeDriveFront = hardwareMap().get(DcMotor.class, "intakefront");
-        intakeDriveBack = hardwareMap().get(DcMotor.class, "intakeback");
-        bumperLeft = hardwareMap().get(Servo.class, "bumperleft");
-        bumperRight = hardwareMap().get(Servo.class, "bumperright");
-        bottomRoller = hardwareMap().get(CRServo.class, "bottomroller");
+        intakeDriveFront = hardwareMap.get(DcMotor.class, "intakefront");
+        intakeDriveBack = hardwareMap.get(DcMotor.class, "intakeback");
+        bumperLeft = hardwareMap.get(Servo.class, "bumperleft");
+        bumperRight = hardwareMap.get(Servo.class, "bumperright");
+        bottomRoller = hardwareMap.get(CRServo.class, "bottomroller");
         
         intakeDriveFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeDriveFront.setDirection(DcMotorSimple.Direction.REVERSE);

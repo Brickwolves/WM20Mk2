@@ -368,11 +368,4 @@ public class AimBotPipe extends OpenCvPipeline {
             }
         }
     }
-
-    @Override
-    public void onViewportTapped() {
-        viewportPaused =        !viewportPaused;
-        if (viewportPaused)     Sensors.frontCamera.webcam.pauseViewport();
-        else                    Sensors.frontCamera.webcam.resumeViewport();
-    }
 }
