@@ -42,7 +42,7 @@ public class Dash_AimBot {
     public static VisionUtils.Target curTarget = BLUE_GOAL;
     public static boolean DEBUG_MODE_ON     = true;
     public static boolean AUTOCALIBRATE_ON        = true;
-    public static boolean INIT_COMPLETED    = true;
+    public static boolean INIT_COMPLETED    = false;
     public static int INIT_RECT_SIDELENGTH  = 10;
 
 

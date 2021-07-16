@@ -110,9 +110,9 @@ public class AimBotPipe extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        return input;
 
-        output = (!INIT_COMPLETED) ? initPipe(input) : regPipe(input);
-        return output;
+        //output = (!INIT_COMPLETED) ? initPipe(input) : regPipe(input);
     }
 
     /**
@@ -372,7 +372,7 @@ public class AimBotPipe extends OpenCvPipeline {
     @Override
     public void onViewportTapped() {
         viewportPaused =        !viewportPaused;
-        if (viewportPaused)     VisionUtils.webcam_front.pauseViewport();
-        else                    VisionUtils.webcam_front.resumeViewport();
+        if (viewportPaused)     Sensors.frontCamera.webcam.pauseViewport();
+        else                    Sensors.frontCamera.webcam.resumeViewport();
     }
 }

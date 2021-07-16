@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Ew;
+package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

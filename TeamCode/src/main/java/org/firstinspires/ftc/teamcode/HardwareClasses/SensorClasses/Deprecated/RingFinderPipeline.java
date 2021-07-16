@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Ew;
+package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -16,7 +16,6 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_WIDTH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.findNWidestContours;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.pixels2Degrees;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.*;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.MAX_Cb;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.MAX_Cr;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.MAX_Y;

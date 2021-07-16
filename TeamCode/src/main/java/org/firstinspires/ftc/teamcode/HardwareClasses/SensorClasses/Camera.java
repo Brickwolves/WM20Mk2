@@ -5,7 +5,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Ew.RingFinderPipeline;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.RingFinderPipeline;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.AimBotPipe;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 public class Camera {
 	
-	OpenCvWebcam webcam;
+	public OpenCvWebcam webcam;
 	public AimBotPipe aimBot = new AimBotPipe();
 	public RingFinderPipeline ringFinder = new RingFinderPipeline();
 	public OpenCvPipeline currentPipeline = new OpenCvPipeline() { public Mat processFrame(Mat input) { return null; } };
