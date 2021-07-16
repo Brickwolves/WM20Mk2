@@ -4,14 +4,14 @@ package org.firstinspires.ftc.teamcode.HardwareClasses;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Camera;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
-import org.firstinspires.ftc.utilities.MathUtils;
-import org.firstinspires.ftc.utilities.RingBufferOwen;
+import org.firstinspires.ftc.teamcode.utilities.MathUtils;
+import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static org.firstinspires.ftc.utilities.Utils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class Sensors {
 	

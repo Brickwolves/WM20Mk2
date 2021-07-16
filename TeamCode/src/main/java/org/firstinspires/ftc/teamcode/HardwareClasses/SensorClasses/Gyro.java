@@ -6,9 +6,9 @@ import androidx.annotation.RequiresApi;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance;
-import org.firstinspires.ftc.utilities.IMU;
-import org.firstinspires.ftc.utilities.MathUtils;
-import org.firstinspires.ftc.utilities.RingBuffer;
+import org.firstinspires.ftc.teamcode.utilities.IMU;
+import org.firstinspires.ftc.teamcode.utilities.MathUtils;
+import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
 
 public class Gyro {
 

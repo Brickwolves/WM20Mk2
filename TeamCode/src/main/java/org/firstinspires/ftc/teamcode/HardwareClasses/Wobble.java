@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.HardwareClasses;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.utilities.Utils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class Wobble {
 

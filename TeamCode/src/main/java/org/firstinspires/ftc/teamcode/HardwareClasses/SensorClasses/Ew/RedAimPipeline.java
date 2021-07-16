@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Ew;
 
+/*
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.opencv.core.Mat;
@@ -244,3 +245,5 @@ public class RedAimPipeline extends OpenCvPipeline {
         else                    VisionUtils.webcam.resumeViewport();
     }
 }
+
+ */

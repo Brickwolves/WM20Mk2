@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.utilities;
+package org.firstinspires.ftc.teamcode.utilities;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-import static org.firstinspires.ftc.utilities.Utils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class IMU {
     private BNO055IMU imu;

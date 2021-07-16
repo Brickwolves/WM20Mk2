@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.utilities.MathUtils;
-import org.firstinspires.ftc.utilities.PID;
-import org.firstinspires.ftc.utilities.RingBuffer;
-import org.firstinspires.ftc.utilities.RingBufferOwen;
+import org.firstinspires.ftc.teamcode.utilities.MathUtils;
+import org.firstinspires.ftc.teamcode.utilities.PID;
+import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
+import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
 
-import static org.firstinspires.ftc.utilities.MathUtils.degCos;
-import static org.firstinspires.ftc.utilities.MathUtils.degTan;
-import static org.firstinspires.ftc.utilities.Utils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.utilities.MathUtils.degCos;
+import static org.firstinspires.ftc.teamcode.utilities.MathUtils.degTan;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class Shooter {
     

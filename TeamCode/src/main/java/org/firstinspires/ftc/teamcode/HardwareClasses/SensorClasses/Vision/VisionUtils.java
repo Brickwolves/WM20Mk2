@@ -27,13 +27,12 @@ public class VisionUtils {
     public static double PS_CENTER_DIST = 63.5;
     public static double PS_FAR_DIST = 81;
 
-    private static double distanceSum = 0;
     public static double SHOOTER_OFFSET_DISTANCE = 12;
 
     // Note: All measurements in CM
 
     public enum Target {
-        GOAL, POWERSHOTS, OUT_OF_RANGE
+        RED_GOAL, BLUE_GOAL, POWERSHOTS, OUT_OF_RANGE
     }
 
     public enum PowerShot {

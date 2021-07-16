@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Shooter;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Wobble;
-import org.firstinspires.ftc.utilities.IMU;
-import org.firstinspires.ftc.utilities.Utils;
+import org.firstinspires.ftc.teamcode.utilities.IMU;
+import org.firstinspires.ftc.teamcode.utilities.Utils;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvWebcam;
 

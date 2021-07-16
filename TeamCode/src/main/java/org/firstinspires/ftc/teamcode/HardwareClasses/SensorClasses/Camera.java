@@ -5,9 +5,9 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Ew.BlueAimPipeline;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Ew.RedAimPipeline;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Ew.RingFinderPipeline;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.AimBotPipe;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -18,9 +18,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class Camera {
 	
 	OpenCvWebcam webcam;
-	public RingFinderPipeline ringFinderPipeline = new RingFinderPipeline();
-	public BlueAimPipeline blueAimPipeline = new BlueAimPipeline();
-	public RedAimPipeline redAimPipeline = new RedAimPipeline();
+	public AimBotPipe aimBot = new AimBotPipe();
+	public RingFinderPipeline ringFinder = new RingFinderPipeline();
 	public OpenCvPipeline currentPipeline = new OpenCvPipeline() { public Mat processFrame(Mat input) { return null; } };
 	
 	
@@ -44,87 +43,60 @@ public class Camera {
 	public void stopVision(){ webcam.closeCameraDevice(); }
 	
 	
-	public int startingStackCount(){ return ringFinderPipeline.getRingCount(); }
+	public int startingStackCount(){ return ringFinder.getRingCount(); }
 	
 	public double highTowerError() {
 		if (Sensors.alliance == Sensors.Alliance.BLUE) {
-			if (currentPipeline != blueAimPipeline) setPipeline(blueAimPipeline);
-			return blueAimPipeline.towerDegreeError();
-		}else{
-			if (currentPipeline != redAimPipeline) setPipeline(redAimPipeline);
-			return redAimPipeline.towerDegreeError();
+		    return aimBot.getTowerDegreeError();
 		}
+		return aimBot.getTowerDegreeError();
 	}
 	
 	public double midTowerError() {
 		if (Sensors.alliance == Sensors.Alliance.BLUE) {
-			if (currentPipeline != redAimPipeline) setPipeline(redAimPipeline);
-			return redAimPipeline.towerDegreeError();
-		}else{
-			if (currentPipeline != blueAimPipeline) setPipeline(blueAimPipeline);
-			return blueAimPipeline.towerDegreeError();
+			return aimBot.getTowerDegreeError();
 		}
+		return aimBot.getTowerDegreeError();
 	}
 	
 	public double highTowerDistance() {
 		if (Sensors.alliance == Sensors.Alliance.BLUE) {
-			if (currentPipeline != blueAimPipeline) setPipeline(blueAimPipeline);
-			return blueAimPipeline.distance2Goal();
-		} else {
-			if (currentPipeline != redAimPipeline) setPipeline(redAimPipeline);
-			return redAimPipeline.distance2Goal();
+			return aimBot.getDistance2Tower();
 		}
+		return aimBot.getDistance2Tower();
 	}
 	
 	
 	public double midTowerDistance() {
 		if (Sensors.alliance == Sensors.Alliance.BLUE) {
-			if (currentPipeline != redAimPipeline) setPipeline(redAimPipeline);
-			return redAimPipeline.distance2Goal();
-		} else {
-			if (currentPipeline != blueAimPipeline) setPipeline(blueAimPipeline);
-			return blueAimPipeline.distance2Goal();
+			return aimBot.getDistance2Tower();
 		}
+		return aimBot.getDistance2Tower();
 	}
 	
 	
-	public boolean isTowerFound(){ return blueAimPipeline.isTowerFound; }
+	public boolean isTowerFound(){ return aimBot.isTowerFound(); }
 	
-	public double shooterOffsetAngle(){ return blueAimPipeline.shooterOffsetAngle(); }
+	public double shooterOffsetAngle(){ return aimBot.shooterOffsetAngle(); }
 	
 	
 	
 	@RequiresApi(api = Build.VERSION_CODES.N)
 	public double leftPSAimAngle(){
 		if (Sensors.alliance == Sensors.Alliance.BLUE) {
-			if (currentPipeline != blueAimPipeline) setPipeline(blueAimPipeline);
-			return Robot.closestTarget(blueAimPipeline.getPSDegreeError(BlueAimPipeline.PowerShot.LEFT));
-		}else {
-			if (currentPipeline != redAimPipeline) setPipeline(redAimPipeline);
-			return Robot.closestTarget(redAimPipeline.getPSDegreeError(RedAimPipeline.PowerShot.LEFT));
+			return Robot.closestTarget(aimBot.getPSDegreeError(VisionUtils.PowerShot.PS_CLOSE));
 		}
+		return Robot.closestTarget(aimBot.getPSDegreeError(VisionUtils.PowerShot.PS_CLOSE));
 	}
 	
 	@RequiresApi(api = Build.VERSION_CODES.N)
 	public double centerPSAimAngle(){
-		if (Sensors.alliance == Sensors.Alliance.BLUE) {
-			if (currentPipeline != blueAimPipeline) setPipeline(blueAimPipeline);
-			return Robot.closestTarget(blueAimPipeline.getPSDegreeError(BlueAimPipeline.PowerShot.CENTER));
-		}else {
-			if (currentPipeline != redAimPipeline) setPipeline(redAimPipeline);
-			return Robot.closestTarget(redAimPipeline.getPSDegreeError(RedAimPipeline.PowerShot.CENTER));
-		}
+		return 2;
 	}
 	
 	@RequiresApi(api = Build.VERSION_CODES.N)
 	public double rightPSAimAngle(){
-		if (Sensors.alliance == Sensors.Alliance.BLUE) {
-			if (currentPipeline != blueAimPipeline) setPipeline(blueAimPipeline);
-			return Robot.closestTarget(blueAimPipeline.getPSDegreeError(BlueAimPipeline.PowerShot.RIGHT));
-		}else {
-			if (currentPipeline != redAimPipeline) setPipeline(redAimPipeline);
-			return Robot.closestTarget(redAimPipeline.getPSDegreeError(RedAimPipeline.PowerShot.RIGHT));
-		}
+		return 2;
 	}
 	
 }

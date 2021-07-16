@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
-import org.firstinspires.ftc.utilities.Utils;
+import org.firstinspires.ftc.teamcode.utilities.Utils;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
