@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.HardwareClasses;
 
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Camera;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Camera;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
 import org.firstinspires.ftc.teamcode.utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;

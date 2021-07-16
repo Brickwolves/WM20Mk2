@@ -14,9 +14,9 @@ public class Utils {
         Utils.hardwareMap = hardwareMap;
     }
     
-    public static void breakpoint(boolean breakpoint){
+    public static void breakpoint(boolean continue_on){
         while(true){
-            if(breakpoint) break;
+            if(continue_on) break;
         }
     }
 

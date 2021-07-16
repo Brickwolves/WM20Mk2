@@ -1,6 +1,46 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
-/*
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvPipeline;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.IMG_HEIGHT;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.IMG_WIDTH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.findNLargestContours;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.findNLeftMostContours;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.VisionUtils.pixels2Degrees;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.MAX_Cb;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.MAX_Cr;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.MAX_Y;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.MIN_Cb;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.MIN_Cr;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.MIN_Y;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.blur;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.dilate_const;
+import static org.firstinspires.ftc.utilities.Dash_PSFinder.erode_const;
+import static org.opencv.core.Core.inRange;
+import static org.opencv.core.CvType.CV_8U;
+import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
+import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
+import static org.opencv.imgproc.Imgproc.GaussianBlur;
+import static org.opencv.imgproc.Imgproc.RETR_TREE;
+import static org.opencv.imgproc.Imgproc.boundingRect;
+import static org.opencv.imgproc.Imgproc.contourArea;
+import static org.opencv.imgproc.Imgproc.cvtColor;
+import static org.opencv.imgproc.Imgproc.dilate;
+import static org.opencv.imgproc.Imgproc.erode;
+import static org.opencv.imgproc.Imgproc.findContours;
+import static org.opencv.imgproc.Imgproc.putText;
+import static org.opencv.imgproc.Imgproc.rectangle;
+
 public class PSAimPipeline extends OpenCvPipeline {
     private boolean viewportPaused;
 
@@ -145,6 +185,26 @@ public class PSAimPipeline extends OpenCvPipeline {
         }
 
         return output;
+
+
+        /*
+        Point text_center = new Point(5, IMG_HEIGHT - 50);
+        putText(output, "Degree Error: " + degree_error, text_center, font, 0.4, new Scalar(255, 255, 0));
+        putText(output, "Pixel Error: " + pixel_error, new Point(5, IMG_HEIGHT - 40), font, 0.4, new Scalar(255, 255, 0));
+         */
+
+
+        /*
+        // Release all captures
+        input.release();
+        releaseAllCaptures();
+
+        // Return altered image
+        return output;
+
+         */
+
+
     }
 
     private Rect[] sortRectsByX(Rect[] rects){
@@ -193,4 +253,3 @@ public class PSAimPipeline extends OpenCvPipeline {
         else                VisionUtils.webcam.resumeViewport();
     }
 }
-*/
