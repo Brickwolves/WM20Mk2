@@ -15,6 +15,9 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class Sensors {
@@ -32,10 +35,10 @@ public class Sensors {
 	static RingBufferOwen blRing = new RingBufferOwen(3);
 	private static double frRPM, flRPM, brRPM, blRPM;
 	
-	public static Alliance alliance;
+	public static Alliance alliance = Alliance.BLUE;
 	
 	
-	public static void init(Alliance alliance){
+	public static void init(){
 
 
 		/*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -48,8 +51,8 @@ public class Sensors {
 		
 		Sensors.alliance = alliance;
 		gyro.init(alliance);
-		//frontCamera = new CameraV2(frontWebcam);
-		//backCamera = new CameraV2(backWebcam);
+		backCamera = new CameraV2("Back Camera");
+		frontCamera = new CameraV2("Front Camera", true);
 		//hopperColor = new REVColorSensor(hopperColorSensor);
 	}
 	
@@ -112,8 +115,7 @@ public class Sensors {
 	
 	
 	public enum Alliance{
-		BLUE,
-		RED
+		BLUE, RED
 	}
 	
 	

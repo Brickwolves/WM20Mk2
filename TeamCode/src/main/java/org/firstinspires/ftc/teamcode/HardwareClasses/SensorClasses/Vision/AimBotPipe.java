@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
-import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -84,8 +83,8 @@ public class AimBotPipe extends OpenCvPipeline {
     private List<MatOfPoint> contours;
 
     // Rectangle settings
-    private Scalar red = new Scalar(255, 0, 0);
-    private Scalar blue = new Scalar(0, 0, 255);
+    private Scalar orange = new Scalar(252, 186, 3);
+    private Scalar lightBlue = new Scalar(3, 252, 227);
     private int thickness = 2;
     private int font = FONT_HERSHEY_COMPLEX;
 
@@ -145,7 +144,7 @@ public class AimBotPipe extends OpenCvPipeline {
         updateHSV(modified, initRect);
 
         // Log the rect for driver-placement
-        rectangle(output, initRect, (curTarget == BLUE_GOAL) ? blue : red, thickness);
+        rectangle(output, initRect, (curTarget == BLUE_GOAL) ? lightBlue : orange, thickness);
 
         return output;
     }
@@ -166,10 +165,6 @@ public class AimBotPipe extends OpenCvPipeline {
         // Blurring
         GaussianBlur(modified, modified, new Size(blur, blur), 0);
 
-        // This is where it diverges, let's make a red threshold and a blue threshold
-        // Make a for loop
-
-
         // Thresholding
         if (curTarget == BLUE_GOAL){
             inRange(modified, BLUE_MIN_HSV, BLUE_MAX_HSV, modified);
@@ -177,8 +172,6 @@ public class AimBotPipe extends OpenCvPipeline {
         else {
             inRange(modified, RED_MIN_HSV, RED_MAX_HSV, modified);
         }
-        // new Scalar(BLUE_MIN_HSV.val[0], BLUE_MIN_HSV.val[1], BLUE_MIN_HSV.val[2]), new Scalar(BLUE_MAX_HSV.val[0], BLUE_MAX_HSV.val[1], BLUE_MAX_HSV.val[2])
-        //inRange(modified, RED_MIN_HSV, RED_MAX_HSV, red_thresh);
 
         // Erosion and Dilation
         erode(modified, modified, new Mat(erode_const, erode_const, CV_8U));
@@ -219,7 +212,7 @@ public class AimBotPipe extends OpenCvPipeline {
         towerDistance = getDistance2Tower();
 
         // Logging Shapes and Degree & Pixel Data
-        rectangle(output, towerRect, (curTarget == BLUE_GOAL) ? blue : red, thickness);
+        rectangle(output, towerRect, (curTarget == BLUE_GOAL) ? lightBlue : orange, thickness);
         line(output, center, new Point(center_x + pixel_error, center_y), new Scalar(0, 0, 255), thickness);
         Point text_center = new Point(5, IMG_HEIGHT - 50);
         putText(output, "Degree Error: " + towerDegreeError, text_center, font, 0.4, new Scalar(255, 255, 0));
@@ -240,6 +233,9 @@ public class AimBotPipe extends OpenCvPipeline {
     public void updateHSV(Mat img, Rect crop){
         Scalar meanHSV = mean(img.submat(crop));
 
+        // Red Goal detection works better with YCrCb
+        // Blue Goal detection works better with HSV
+        // We can tune margins of error for each channel with the following
         int[] YCrCb_margins = {YM, CrM, CbM};
         int[] HSV_margins = {HM, SM, VM};
 
@@ -351,15 +347,5 @@ public class AimBotPipe extends OpenCvPipeline {
         }
 
         return goalRect;
-    }
-
-    public void releaseAllCaptures(){
-        modified.release();
-        hierarchy.release();
-        if (contours != null){
-            for (MatOfPoint cnt : contours){
-                cnt.release();
-            }
-        }
     }
 }

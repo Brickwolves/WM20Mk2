@@ -15,15 +15,15 @@ import java.util.List;
 
 import static java.lang.StrictMath.PI;
 import static java.lang.StrictMath.abs;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.IMG_WIDTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.PS_CENTER_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.PS_LEFT_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.PS_RIGHT_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.SHOOTER_OFFSET_DISTANCE;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.findNLargestContours;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.getDistance2Tower;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.pixels2Degrees;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.IMG_HEIGHT;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.IMG_WIDTH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.PS_CENTER_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.PS_LEFT_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.PS_RIGHT_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.SHOOTER_OFFSET_DISTANCE;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.findNLargestContours;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.getDistance2Tower;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.pixels2Degrees;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_H;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_S;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_V;
@@ -239,7 +239,7 @@ public class RedAimPipeline extends OpenCvPipeline {
     @Override
     public void onViewportTapped() {
         viewportPaused = !viewportPaused;
-        if (viewportPaused)     VisionUtils.webcam.pauseViewport();
-        else                    VisionUtils.webcam.resumeViewport();
+        if (viewportPaused)     VisionUtilsDep.webcam.pauseViewport();
+        else                    VisionUtilsDep.webcam.resumeViewport();
     }
 }

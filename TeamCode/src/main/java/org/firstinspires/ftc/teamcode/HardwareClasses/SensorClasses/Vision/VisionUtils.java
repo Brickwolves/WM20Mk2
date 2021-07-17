@@ -32,7 +32,7 @@ public class VisionUtils {
     // Note: All measurements in CM
 
     public enum Target {
-        RED_GOAL, BLUE_GOAL, POWERSHOTS, OUT_OF_RANGE
+        RED_GOAL, BLUE_GOAL, BLUE_POWERSHOTS, RED_POWERSHOTS, OUT_OF_RANGE
     }
 
     public enum PowerShot {

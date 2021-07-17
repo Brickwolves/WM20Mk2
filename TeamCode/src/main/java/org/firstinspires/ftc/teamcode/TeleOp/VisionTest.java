@@ -31,51 +31,77 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
-import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.AimBotPipe;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import static com.qualcomm.robotcore.util.Range.clip;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.AUTO_CALIBRATE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
 @TeleOp(name = "VisionTest", group = "Concept")
-public class VisionTestTeleOp extends OpMode {
+public class VisionTest extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
   private OpenCvCamera webcam;
   private AimBotPipe aimBotPipe = new AimBotPipe();
   private Controller controller;
+  private DcMotor fl, fr, bl, br;
 
   @Override
   public void init() {
     setOpMode(this);
 
-    Robot.init();
-    Sensors.init(Sensors.Alliance.BLUE);
-
     controller = new Controller(gamepad1);
 
-    Robot.resetGyro(0);
+    initMotors();
+    initCameras();
 
+  }
+  public void initCameras(){
     int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Front Camera"), cameraMonitorViewId);
     webcam.openCameraDeviceAsync(() -> webcam.startStreaming(432, 240, OpenCvCameraRotation.UPRIGHT));
     webcam.setPipeline(aimBotPipe);
-
   }
 
+  public void initMotors(){
+    fl = hardwareMap.get(DcMotor.class, "frontleft");
+    fr = hardwareMap.get(DcMotor.class, "frontright");
+    bl = hardwareMap.get(DcMotor.class, "backleft");
+    br = hardwareMap.get(DcMotor.class, "backright");
+
+    fr.setDirection(DcMotorSimple.Direction.FORWARD);
+    fl.setDirection(DcMotorSimple.Direction.REVERSE);
+    br.setDirection(DcMotorSimple.Direction.FORWARD);
+    bl.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+  }
+
+  public void setPowerTele(double y, double x, double r, double p){
+    fr.setPower((y - x - r) * p);
+    fl.setPower((y + x + r) * p);
+    br.setPower((y + x - r) * p);
+    bl.setPower((y - x - r) * p);
+  }
 
 
   /*
@@ -108,26 +134,40 @@ public class VisionTestTeleOp extends OpMode {
   public void controls(){
     controller.update();
 
-    Sensors.gyro.update();
-    Robot.setPowerTele(controller.rightStick.Y(), controller.rightStick.X(), controller.leftStick.X(), 1);
+    double power = clip(gamepad1.right_trigger, 0.3, 0.8);
 
     // Hold to autocalibrate on a color
-    if (controller.cross.hold()){
-      aimBotPipe.switch2AutoCalibrate();
-    }
-    else {
-      aimBotPipe.switch2Regular();
+    switch (Controller.touchSensor.getCount()){
+      case 1:
+        curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
+        aimBotPipe.switch2AutoCalibrate();
+        break;
+
+      case 2:
+        aimBotPipe.switch2Regular();
+        break;
+
+      case 3:
+        curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
+        aimBotPipe.switch2AutoCalibrate();
+        break;
+
+      case 4:
+        aimBotPipe.switch2Regular();
+        break;
+
+      case 5:
+        Controller.touchSensor.resetCount();
+        break;
     }
 
-    // Toggle which goal using CIRCLE
-    if (controller.circle.toggle()){
-      curTarget = BLUE_GOAL;
-    }
-    else {
-      curTarget = RED_GOAL;
-    }
+
+
+
+    setPowerTele(controller.rightStick.Y(), controller.rightStick.X(), controller.leftStick.X(), power);
 
     multTelemetry.addData("Status", "Run Time: " + runtime.toString());
+    multTelemetry.addData("Touch Press", Controller.touchSensor.press());
     multTelemetry.addData("Tower", curTarget);
     multTelemetry.addData("Mode", (AUTO_CALIBRATE_ON) ? "Auto Calibration": "Detecting");
     multTelemetry.addData("Distance", aimBotPipe.getDistance2Tower());

@@ -12,11 +12,10 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.IMG_WIDTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.findNWidestContours;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtils.pixels2Degrees;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.*;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.IMG_HEIGHT;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.IMG_WIDTH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.findNWidestContours;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.pixels2Degrees;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.MAX_Cb;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.MAX_Cr;
 import static org.firstinspires.ftc.teamcode.utilities.Dash_RingFinder.MAX_Y;

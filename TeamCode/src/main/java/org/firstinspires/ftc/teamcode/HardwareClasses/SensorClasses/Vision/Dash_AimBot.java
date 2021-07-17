@@ -10,20 +10,23 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 @Config
 public class Dash_AimBot {
 
+    // Thresholding values
     public static Scalar RED_MAX_HSV = new Scalar(0, 0, 0);
     public static Scalar RED_MIN_HSV = new Scalar(0, 0, 0);
     public static Scalar BLUE_MAX_HSV = new Scalar(0, 0, 0);
     public static Scalar BLUE_MIN_HSV = new Scalar(0, 0, 0);
     public static Scalar RING_MAX_HSV = new Scalar(0, 0, 0);
     public static Scalar RING_MIN_HSV = new Scalar(0, 0, 0);
+
+    // Margins for each value
     public static int YM = 50;
     public static int CrM = 15;
-    public static int CbM = 15;
-    public static int HM = 30;
-    public static int SM = 30;
-    public static int VM = 30;
+    public static int CbM = 15;     // Lighter conditions
+    public static int HM = 30;   // 5
+    public static int SM = 30;  // 10
+    public static int VM = 30;  // 10
 
-
+    // Tuning constants to eliminate noise
     public static int blur = 5;
     public static int erode_const = 5;
     public static int dilate_const = 5;

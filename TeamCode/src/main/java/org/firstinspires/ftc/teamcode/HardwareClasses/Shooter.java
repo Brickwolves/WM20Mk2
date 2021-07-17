@@ -107,11 +107,10 @@ public class Shooter {
     
     public static void turretAim(boolean autoAim){
         double towerError;
-        if(currentShooterState == ShooterState.MID_GOAL) towerError = Sensors.frontCamera.highTowerError();
-        else towerError = Sensors.frontCamera.highTowerError();
+        towerError = (currentShooterState == ShooterState.MID_GOAL) ? Sensors.frontCamera.midGoalError() : Sensors.frontCamera.highGoalError();
         
         if(autoAim && Sensors.gyro.absAngleRange(67.5, 127.5) && getPower() > -.1)
-            setTurretAngle(towerError - 1 + (Sensors.robotVelocityComponent(Sensors.frontCamera.highTowerError() - 90)) / 37);
+            setTurretAngle(towerError - 1 + (Sensors.robotVelocityComponent(towerError - 90)) / 37);
         else setTurretAngle(0);
     }
     
@@ -122,7 +121,7 @@ public class Shooter {
     
     
     public static void turretPSAim(boolean autoAim){
-        if(Sensors.frontCamera.isTowerFound() && autoAim && Sensors.gyro.absAngleRange(30, 150) && getPower() > .1)
+        if(Sensors.frontCamera.isHighGoalFound() && autoAim && Sensors.gyro.absAngleRange(30, 150) && getPower() > .1)
             setTurretAngle(Robot.getPSAngle() - Sensors.gyro.rawAngle() - 0 +
                                    (Sensors.robotVelocityComponent(Robot.getPSAngle() - Sensors.gyro.rawAngle() - 90)) / 41);
                                    //(Sensors.robotVelocityComponent(Robot.getPSAngle() - Sensors.gyro.rawAngle())) / 30);
@@ -206,9 +205,9 @@ public class Shooter {
     
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void highGoal(boolean autoPower){
-        double towerDistance = Sensors.frontCamera.highTowerDistance() / 100;
+        double towerDistance = Sensors.frontCamera.highGoalDistance() / 100;
         int RPM;
-        if(towerDistance < 1.8 || !Sensors.frontCamera.isTowerFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
+        if(towerDistance < 1.8 || !Sensors.frontCamera.isHighGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
              RPM = TOP_GOAL;
         }else {
             RPM = (int) (237 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
@@ -219,9 +218,9 @@ public class Shooter {
     
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void midGoal(boolean autoPower){
-        double towerDistance = Sensors.frontCamera.highTowerDistance() / 100;
+        double towerDistance = Sensors.frontCamera.midGoalDistance() / 100;
         int RPM;
-        if(towerDistance < 1.8 || !Sensors.frontCamera.isTowerFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
+        if(towerDistance < 1.8 || !Sensors.frontCamera.isMidGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
             RPM = TOP_GOAL;
         }else {
             RPM = (int) (220 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
@@ -264,7 +263,7 @@ public class Shooter {
                 if (midGoal) newState(ShooterState.OFF);
                 if (highGoal) newState(ShooterState.HIGH_GOAL);
                 midGoal(visionAim);
-                turretAim();
+                setTurretAngle(0);
                 break;
                 
             case POWER_SHOT:

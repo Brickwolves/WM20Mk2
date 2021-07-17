@@ -10,7 +10,7 @@ import java.util.List;
 import static org.opencv.imgproc.Imgproc.boundingRect;
 import static org.opencv.imgproc.Imgproc.contourArea;
 
-public class VisionUtils {
+public class VisionUtilsDep {
     
     private static final RingBuffer<Double> distanceBuffer = new RingBuffer<>(4, 0.0);
 
