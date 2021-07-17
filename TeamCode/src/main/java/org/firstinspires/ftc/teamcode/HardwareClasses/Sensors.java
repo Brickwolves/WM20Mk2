@@ -38,9 +38,9 @@ public class Sensors {
 	public static void init(Alliance alliance){
 
 
-		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+		/*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 		OpenCvCamera frontWebcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Front Camera"), cameraMonitorViewId);
-		OpenCvCamera backWebcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Back Camera"), cameraMonitorViewId);
+		OpenCvCamera backWebcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Back Camera"), cameraMonitorViewId);*/
 
 
 
@@ -48,8 +48,8 @@ public class Sensors {
 		
 		Sensors.alliance = alliance;
 		gyro.init(alliance);
-		frontCamera = new CameraV2(frontWebcam);
-		backCamera = new CameraV2(backWebcam);
+		//frontCamera = new CameraV2(frontWebcam);
+		//backCamera = new CameraV2(backWebcam);
 		//hopperColor = new REVColorSensor(hopperColorSensor);
 	}
 	

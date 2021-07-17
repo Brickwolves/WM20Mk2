@@ -17,7 +17,6 @@ public class Dash_AutoAim {
     public static int MIN_V = 85;
     public static int MAX_V = 205;
 
-    public static int conversion_factor =  Imgproc.COLOR_BGR2HSV;
     public static int blur = 5;
     public static int erode_const = 5;
     public static int dilate_const = 5;
