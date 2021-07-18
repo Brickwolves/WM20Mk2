@@ -19,16 +19,16 @@ import static com.qualcomm.robotcore.util.Range.clip;
 import static java.lang.Math.round;
 import static java.lang.StrictMath.PI;
 import static java.lang.StrictMath.abs;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.AUTO_CALIBRATE_ON;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MAX_HSV;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MIN_HSV;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_AUTO_CALIBRATE_ON;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MAX_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.CbM;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.CrM;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.DEBUG_MODE_ON;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_DEBUG_MODE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.HM;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.INIT_RECT_SIDELENGTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MAX_HSV;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MIN_HSV;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_INIT_RECT_SIDELENGTH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MAX_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.SM;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.VM;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.YM;
@@ -102,21 +102,21 @@ public class AimBotPipe extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        return (AUTO_CALIBRATE_ON) ? autoCalibratePipe(input) : detectingPipe(input);
+        return (TOWER_AUTO_CALIBRATE_ON) ? autoCalibratePipe(input) : detectingPipe(input);
     }
 
     /**
      * Gives a target on phone, aim at designated goal, then switch2Regular()
      */
     public void switch2AutoCalibrate(){
-        AUTO_CALIBRATE_ON = true;
+        TOWER_AUTO_CALIBRATE_ON = true;
     }
 
     /**
      * After auto calibrate, will show goal target
      */
     public void switch2Regular(){
-        AUTO_CALIBRATE_ON = false;
+        TOWER_AUTO_CALIBRATE_ON = false;
     }
 
     public Mat autoCalibratePipe(Mat input){
@@ -136,9 +136,9 @@ public class AimBotPipe extends OpenCvPipeline {
         GaussianBlur(modified, modified, new Size(blur, blur), 0);
 
         // Retrieve initRect
-        int x = (int) (round(IMG_WIDTH / 2) - round(INIT_RECT_SIDELENGTH/2.0));
+        int x = (int) (round(IMG_WIDTH / 2) - round(TOWER_INIT_RECT_SIDELENGTH /2.0));
         int y = 140;
-        Rect initRect = new Rect(x, y, INIT_RECT_SIDELENGTH, INIT_RECT_SIDELENGTH);
+        Rect initRect = new Rect(x, y, TOWER_INIT_RECT_SIDELENGTH, TOWER_INIT_RECT_SIDELENGTH);
 
         // Calc aveHSV w/i initRect
         updateHSV(modified, initRect);
@@ -167,10 +167,10 @@ public class AimBotPipe extends OpenCvPipeline {
 
         // Thresholding
         if (curTarget == BLUE_GOAL){
-            inRange(modified, BLUE_MIN_HSV, BLUE_MAX_HSV, modified);
+            inRange(modified, BLUE_MIN_THRESH, BLUE_MAX_THRESH, modified);
         }
         else {
-            inRange(modified, RED_MIN_HSV, RED_MAX_HSV, modified);
+            inRange(modified, RED_MIN_THRESH, RED_MAX_THRESH, modified);
         }
 
         // Erosion and Dilation
@@ -219,7 +219,7 @@ public class AimBotPipe extends OpenCvPipeline {
         putText(output, "Pixel Error: " + pixel_error, new Point(5, IMG_HEIGHT - 40), font, 0.4, new Scalar(255, 255, 0));
 
         // Return altered image
-        if (DEBUG_MODE_ON) return modified;
+        if (TOWER_DEBUG_MODE_ON) return modified;
         return output;
 
     }
@@ -241,12 +241,12 @@ public class AimBotPipe extends OpenCvPipeline {
 
         for (int i=0; i < 3; i++){
             if (curTarget == BLUE_GOAL){
-                BLUE_MAX_HSV.val[i] = clip(round(meanHSV.val[i] + HSV_margins[i]), 0, 255);
-                BLUE_MIN_HSV.val[i] = clip(round(meanHSV.val[i] - HSV_margins[i]), 0, 255);
+                BLUE_MAX_THRESH.val[i] = clip(round(meanHSV.val[i] + HSV_margins[i]), 0, 255);
+                BLUE_MIN_THRESH.val[i] = clip(round(meanHSV.val[i] - HSV_margins[i]), 0, 255);
             }
             else if (curTarget == RED_GOAL){
-                RED_MAX_HSV.val[i] = clip(round(meanHSV.val[i] + YCrCb_margins[i]), 0, 255);
-                RED_MIN_HSV.val[i] = clip(round(meanHSV.val[i] - YCrCb_margins[i]), 0, 255);
+                RED_MAX_THRESH.val[i] = clip(round(meanHSV.val[i] + YCrCb_margins[i]), 0, 255);
+                RED_MIN_THRESH.val[i] = clip(round(meanHSV.val[i] - YCrCb_margins[i]), 0, 255);
             }
         }
         //multTelemetry.addData("HSV", meanHSV.toString());

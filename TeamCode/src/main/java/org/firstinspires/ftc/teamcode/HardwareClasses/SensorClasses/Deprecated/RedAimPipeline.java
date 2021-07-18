@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
+/*
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -24,17 +25,17 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Depre
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.findNLargestContours;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.getDistance2Tower;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.pixels2Degrees;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_H;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_S;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_V;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MIN_H;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MIN_S;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MIN_V;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.blur;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.dilate_const;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.erode_const;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.goalWidth;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.horizonLineRatio;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.MAX_H;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.MAX_S;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.MAX_V;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.MIN_H;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.MIN_S;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.MIN_V;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.blur;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.dilate_const;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.erode_const;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.goalWidth;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Dash_AutoAim.horizonLineRatio;
 import static org.firstinspires.ftc.teamcode.utilities.MathUtils.degATan;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8U;
@@ -243,3 +244,4 @@ public class RedAimPipeline extends OpenCvPipeline {
         else                    VisionUtilsDep.webcam.resumeViewport();
     }
 }
+ */

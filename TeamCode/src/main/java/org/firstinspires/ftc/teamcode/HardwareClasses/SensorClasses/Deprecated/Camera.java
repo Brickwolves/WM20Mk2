@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
-
+/*
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -125,3 +125,5 @@ public class Camera {
 	}
 	
 }
+
+ */

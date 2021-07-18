@@ -11,12 +11,10 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 public class Dash_AimBot {
 
     // Thresholding values
-    public static Scalar RED_MAX_HSV = new Scalar(0, 0, 0);
-    public static Scalar RED_MIN_HSV = new Scalar(0, 0, 0);
-    public static Scalar BLUE_MAX_HSV = new Scalar(0, 0, 0);
-    public static Scalar BLUE_MIN_HSV = new Scalar(0, 0, 0);
-    public static Scalar RING_MAX_HSV = new Scalar(0, 0, 0);
-    public static Scalar RING_MIN_HSV = new Scalar(0, 0, 0);
+    public static Scalar RED_MAX_THRESH = new Scalar(0, 0, 0);
+    public static Scalar RED_MIN_THRESH = new Scalar(0, 0, 0);
+    public static Scalar BLUE_MAX_THRESH = new Scalar(0, 0, 0);
+    public static Scalar BLUE_MIN_THRESH = new Scalar(0, 0, 0);
 
     // Margins for each value
     public static int YM = 50;
@@ -35,9 +33,9 @@ public class Dash_AimBot {
     // Debugging tools
     public static int conversion_factor =  Imgproc.COLOR_RGB2HSV;   // Imgproc.COLOR_RGB2YCrCb
     public static VisionUtils.Target curTarget = BLUE_GOAL;
-    public static boolean DEBUG_MODE_ON     = false;
-    public static boolean AUTO_CALIBRATE_ON = false;
-    public static int INIT_RECT_SIDELENGTH  = 10;
+    public static boolean TOWER_DEBUG_MODE_ON = false;
+    public static boolean TOWER_AUTO_CALIBRATE_ON = false;
+    public static int TOWER_INIT_RECT_SIDELENGTH = 10;
 
 
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utilities;
+package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import com.acmerobotics.dashboard.config.Config;
 

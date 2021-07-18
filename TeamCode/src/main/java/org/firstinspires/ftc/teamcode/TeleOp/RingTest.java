@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.AimBotPipe;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -46,19 +47,20 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import static com.qualcomm.robotcore.util.Range.clip;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_AUTO_CALIBRATE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_AUTO_CALIBRATE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
-@TeleOp(name = "VisionTest", group = "Concept")
-public class VisionTest extends OpMode {
+@TeleOp(name = "RingTest", group = "Concept")
+public class RingTest extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
   private OpenCvCamera webcam;
-  private AimBotPipe aimBotPipe = new AimBotPipe();
+  private CameraV2 cam;
   private Controller controller;
   private DcMotor fl, fr, bl, br;
 
@@ -67,16 +69,10 @@ public class VisionTest extends OpMode {
     setOpMode(this);
 
     controller = new Controller(gamepad1);
+    cam = new CameraV2("Back Camera", true);
 
     initMotors();
-    initCameras();
 
-  }
-  public void initCameras(){
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Front Camera"), cameraMonitorViewId);
-    webcam.openCameraDeviceAsync(() -> webcam.startStreaming(432, 240, OpenCvCameraRotation.UPRIGHT));
-    webcam.setPipeline(aimBotPipe);
   }
 
   public void initMotors(){
@@ -134,45 +130,11 @@ public class VisionTest extends OpMode {
   public void controls(){
     controller.update();
 
-    double power = clip(gamepad1.right_trigger, 0.3, 0.8);
-
-    // Hold to autocalibrate on a color
-    switch (Controller.touchSensor.getCount()){
-      case 1:
-        curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
-        aimBotPipe.switch2AutoCalibrate();
-        break;
-
-      case 2:
-        aimBotPipe.switch2Regular();
-        break;
-
-      case 3:
-        curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
-        aimBotPipe.switch2AutoCalibrate();
-        break;
-
-      case 4:
-        aimBotPipe.switch2Regular();
-        break;
-
-      case 5:
-        Controller.touchSensor.resetCount();
-        break;
-    }
-
-
-
-
-    setPowerTele(controller.rightStick.Y(), controller.rightStick.X(), controller.leftStick.X(), power);
+    cam.calibrateRingDetection();
 
     multTelemetry.addData("Status", "Run Time: " + runtime.toString());
-    multTelemetry.addData("Touch Press", Controller.touchSensor.press());
-    multTelemetry.addData("Tower", curTarget);
-    multTelemetry.addData("Mode", (TOWER_AUTO_CALIBRATE_ON) ? "Auto Calibration": "Detecting");
-    multTelemetry.addData("Distance", aimBotPipe.getDistance2Tower());
-    multTelemetry.addData("DegreeError", aimBotPipe.getTowerDegreeError());
-    multTelemetry.addData("Goal Found", aimBotPipe.isTowerFound());
+    multTelemetry.addData("Mode", (RING_AUTO_CALIBRATE_ON) ? "Auto Calibration": "Detecting");
+    multTelemetry.addData("Ring Count", cam.startingStackCount());
     multTelemetry.update();
   }
 

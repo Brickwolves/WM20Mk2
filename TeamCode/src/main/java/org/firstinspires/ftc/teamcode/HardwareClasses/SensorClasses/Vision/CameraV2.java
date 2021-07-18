@@ -1,41 +1,23 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
-import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.BlueAimPipeline;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.RedAimPipeline;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.RingFinderPipeline;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
-import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_POWERSHOTS;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_POWERSHOTS;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class CameraV2 {
 
-
-	public RingFinderPipeline ringFinderPipeline = new RingFinderPipeline();
-	public BlueAimPipeline blueAimPipeline = new BlueAimPipeline();
-	public RedAimPipeline redAimPipeline = new RedAimPipeline();
-	public OpenCvPipeline currentPipeline = new OpenCvPipeline() { public Mat processFrame(Mat input) { return null; } };
-
-
-	private OpenCvCamera webcam;
 	private AimBotPipe aimBotPipe = new AimBotPipe();
+	public SanicPipeV2 sanicPipe = new SanicPipeV2();
+	private OpenCvCamera webcam;
 	private String id;
 	private boolean display;
 
@@ -51,7 +33,7 @@ public class CameraV2 {
 
 		// Set the pipeline depending on id
 		if (id.equals("Front Camera")) webcam.setPipeline(aimBotPipe);
-		else webcam.setPipeline(ringFinderPipeline);
+		else webcam.setPipeline(sanicPipe);
 	}
 	public CameraV2(String id){
 		this.id = id;
@@ -63,10 +45,8 @@ public class CameraV2 {
 
 		// Set the pipeline depending on id
 		if (id.equals("Front Camera")) webcam.setPipeline(aimBotPipe);
-		else webcam.setPipeline(ringFinderPipeline);
+		else webcam.setPipeline(sanicPipe);
 	}
-
-	public void startVision(int width, int height) { webcam.openCameraDeviceAsync(() -> webcam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT)); }
 
 	public void stopVision(){ webcam.closeCameraDevice(); }
 
@@ -74,7 +54,7 @@ public class CameraV2 {
 	
 	public void optimizeEfficiency(){ webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.MAXIMIZE_EFFICIENCY); }
 	
-	public int startingStackCount(){ return ringFinderPipeline.getRingCount(); }
+	public int startingStackCount(){ return sanicPipe.getRingCount(); }
 
 	public enum VisionOption {
 		DEGREES, DISTANCE
@@ -111,14 +91,12 @@ public class CameraV2 {
 		return aimBotPipe.isTowerFound();
 	}
 	
-	public double shooterOffsetAngle(){ return blueAimPipeline.shooterOffsetAngle(); }
-	
-	public double getPowerShot(VisionUtils.PowerShot powerShot){
+	public double getPowerShotAngle(VisionUtils.PowerShot powerShot){
 		return aimBotPipe.getPSDegreeError(powerShot);
 	}
 
 
-	public void calibrateVision(){
+	public void calibrateTowerDetection(){
 		// Hold to autocalibrate on a color
 		switch (Controller.touchSensor.getCount()) {
 			case 1:
@@ -140,6 +118,23 @@ public class CameraV2 {
 				break;
 
 			case 5:
+				Controller.touchSensor.resetCount();
+				break;
+		}
+	}
+
+	public void calibrateRingDetection(){
+		// Hold to autocalibrate on a color
+		switch (Controller.touchSensor.getCount()) {
+			case 1:
+				sanicPipe.switch2AutoCalibrate();
+				break;
+
+			case 2:
+				sanicPipe.switch2Regular();
+				break;
+
+			case 3:
 				Controller.touchSensor.resetCount();
 				break;
 		}

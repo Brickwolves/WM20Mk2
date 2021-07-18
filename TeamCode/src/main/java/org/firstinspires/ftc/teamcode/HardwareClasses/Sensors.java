@@ -1,24 +1,13 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses;
 
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.Camera;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.WebcamExample;
 import org.firstinspires.ftc.teamcode.utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
-import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class Sensors {
 	
@@ -51,8 +40,9 @@ public class Sensors {
 		
 		Sensors.alliance = alliance;
 		gyro.init(alliance);
-		backCamera = new CameraV2("Back Camera");
-		frontCamera = new CameraV2("Front Camera", true);
+		frontCamera = new CameraV2("Front Camera");
+		backCamera = new CameraV2("Back Camera", true);
+
 		//hopperColor = new REVColorSensor(hopperColorSensor);
 	}
 	

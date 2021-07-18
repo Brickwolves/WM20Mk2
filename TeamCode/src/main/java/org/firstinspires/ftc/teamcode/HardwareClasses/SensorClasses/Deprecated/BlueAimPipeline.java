@@ -1,48 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
-import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvPipeline;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.lang.StrictMath.PI;
 import static java.lang.StrictMath.abs;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.IMG_HEIGHT;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.IMG_WIDTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.PS_CENTER_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.PS_LEFT_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.PS_RIGHT_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.SHOOTER_OFFSET_DISTANCE;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.findNLargestContours;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.getDistance2Tower;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated.VisionUtilsDep.pixels2Degrees;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_H;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_S;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MAX_V;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MIN_H;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MIN_S;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.MIN_V;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.blur;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.dilate_const;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.erode_const;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.goalWidth;
-import static org.firstinspires.ftc.teamcode.utilities.Dash_AutoAim.horizonLineRatio;
-import static org.firstinspires.ftc.teamcode.utilities.MathUtils.degATan;
-import static org.opencv.core.Core.inRange;
-import static org.opencv.core.CvType.CV_8U;
-import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
-import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
 import static org.opencv.imgproc.Imgproc.GaussianBlur;
-import static org.opencv.imgproc.Imgproc.RETR_TREE;
-import static org.opencv.imgproc.Imgproc.boundingRect;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 import static org.opencv.imgproc.Imgproc.dilate;
 import static org.opencv.imgproc.Imgproc.erode;
@@ -51,6 +10,7 @@ import static org.opencv.imgproc.Imgproc.line;
 import static org.opencv.imgproc.Imgproc.putText;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
+/*
 public class BlueAimPipeline extends OpenCvPipeline {
     private boolean viewportPaused;
 
@@ -243,3 +203,5 @@ public class BlueAimPipeline extends OpenCvPipeline {
         else                    VisionUtilsDep.webcam.resumeViewport();
     }
 }
+
+ */
