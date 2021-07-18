@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -54,6 +55,7 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BL
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
+@Disabled
 @TeleOp(name = "RingTest", group = "Concept")
 public class RingTest extends OpMode {
 

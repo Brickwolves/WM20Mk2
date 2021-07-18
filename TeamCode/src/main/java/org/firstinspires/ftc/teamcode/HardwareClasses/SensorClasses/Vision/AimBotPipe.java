@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
+import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -87,6 +88,8 @@ public class AimBotPipe extends OpenCvPipeline {
     private Scalar lightBlue = new Scalar(3, 252, 227);
     private int thickness = 2;
     private int font = FONT_HERSHEY_COMPLEX;
+    private RingBuffer<Double> distanceBuffer = new RingBuffer<Double>(4, 0.0);
+    private double distanceSum = 0;
 
 
     /*
@@ -209,7 +212,7 @@ public class AimBotPipe extends OpenCvPipeline {
         // Calculate Error
         double pixel_error = (IMG_WIDTH / 2) - center_x;
         towerDegreeError = pixels2Degrees(pixel_error, X);
-        towerDistance = getDistance2Tower();
+        towerDistance = getDistance2Goal();
 
         // Logging Shapes and Degree & Pixel Data
         rectangle(output, towerRect, (curTarget == BLUE_GOAL) ? lightBlue : orange, thickness);
@@ -289,16 +292,17 @@ public class AimBotPipe extends OpenCvPipeline {
         return (isTowerFound()) ? towerDegreeError : 0;
     }
 
-    public double getTowerDegreeError(){
+    public double getGoalDegreeError(){
         return (isTowerFound()) ? towerDegreeError * 0.8 : 0;
     }
 
-    public double getDistance2Tower() {
+    public double getDistance2Goal() {
         if (!isTowerFound() || towerRect.y == 0) return 0;
         double towerHeight = TOWER_HEIGHT - towerRect.y;
         double theta = (towerHeight / IMG_HEIGHT) * .75;
         double distance = 100/Math.tan(theta) - 0;
-        return distance;
+        distanceSum = distanceSum + distance - distanceBuffer.getValue(distance);
+        return (distanceSum / 4) / (1 + abs(Sensors.gyro.absModAngle() - 90) * .00761);
     }
 
     public Rect getTowerRect(){

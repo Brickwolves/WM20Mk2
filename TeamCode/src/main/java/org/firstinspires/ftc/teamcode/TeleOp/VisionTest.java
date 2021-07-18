@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,6 +53,7 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BL
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
+@Disabled
 @TeleOp(name = "VisionTest", group = "Concept")
 public class VisionTest extends OpMode {
 
@@ -170,8 +172,8 @@ public class VisionTest extends OpMode {
     multTelemetry.addData("Touch Press", Controller.touchSensor.press());
     multTelemetry.addData("Tower", curTarget);
     multTelemetry.addData("Mode", (TOWER_AUTO_CALIBRATE_ON) ? "Auto Calibration": "Detecting");
-    multTelemetry.addData("Distance", aimBotPipe.getDistance2Tower());
-    multTelemetry.addData("DegreeError", aimBotPipe.getTowerDegreeError());
+    multTelemetry.addData("Distance", aimBotPipe.getDistance2Goal());
+    multTelemetry.addData("DegreeError", aimBotPipe.getGoalDegreeError());
     multTelemetry.addData("Goal Found", aimBotPipe.isTowerFound());
     multTelemetry.update();
   }

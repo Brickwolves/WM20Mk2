@@ -54,21 +54,26 @@ public class PID {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public double update(double error){
-    
+
         integralSum += error;
         if(integralLength != 0){ integralSum -= integralBuffer.getValue(error); }
-        
+
+        double pComponent; double iComponent; double dComponent;
         
         double currentTime = System.currentTimeMillis();
         double deltaTime = (currentTime - timeBuffer.getValue(currentTime)) / 1000;
         double deltaError = error - derivitaveBuffer.getValue(error);
         double rateOfChange = (deltaError / deltaTime) / 3;
         
-        
-        double pComponent = error * proportional;
-        double iComponent = integralSum * integral;
-        double dComponent = (rateOfChange * derivative);
-        
+        if(!debugMode) {
+            pComponent = error * proportional;
+            iComponent = integralSum * integral;
+            dComponent = (rateOfChange * derivative);
+        }else{
+            pComponent = error * Constants.p;
+            iComponent = integralSum * Constants.i;
+            dComponent = (rateOfChange * Constants.d);
+        }
         
         if(debugMode){
             dashboardTelemetry.addData("Proportional", pComponent);

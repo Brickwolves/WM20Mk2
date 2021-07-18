@@ -23,8 +23,8 @@ public class Shooter {
     private static DcMotor shooterFront, shooterBack;
     private static Servo feeder, turret, feederLock;
     
-    public static PID highGoalPID = new PID(.00009, 0.00005, 0.00003, 0.3, 50);
-    public static PID midGoalPID = new PID(.00012, 0.00005, 0.00025, 0.3, 50);
+    public static PID highGoalPID = new PID(.000013, 0.00005, 0.000027, 0.3, 50, false);
+    public static PID midGoalPID = new PID(.00012, 0.00005, 0.00025, 0.3, 50, true);
     public static PID powerShotPID = new PID(.00012, 0.000055, 0.00027, 0.3, 50);
 
     private static final double TICKS_PER_ROTATION = 42;
@@ -38,7 +38,7 @@ public class Shooter {
     private static final double TURRET_SERVO_R = .935, TURRET_SERVO_L = .42, TURRET_SERVO_RANGE = TURRET_SERVO_R - TURRET_SERVO_L;
     private static final double TURRET_ANGLE_R = -22.5, TURRET_ANGLE_L = 39, TURRET_ANGLE_RANGE = TURRET_ANGLE_R - TURRET_ANGLE_L;
     
-    private static final int TOP_GOAL = 3250, POWER_SHOT = 2900;
+    private static final int TOP_GOAL = 3100, POWER_SHOT = 2900;
     
     private static boolean isFeederLocked;
     private static double shooterRPM, integralSumHigh, integralSumMid;
@@ -210,7 +210,7 @@ public class Shooter {
         if(towerDistance < 1.8 || !Sensors.frontCamera.isHighGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
              RPM = TOP_GOAL;
         }else {
-            RPM = (int) (237 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
+            RPM = (int) (212 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
                                                   (2.5 * degCos(verticalComponent()) * degCos(verticalComponent()) * (.9 * degTan(verticalComponent()) * (towerDistance - .07) - .796)))));
         }
         setRPM(RPM, highGoalPID);
@@ -223,7 +223,7 @@ public class Shooter {
         if(towerDistance < 1.8 || !Sensors.frontCamera.isMidGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
             RPM = TOP_GOAL;
         }else {
-            RPM = (int) (220 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
+            RPM = (int) (180 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
                                                   (2.5 * degCos(verticalComponent()) * degCos(verticalComponent()) * (.9 * degTan(verticalComponent()) * (towerDistance - .07) - .796)))));
         }
         setRPM(RPM, midGoalPID);
@@ -283,7 +283,7 @@ public class Shooter {
     public static void setRPM(int targetRPM, PID pid){
         Shooter.targetRPM = targetRPM;
         
-        pid.setFComponent(targetRPM / 5750.0);
+        pid.setFComponent(targetRPM / 5500.0);
         
         double shooterPower = pid.update(targetRPM - updateRPM());
         

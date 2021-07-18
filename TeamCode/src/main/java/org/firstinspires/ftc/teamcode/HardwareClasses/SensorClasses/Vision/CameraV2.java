@@ -15,7 +15,7 @@ import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 public class CameraV2 {
 
-	private AimBotPipe aimBotPipe = new AimBotPipe();
+	public AimBotPipe aimBotPipe = new AimBotPipe();
 	public SanicPipeV2 sanicPipe = new SanicPipeV2();
 	private OpenCvCamera webcam;
 	private String id;
@@ -62,22 +62,22 @@ public class CameraV2 {
 
 	public double highGoalError() {
 	    curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
-		return aimBotPipe.getTowerDegreeError();
+		return aimBotPipe.getGoalDegreeError();
 	}
 	
 	public double midGoalError() {
 		curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
-		return aimBotPipe.getTowerDegreeError();
+		return aimBotPipe.getGoalDegreeError();
 	}
 	
 	public double highGoalDistance() {
 		curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
-		return aimBotPipe.getDistance2Tower();
+		return aimBotPipe.getDistance2Goal();
 	}
 	
 	public double midGoalDistance() {
 		curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
-		return aimBotPipe.getDistance2Tower();
+		return aimBotPipe.getDistance2Goal();
 	}
 	
 	

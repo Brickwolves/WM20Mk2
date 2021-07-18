@@ -29,27 +29,14 @@ public class Sensors {
 	
 	public static void init(){
 
-
-		/*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-		OpenCvCamera frontWebcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Front Camera"), cameraMonitorViewId);
-		OpenCvCamera backWebcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Back Camera"), cameraMonitorViewId);*/
-
-
-
-		//ColorSensor hopperColorSensor = hardwareMap().get(ColorSensor.class, "hoppercolor");
-		
-		Sensors.alliance = alliance;
 		gyro.init(alliance);
-		frontCamera = new CameraV2("Front Camera");
-		backCamera = new CameraV2("Back Camera", true);
-
-		//hopperColor = new REVColorSensor(hopperColorSensor);
+		backCamera = new CameraV2("Back Camera");
+		frontCamera = new CameraV2("Front Camera", true);
 	}
 	
 	public static void update(){
 		currentTimeMillis = System.currentTimeMillis();
 		gyro.update();
-		//hopperColor.update();
 		
 		long deltaMili = currentTimeMillis - timeRing.getValue(currentTimeMillis);
 		double deltaMinutes = deltaMili / 60000.0;
@@ -104,9 +91,7 @@ public class Sensors {
 	}*/
 	
 	
-	public enum Alliance{
-		BLUE, RED
-	}
+	public enum Alliance{ BLUE, RED }
 	
 	
 }

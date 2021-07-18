@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.HardwareClasses;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.utilities.Utils;
 
@@ -11,9 +10,9 @@ public class Controller {
 	private final Gamepad gamepad;
 	
 	public Thumbstick rightStick, leftStick;
-	public Button cross, circle, triangle, square, up, down, left, right, RB, LB, RS, LS, share, touchpad;
+	public Button cross, circle, triangle, square, up, down, left, right, RB, LB, RT, LT, RS, LS, share, touchpad;
 	public static Button touchSensor;
-	public Trigger RT, LT;
+
 	public static DigitalChannel touchSensorObj;
 	
 	
@@ -24,14 +23,12 @@ public class Controller {
 		cross = new Button(); circle = new Button(); triangle = new Button(); square = new Button();
 		up = new Button(); down = new Button(); left = new Button(); right = new Button();
 		RB = new Button(); LB = new Button(); RS = new Button(); LS = new Button();
+		RT = new Button(); LT = new Button();
 		share = new Button(); touchpad = new Button();
-		
-		RT = new Trigger(); LT = new Trigger();
 
 		touchSensorObj = Utils.hardwareMap.get(DigitalChannel.class, "touchsensor");
 		touchSensorObj.setMode(DigitalChannel.Mode.INPUT);
 		touchSensor = new Button();
-
 	}
 	
 	
@@ -50,15 +47,25 @@ public class Controller {
 	
 	
 	public class Button {
-		private boolean hold = false; private boolean press = false; private boolean toggle = false;
+		private boolean hold = false; private boolean press = false; private boolean toggle = false; private float rawVal = 0;
+		private boolean inputYet = false;
 		private int count = 0;
+
+		private void update(float trigger){
+			rawVal = trigger;
+			update(rawVal > .5);
+		}
+
 		private void update(boolean button) {
 			boolean wasHeld = hold;
 			press = (hold = button) && !wasHeld;
-			if (press) count++;
+			if (press) { count++; inputYet = true; }
 		}
+
+		public boolean inputYet(){ return inputYet; }
 		
-		
+		public float rawVal() { return rawVal; }
+
 		public boolean hold() { return hold; }
 		
 		public boolean press() { return press; }
@@ -75,33 +82,13 @@ public class Controller {
 			return count;
 		}
 
-
-	}
-	
-	
-	public class Trigger {
-		private final Button trigger = new Button();
-		private float value;
-		
-		private void update(float value) {
-			this.value = value;
-			trigger.update(hold());
-		}
-		
-		public float value(){ return value; }
-		
-		public boolean hold() { return value > .7; }
-		
-		public boolean press() { return trigger.press(); }
-		
-		public boolean toggle() { return trigger.toggle(); }
-		
 		public double range(double pressed, double released){
 			double range = pressed - released;
-			return (value() * range) + released;
+			return (rawVal() * range) + released;
 		}
-		
+
 	}
+
 	
 	
 	public class Thumbstick {

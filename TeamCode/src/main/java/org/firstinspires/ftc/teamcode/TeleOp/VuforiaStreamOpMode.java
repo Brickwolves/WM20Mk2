@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.ftc.R;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  * your Vuforia key below and select the 'Camera' preset on top right of the dashboard. This sample
  * also works for UVCs with slight adjustments.
  */
+@Disabled
 @Autonomous
 public class VuforiaStreamOpMode extends LinearOpMode {
 
