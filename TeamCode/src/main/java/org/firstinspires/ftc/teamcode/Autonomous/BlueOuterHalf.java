@@ -163,6 +163,7 @@ public class BlueOuterHalf extends OpMode {
 						if(mainTime.seconds() > .8) Robot.setPowerAuto(0, 0, 90);
 						break;
 				}
+				break;
 
 			case 1:
 				switch (currentMainState) {
@@ -267,6 +268,7 @@ public class BlueOuterHalf extends OpMode {
 						break;
 
 				}
+				break;
 		}
 		
 		loopTelemetry();
