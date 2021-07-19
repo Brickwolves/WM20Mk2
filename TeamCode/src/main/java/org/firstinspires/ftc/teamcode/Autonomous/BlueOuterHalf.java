@@ -23,7 +23,7 @@ import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 
 //Disabled
-@Autonomous(name = "BLUE Outer Half", group = "Auto")
+@Autonomous(name = "BLUE Outer Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
 public class BlueOuterHalf extends OpMode {
 	
 	private Controller operator;
@@ -198,19 +198,19 @@ public class BlueOuterHalf extends OpMode {
 
 					case state4Turn:
 						if (mainTime.seconds() > .1) {
-							Robot.turn(-105, 1, .2);
-							if (Sensors.gyro.angleRange(-110, -90)) newState(Main.state5Drive);
+							Robot.turn(-110, 1, .2);
+							if (Sensors.gyro.angleRange(-115, -100)) newState(Main.state5Drive);
 							break;
 						}
 
 					case state5Drive:
 						Wobble.armPosition(.15);
-						Robot.strafe(13, -105, 75, .7, .2, 0);
+						Robot.strafe(13, -110, 70, .7, .2, 0);
 						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.delay3);
 						break;
 
 					case delay3:
-						if(mainTime.seconds() > .4) { Wobble.gripperOpen(); Robot.setPowerAuto(0, 0, Robot.closestTarget(-105)); }
+						if(mainTime.seconds() > .4) { Wobble.gripperOpen(); Robot.setPowerAuto(0, 0, Robot.closestTarget(-110)); }
 						if(mainTime.seconds() > .5) Wobble.armFold();
 						if(mainTime.seconds() > .8) Wobble.gripperHalf();
 						if(mainTime.seconds() > .8 + WOBBLE1) newState(Main.state6Drive);

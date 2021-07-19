@@ -21,7 +21,7 @@ import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 
 //Disabled
-@Autonomous(name = "RED Outer Half", group = "Auto")
+@Autonomous(name = "RED Outer Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
 public class RedOuterHalf extends OpMode {
 	
 	private Controller operator;
@@ -76,7 +76,7 @@ public class RedOuterHalf extends OpMode {
 	
 	public void start() {
 		Sensors.update();
-		mainTime.reset(); Robot.resetGyro(-90); Robot.resetWithoutEncoders();
+		mainTime.reset(); Robot.resetGyro(90); Robot.resetWithoutEncoders();
 		ringCount = 0;
 		//ringCount = Sensors.backCamera.startingStackCount();
 		Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
@@ -95,15 +95,15 @@ public class RedOuterHalf extends OpMode {
 						break;
 
 					case state1Drive:
-						Robot.strafe(22, 90, -90, 1, .15, 0);
+						Robot.strafe(22, -90, 90, 1, .15, 0);
 						Wobble.armTele();
 						if (Robot.isStrafeComplete) newState(Main.state2Turn);
 						break;
 
 					case state2Turn:
 						if (mainTime.seconds() > .8) {
-							Robot.turn(-95, 1, .3);
-							if (Sensors.gyro.angleRange(-120, -80)) newState(Main.state3Shoot);
+							Robot.turn(85, 1, .3);
+							if (Sensors.gyro.angleRange(60, 100)) newState(Main.state3Shoot);
 						}
 						break;
 
@@ -122,18 +122,18 @@ public class RedOuterHalf extends OpMode {
 					case state4Turn:
 						Wobble.armPosition(.15);
 						if (mainTime.seconds() > .1) {
-							Robot.turn(110, 1, .2);
-							if (Sensors.gyro.angleRange(-254, -245)) newState(Main.state5Drive);
+							Robot.turn(-70, 1, .2);
+							if (Sensors.gyro.angleRange(-74, -65)) newState(Main.state5Drive);
 							break;
 						}
 
 					case state5Drive:
-						if(mainTime.seconds() > .3) Robot.strafe(4, -110, -70, .6, .2, 0);
+						if(mainTime.seconds() > .3) Robot.strafe(4, -70, 110, .6, .2, 0);
 						if(mainTime.seconds() > .4 && Robot.isStrafeComplete) newState(Main.delay3);
 						break;
 
 					case delay3:
-						Robot.setPowerAuto(0, 0, -150);
+						Robot.setPowerAuto(0, 0, -70);
 						if(mainTime.seconds() > .3) Wobble.gripperOpen();
 						if(mainTime.seconds() > .5) Wobble.armFold();
 						if(mainTime.seconds() > .7) Wobble.gripperHalf();
@@ -141,7 +141,7 @@ public class RedOuterHalf extends OpMode {
 						break;
 
 					case state6Drive:
-						Robot.strafe(17, 90, 90, 1, .3, 0);
+						Robot.strafe(17, -90, -90, 1, .3, 0);
 						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.state7Turn);
 						break;
 
