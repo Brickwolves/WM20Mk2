@@ -114,10 +114,10 @@ public class CuttleFish extends OpenCvPipeline {
     private Rect towerRect = new Rect(0, 0, 0, 0);
     private double towerDistance = 0;
 
-    // cuttlefish.xml is face
-    // cuttlefish_cyclops.xml is eyes
-    // cuttlefish_body.xml is body
-    // cuttlefish_upper.xml is upperbody
+    // cuttlefish.xml
+    // cuttlefish_cyclops.xml
+    // cuttlefish_body.xml
+    // cuttlefish_upper.xml
     String xmlFile = Environment.getExternalStorageDirectory().getPath() + "/cuttlefish_body.xml";
     CascadeClassifier classifier = new CascadeClassifier(xmlFile);
 
