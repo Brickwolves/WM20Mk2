@@ -18,6 +18,7 @@ public class PID {
     private double result = 0;
     public double integralSum = 0;
     private int integralLength;
+    public double pComponent; public double iComponent; public double dComponent;
 
     private RingBuffer <Double> integralBuffer;
     private RingBuffer<Double> derivitaveBuffer;
@@ -58,7 +59,7 @@ public class PID {
         integralSum += error;
         if(integralLength != 0){ integralSum -= integralBuffer.getValue(error); }
 
-        double pComponent; double iComponent; double dComponent;
+
         
         double currentTime = System.currentTimeMillis();
         double deltaTime = (currentTime - timeBuffer.getValue(currentTime)) / 1000;

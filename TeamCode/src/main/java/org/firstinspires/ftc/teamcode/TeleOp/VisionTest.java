@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,35 +37,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.AimBotPipe;
-import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.CuttleFish;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import static com.qualcomm.robotcore.util.Range.clip;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_AUTO_CALIBRATE_ON;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_x;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_y;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
-@Disabled
 @TeleOp(name = "VisionTest", group = "Concept")
 public class VisionTest extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
   private OpenCvCamera webcam;
-  private AimBotPipe aimBotPipe = new AimBotPipe();
+  private CuttleFish cuttleFish = new CuttleFish();
   private Controller controller;
   private DcMotor fl, fr, bl, br;
 
   @Override
   public void init() {
     setOpMode(this);
+
 
     controller = new Controller(gamepad1);
 
@@ -78,7 +73,7 @@ public class VisionTest extends OpMode {
     int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Front Camera"), cameraMonitorViewId);
     webcam.openCameraDeviceAsync(() -> webcam.startStreaming(432, 240, OpenCvCameraRotation.UPRIGHT));
-    webcam.setPipeline(aimBotPipe);
+    webcam.setPipeline(cuttleFish);
   }
 
   public void initMotors(){
@@ -138,43 +133,14 @@ public class VisionTest extends OpMode {
 
     double power = clip(gamepad1.right_trigger, 0.3, 0.8);
 
-    // Hold to autocalibrate on a color
-    switch (Controller.touchSensor.getCount()){
-      case 1:
-        curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
-        aimBotPipe.switch2AutoCalibrate();
-        break;
-
-      case 2:
-        aimBotPipe.switch2Regular();
-        break;
-
-      case 3:
-        curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
-        aimBotPipe.switch2AutoCalibrate();
-        break;
-
-      case 4:
-        aimBotPipe.switch2Regular();
-        break;
-
-      case 5:
-        Controller.touchSensor.resetCount();
-        break;
-    }
-
+    cuttle_x += controller.rightStick.X();
+    cuttle_y += controller.rightStick.Y();
 
 
 
     setPowerTele(controller.rightStick.Y(), controller.rightStick.X(), controller.leftStick.X(), power);
 
     multTelemetry.addData("Status", "Run Time: " + runtime.toString());
-    multTelemetry.addData("Touch Press", Controller.touchSensor.press());
-    multTelemetry.addData("Tower", curTarget);
-    multTelemetry.addData("Mode", (TOWER_AUTO_CALIBRATE_ON) ? "Auto Calibration": "Detecting");
-    multTelemetry.addData("Distance", aimBotPipe.getDistance2Goal());
-    multTelemetry.addData("DegreeError", aimBotPipe.getGoalDegreeError());
-    multTelemetry.addData("Goal Found", aimBotPipe.isTowerFound());
     multTelemetry.update();
   }
 
