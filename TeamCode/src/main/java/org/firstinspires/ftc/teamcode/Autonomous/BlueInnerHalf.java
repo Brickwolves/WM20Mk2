@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Intake;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PowerShot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.utilities.Utils;
 import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Robot.closestTarget;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 
 //Disabled
 @Autonomous(name = "BLUE Inner Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
@@ -79,6 +81,7 @@ public class BlueInnerHalf extends OpMode {
 		Sensors.update();
 		mainTime.reset(); Robot.resetGyro(90); Robot.resetWithoutEncoders();
 		ringCount = 0;
+		Dash_AimBot.curTarget = BLUE_GOAL;
 		//ringCount = Sensors.backCamera.startingStackCount();
 		Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
 		Intake.intakeOff(); Intake.bumperRetract();
@@ -109,8 +112,16 @@ public class BlueInnerHalf extends OpMode {
 						Shooter.setFeederCount(0);
 						break;
 
+					case breakpoint:
+						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE));
+						telemetry.addData("tower distance", Sensors.frontCamera.highGoalDistance());
+						if(operator.cross.press()) newState(Main.state3PS1);
+						break;
+
 					case state3PS1:
 						Shooter.powerShot();
+						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE));
+						telemetry.addData("tower distance", Sensors.frontCamera.highGoalDistance());
 						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE));
 						Shooter.feederState(mainTime.seconds() > .6 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
@@ -244,7 +255,7 @@ public class BlueInnerHalf extends OpMode {
 		state12WobbleGoal, state12Drive, state13Turn, state13Drive, state14Drive, state15Drive, state15Shoot, state16Shoot, state16Drive, state17Shoot, state17Drive, state18Turn, state18Drive,
 		state18Shoot, state19Drive, state20Drive, state20WobbleGoal, state21Drive, stateFinished, state1Diagonal, state1Turn, state22Shoot, state22Turn, state3Shoot, state10Drive, state10Turn,
 		state14Turn, state17Wobble, state15Turn, state16Turn, state19Wobble, state20Turn, state95Drive, state22Drive, state165Turn, state115Drive, delay1, delay2, state23Drive, state4Turn,
-		state5Drive, state6Drive, delay4, state7Drive, state8Turn, state7Turn, delay5, state8Drive, state9Shoot, stat36PS1, state3PS1, state4PS2, state5PS3, state12Turn, delay3
+		state5Drive, state6Drive, delay4, state7Drive, state8Turn, state7Turn, delay5, state8Drive, state9Shoot, stat36PS1, state3PS1, state4PS2, state5PS3, state12Turn, breakpoint, delay3
 	}
 	
 	private void loopTelemetry(){

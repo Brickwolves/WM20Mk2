@@ -33,6 +33,10 @@ public class VisionUtils {
         RED_GOAL, BLUE_GOAL, BLUE_POWERSHOTS, RED_POWERSHOTS, OUT_OF_RANGE
     }
 
+    public enum Auto {
+        BLUE_LEFT, BLUE_RIGHT, RED_LEFT, RED_RIGHT
+    }
+
     public enum PowerShot {
         PS_CLOSE, PS_MIDDLE, PS_FAR
     }

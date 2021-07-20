@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.CuttleFish;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.SanicPipeV2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -54,7 +55,7 @@ public class VisionTest extends OpMode {
   private ElapsedTime runtime = new ElapsedTime();
 
   private OpenCvCamera webcam;
-  private CuttleFish cuttleFish = new CuttleFish();
+  private SanicPipeV2 sanicPipeV2 = new SanicPipeV2();
   private Controller controller;
   private DcMotor fl, fr, bl, br;
 
@@ -71,9 +72,9 @@ public class VisionTest extends OpMode {
   }
   public void initCameras(){
     int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Front Camera"), cameraMonitorViewId);
+    webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Back Camera"), cameraMonitorViewId);
     webcam.openCameraDeviceAsync(() -> webcam.startStreaming(432, 240, OpenCvCameraRotation.UPRIGHT));
-    webcam.setPipeline(cuttleFish);
+    webcam.setPipeline(sanicPipeV2);
   }
 
   public void initMotors(){

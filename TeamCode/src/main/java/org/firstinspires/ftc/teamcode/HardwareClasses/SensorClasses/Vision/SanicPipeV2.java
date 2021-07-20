@@ -15,15 +15,21 @@ import java.util.List;
 import static com.qualcomm.robotcore.util.Range.clip;
 import static java.lang.Math.round;
 import static java.lang.StrictMath.tan;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_INIT_RECT_SIDELENGTH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.blur;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.dilate_const;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.erode_const;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.AUTO;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_LEFT_X;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_RIGHT_X;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_LEFT_X;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_RIGHT_X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_AUTO_CALIBRATE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_DEBUG_MODE_ON;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_INIT_RECT_SIDELENGTH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_INIT_RECT_HEIGHT;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_INIT_RECT_WIDTH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MIN_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_Y;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.horizonLineRatio;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.BACK_WEBCAM_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_HEIGHT;
@@ -111,9 +117,24 @@ public class SanicPipeV2 extends OpenCvPipeline {
         GaussianBlur(modified, modified, new Size(blur, blur), 0);
 
         // Retrieve initRect
-        int x = (int) (round(IMG_WIDTH / 2) - round(RING_INIT_RECT_SIDELENGTH /2.0));
-        int y = 180;
-        Rect initRect = new Rect(x, y, RING_INIT_RECT_SIDELENGTH, RING_INIT_RECT_SIDELENGTH);
+        int x = 0;
+        int y = RING_Y;
+        switch (AUTO){
+            case BLUE_LEFT:
+                x = BLUE_LEFT_X;
+                break;
+            case BLUE_RIGHT:
+                x = BLUE_RIGHT_X;
+                break;
+            case RED_LEFT:
+                x = RED_LEFT_X;
+                break;
+            case RED_RIGHT:
+                x = RED_RIGHT_X;
+                break;
+        }
+
+        Rect initRect = new Rect(x, y, RING_INIT_RECT_WIDTH, RING_INIT_RECT_HEIGHT);
 
         // Calc aveHSV w/i initRect
         updateHSV(modified, initRect);

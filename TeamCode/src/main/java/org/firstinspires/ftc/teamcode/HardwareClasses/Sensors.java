@@ -30,9 +30,9 @@ public class Sensors {
 	public static void init(){
 
 		gyro.init(alliance);
+
 		backCamera = new CameraV2("Back Camera");
 		frontCamera = new CameraV2("Front Camera", true);
-
 	}
 	
 	public static void update(){
