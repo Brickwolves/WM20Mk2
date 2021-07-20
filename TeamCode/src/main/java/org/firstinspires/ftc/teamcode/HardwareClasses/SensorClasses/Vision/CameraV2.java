@@ -7,6 +7,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import static org.firstinspires.ftc.teamcode.HardwareClasses.Robot.closestTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
@@ -60,6 +61,10 @@ public class CameraV2 {
 		DEGREES, DISTANCE
 	}
 
+	public void setTarget(VisionUtils.Target target){
+		curTarget = target;
+	}
+
 	public double highGoalError() {
 	    curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
 		return aimBotPipe.getGoalDegreeError();
@@ -92,7 +97,8 @@ public class CameraV2 {
 	}
 	
 	public double getPowerShotAngle(VisionUtils.PowerShot powerShot){
-		return aimBotPipe.getPSDegreeError(powerShot);
+		curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
+		return closestTarget(aimBotPipe.getPSDegreeError(powerShot));
 	}
 
 

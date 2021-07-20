@@ -21,9 +21,9 @@ public class VisionUtils {
 
     public static final double RING_HEIGHT = 20;
     public static final double TOWER_HEIGHT = 230;
-    public static double PS_CLOSE_DIST = 40;
-    public static double PS_CENTER_DIST = 63.5;
-    public static double PS_FAR_DIST = 81;
+    public static double PS_CLOSE_DIST = 28;
+    public static double PS_CENTER_DIST = 50;
+    public static double PS_FAR_DIST = 67;
 
     public static double SHOOTER_OFFSET_DISTANCE = 12;
 

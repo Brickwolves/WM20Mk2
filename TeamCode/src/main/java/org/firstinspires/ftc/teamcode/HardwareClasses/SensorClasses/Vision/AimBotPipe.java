@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PowerShot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
 import org.opencv.core.Mat;
@@ -264,7 +265,7 @@ public class AimBotPipe extends OpenCvPipeline {
      * @param powerShot
      * @return
      */
-    public double getPSDegreeError(VisionUtils.PowerShot powerShot){
+    public double getPSDegreeError(PowerShot powerShot){
         double yDistance = towerDistance * Math.cos((Sensors.gyro.modAngle() + towerDegreeError - 90) * (PI / 180));
         double xDistance = towerDistance * Math.sin((Sensors.gyro.modAngle() + towerDegreeError - 90) * (PI / 180));
         double dDistance;
@@ -280,6 +281,7 @@ public class AimBotPipe extends OpenCvPipeline {
                 break;
             default:
                 dDistance = 0;
+                break;
         }
         return (180 / PI) * Math.atan2(dDistance, yDistance) + 90;
     }
@@ -301,8 +303,8 @@ public class AimBotPipe extends OpenCvPipeline {
         double towerHeight = TOWER_HEIGHT - towerRect.y;
         double theta = (towerHeight / IMG_HEIGHT) * .75;
         double distance = 100/Math.tan(theta) - 0;
-        distanceSum = distanceSum + distance - distanceBuffer.getValue(distance);
-        return (distanceSum / 4) / (1 + abs(Sensors.gyro.absModAngle() - 90) * .00761);
+        //distanceSum = distanceSum + distance - distanceBuffer.getValue(distance);
+        return distance / (1 + abs(Sensors.gyro.absModAngle() - 90) * .00761);
     }
 
     public Rect getTowerRect(){
