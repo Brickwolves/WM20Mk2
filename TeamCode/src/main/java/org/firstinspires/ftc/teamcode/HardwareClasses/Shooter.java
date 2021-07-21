@@ -23,22 +23,22 @@ public class Shooter {
     private static DcMotor shooterFront, shooterBack;
     private static Servo feeder, turret, feederLock;
     
-    public static PID highGoalPID = new PID(.000013, 0.00005, 0.000027, 0.3, 50, false);
-    public static PID midGoalPID = new PID(.00012, 0.00005, 0.00025, 0.3, 50, false);
-    public static PID powerShotPID = new PID(.00012, 0.00005, 0.00027, 0.3, 50);
+    public static PID highGoalPID = new PID(.000023, 0.00005, 0.000045, 0.3, 50, false);
+    public static PID midGoalPID = new PID(.00015, 0.00005, 0.0002, 0.3, 50, false);
+    public static PID powerShotPID = new PID(.0002, 0.00005, 0.0002, 0.3, 50,false);
 
     private static final double TICKS_PER_ROTATION = 42;
     
     private static final double RING_FEED = 0.15, RING_FULL_FEED = 0, HALF_RESET = 0.45, RESET = .63;
     private static final double FEEDER_LOCK = .46, FEEDER_UNLOCK = .18;
     
-    private static final double FEED_TIME = .1, RESET_TIME = .1, PS_DELAY = .4;
+    private static final double FEED_TIME = .13, RESET_TIME = .1, PS_DELAY = .4;
     private static final double LOCK_TIME = 1, UNLOCK_TIME = .13;
     
     private static final double TURRET_SERVO_R = .935, TURRET_SERVO_L = .42, TURRET_SERVO_RANGE = TURRET_SERVO_R - TURRET_SERVO_L;
     private static final double TURRET_ANGLE_R = -22.5, TURRET_ANGLE_L = 39, TURRET_ANGLE_RANGE = TURRET_ANGLE_R - TURRET_ANGLE_L;
     
-    private static final int TOP_GOAL = 3100, POWER_SHOT = 2870;
+    private static final int TOP_GOAL = 3100, POWER_SHOT = 2870, MID_GOAL = 2900;
     
     private static boolean isFeederLocked;
     private static double shooterRPM, integralSumHigh, integralSumMid;
@@ -99,7 +99,7 @@ public class Shooter {
     public static double verticalComponent(){
         double xComponent = MathUtils.degSin(getTurretAngle());
         double yComponent = Math.sqrt(.25 - .25 * Math.pow(xComponent, 2));
-        return ((MathUtils.degASin(yComponent) - 30) * .9) + 30;
+        return ((MathUtils.degASin(yComponent) - 30) * 1.1) + 30;
     }
     
     
@@ -110,7 +110,7 @@ public class Shooter {
         towerError = (currentShooterState == ShooterState.MID_GOAL) ? Sensors.frontCamera.midGoalError() : Sensors.frontCamera.highGoalError();
         
         if(autoAim && Sensors.gyro.absAngleRange(67.5, 127.5) && getPower() > -.1)
-            setTurretAngle(towerError - 1 + (Sensors.robotVelocityComponent(towerError - 90)) / 37);
+            setTurretAngle(towerError - 1 + (Sensors.robotVelocityComponent(towerError - 90)) / 29);
         else setTurretAngle(0);
     }
     
@@ -122,7 +122,7 @@ public class Shooter {
     
     public static void turretPSAim(boolean autoAim){
         if(Sensors.frontCamera.isHighGoalFound() && autoAim && Sensors.gyro.absAngleRange(30, 150) && getPower() > .1)
-            setTurretAngle(Robot.getPSAngle() - Sensors.gyro.rawAngle() - 0 +
+            setTurretAngle(Robot.getPSAngle() - Sensors.gyro.rawAngle() - 1 +
                                    (Sensors.robotVelocityComponent(Robot.getPSAngle() - Sensors.gyro.rawAngle() - 90)) / 41);
                                    //(Sensors.robotVelocityComponent(Robot.getPSAngle() - Sensors.gyro.rawAngle())) / 30);
         else setTurretAngle(0);
@@ -210,8 +210,8 @@ public class Shooter {
         if(towerDistance < 1.8 || !Sensors.frontCamera.isHighGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
              RPM = TOP_GOAL;
         }else {
-            RPM = (int) (212 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
-                                                  (2.5 * degCos(verticalComponent()) * degCos(verticalComponent()) * (.9 * degTan(verticalComponent()) * (towerDistance - .07) - .796)))));
+            RPM = (int) (210 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.2, 3.5) /
+                                                  (2.5 * degCos(verticalComponent()) * degCos(verticalComponent()) * (.9 * degTan(verticalComponent()) * (towerDistance - .29) - .7)))));
         }
         setRPM(RPM, highGoalPID);
     }
@@ -223,7 +223,7 @@ public class Shooter {
         if(towerDistance < 1.8 || !Sensors.frontCamera.isMidGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
             RPM = TOP_GOAL;
         }else {
-            RPM = (int) (180 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
+            RPM = (int) (190 * (Math.sqrt(9.8 * Math.pow(towerDistance - 0.07, 3) /
                                                   (2.5 * degCos(verticalComponent()) * degCos(verticalComponent()) * (.9 * degTan(verticalComponent()) * (towerDistance - .07) - .796)))));
         }
         setRPM(RPM, midGoalPID);
