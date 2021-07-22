@@ -66,15 +66,15 @@ public class Intake {
         currentStallState = StallState.START;
         currentBumperState = BumperState.GROUND;
     }
+
     
+    public static void bumperPos(double position){ bumperPosition = position; bumperLeft.setPosition(position); bumperRight.setPosition(position - SERVO_DIFF); }
     
-    public static void setBumperPosition(double position){ bumperPosition = position; bumperLeft.setPosition(position); bumperRight.setPosition(position - SERVO_DIFF); }
+    public static void bumperRetract(){ bumperPosition = RETRACTED; bumperPos(RETRACTED); }
     
-    public static void bumperRetract(){ bumperPosition = RETRACTED; setBumperPosition(RETRACTED); }
+    public static void bumperRollingRings(){ bumperPosition = ROLLING_RINGS; bumperPos(ROLLING_RINGS); }
     
-    public static void bumperRollingRings(){ bumperPosition = ROLLING_RINGS; setBumperPosition(ROLLING_RINGS); }
-    
-    public static void bumperGroundRings(){ bumperPosition = GROUND_RINGS; setBumperPosition(GROUND_RINGS); }
+    public static void bumperGroundRings(){ bumperPosition = GROUND_RINGS; bumperPos(GROUND_RINGS); }
     
     
     public static void bumperState(boolean deployToggle, boolean rollingRings){

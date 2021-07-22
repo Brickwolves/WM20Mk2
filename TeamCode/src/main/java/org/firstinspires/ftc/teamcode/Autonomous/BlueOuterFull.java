@@ -590,7 +590,7 @@ public class BlueOuterFull extends OpMode {
 
 						//forward to ring stack
 						case state11Drive:
-							Intake.setBumperPosition(.09);
+							Intake.bumperPos(.09);
 							Robot.strafe(11, 90, 90, .6, .5, 0);
 							Shooter.highGoal(true);
 							if (Robot.isStrafeComplete) newState(Main.state115Drive);
@@ -599,14 +599,14 @@ public class BlueOuterFull extends OpMode {
 
 						case state115Drive:
 							Robot.strafe(4, 90, -90, .1, 1, 0);
-							Intake.setBumperPosition(.21);
+							Intake.bumperPos(.21);
 							if (Robot.isStrafeComplete) newState(Main.state12Drive);
 
 
 							//drive forward while intaking and shooting into high tower
 						case state12Drive:
 							Robot.strafe(13, Sensors.gyro.rawAngle() + Sensors.frontCamera.highGoalError() - 1, 90, .14, .15, .2);
-							Intake.setBumperPosition(.21);
+							Intake.bumperPos(.21);
 							Shooter.turretAim();
 							Intake.setPower(.31);
 							Shooter.highGoal(true);
@@ -647,7 +647,7 @@ public class BlueOuterFull extends OpMode {
 							Wobble.armFold();
 							Wobble.gripperHalf();
 							Intake.intakeStallControl();
-							Intake.setBumperPosition(.13);
+							Intake.bumperPos(.13);
 							Shooter.setFeederCount(0);
 							if (Robot.isStrafeComplete) newState(Main.state22Turn);
 							break;

@@ -71,9 +71,9 @@ public class PID {
             iComponent = integralSum * integral;
             dComponent = (rateOfChange * derivative);
         }else{
-            pComponent = error * Constants.p;
-            iComponent = integralSum * Constants.i;
-            dComponent = (rateOfChange * Constants.d);
+            pComponent = error * PID_Constants.p;
+            iComponent = integralSum * PID_Constants.i;
+            dComponent = (rateOfChange * PID_Constants.d);
         }
         
         if(debugMode){

@@ -10,9 +10,9 @@ public class Wobble {
     private static Servo gripperRight, gripperLeft;
     private static Servo lifter;
     
-    private static final double GRIP = .653, OPEN = 0.23, HALF = 0.48;
+    private static final double GRIP = .653, OPEN = 0.23, HALF = 0.48, SERVO_DIFF = .13;
     
-    private static final double ARM_UP = .68, ARM_TELE = .84, ARM_DOWN = 0.1, ARM_FOLD = .99, SERVO_DIFF = .13;
+    private static final double ARM_UP = .68, ARM_TELE = .84, ARM_DOWN = 0.1, ARM_FOLD = .99;
     
     private static ArmState currentArmState;
     private static GripperState currentGripperState;
@@ -35,7 +35,7 @@ public class Wobble {
     
     public static void gripperOpen() { gripperRight.setPosition(OPEN); gripperLeft.setPosition(OPEN - SERVO_DIFF); }
     
-    public static void gripperHalf() { gripperRight.setPosition(HALF);gripperLeft.setPosition(HALF - SERVO_DIFF); }
+    public static void gripperHalf() { gripperRight.setPosition(HALF); gripperLeft.setPosition(HALF - SERVO_DIFF); }
     
     public static void gripperState(boolean openClose){
         switch (currentGripperState){
