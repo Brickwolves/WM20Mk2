@@ -77,7 +77,7 @@ public class BlueOuterHalf extends OpMode {
 	public void start() {
 		Sensors.update();
 		mainTime.reset(); Robot.resetGyro(90); Robot.resetWithoutEncoders();
-		ringCount = 1;
+		ringCount = 0;
 		//ringCount = Sensors.backCamera.startingStackCount();
 		Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
 		Intake.intakeOff(); Intake.bumperRetract();

@@ -72,7 +72,7 @@ public class CameraV2 {
 	
 	public double midGoalError() {
 		curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
-		return aimBotPipe.getGoalDegreeError();
+		return aimBotPipe.getGoalDegreeError() + Math.abs(Sensors.gyro.absModAngle() - 90) * .05;
 	}
 	
 	public double highGoalDistance() {
