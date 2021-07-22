@@ -200,7 +200,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
             degrees_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X); //JAMIE HAD TO ADD THIS
 
             // Update ring count
-            ring_count = (widest_rect.height < (0.5 * widest_rect.width)) ? 1 : 4;
+            ring_count = (widest_rect.height < 10) ? 1 : 4;
 
             // Log center
             //String coords = "(" + center_x + ", " + center_y + ")";
