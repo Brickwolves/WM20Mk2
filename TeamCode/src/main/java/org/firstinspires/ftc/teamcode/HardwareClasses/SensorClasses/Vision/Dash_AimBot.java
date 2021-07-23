@@ -30,6 +30,15 @@ public class Dash_AimBot {
     public static int dilate_const = 5;
     public static int goalWidth = 100;
 
+    // PowerShots
+    public static double PS_BLUE_CLOSE_DIST = 15;
+    public static double PS_BLUE_MID_DIST = 35;
+    public static double PS_BLUE_FAR_DIST = 50;
+
+    public static double PS_RED_CLOSE_DIST = 40;
+    public static double PS_RED_MID_DIST = 58;
+    public static double PS_RED_FAR_DIST = 74;
+
     // Debugging tools
     public static int conversion_factor =  Imgproc.COLOR_RGB2HSV;   // Imgproc.COLOR_RGB2YCrCb
     public static VisionUtils.Target curTarget = BLUE_GOAL;

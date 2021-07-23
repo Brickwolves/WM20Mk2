@@ -27,17 +27,17 @@ import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 import static java.lang.StrictMath.PI;
 import static java.lang.StrictMath.abs;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_AUTO_CALIBRATE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.CbM;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.CrM;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_DEBUG_MODE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.HM;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_INIT_RECT_SIDELENGTH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.SM;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_AUTO_CALIBRATE_ON;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_DEBUG_MODE_ON;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_INIT_RECT_SIDELENGTH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.VM;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.YM;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.blur;
@@ -49,9 +49,12 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.AXES.X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_WIDTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PS_MID_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PS_CLOSE_DIST;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PS_FAR_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.PS_BLUE_CLOSE_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.PS_BLUE_FAR_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.PS_BLUE_MID_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.PS_RED_CLOSE_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.PS_RED_FAR_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.PS_RED_MID_DIST;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.RECT_OPTION.AREA;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.SHOOTER_OFFSET_DISTANCE;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.TOWER_HEIGHT;
@@ -267,32 +270,6 @@ public class AimBotPipe extends OpenCvPipeline {
         return degATan(SHOOTER_OFFSET_DISTANCE, towerDistance);
     }
 
-    /**
-     * TO DO, negate for red
-     * @param powerShot
-     * @return
-     */
-    public double getPSDegreeError(PowerShot powerShot){
-        double yDistance = towerDistance * cos((Sensors.gyro.modAngle() + towerDegreeError - 90) * (PI / 180));
-        double xDistance = towerDistance * Math.sin((Sensors.gyro.modAngle() + towerDegreeError - 90) * (PI / 180));
-        double dDistance;
-        switch (powerShot) {
-            case PS_CLOSE:
-                dDistance = xDistance - PS_CLOSE_DIST;
-                break;
-            case PS_MID:
-                dDistance = xDistance - PS_MID_DIST;
-                break;
-            case PS_FAR:
-                dDistance = xDistance - PS_FAR_DIST;
-                break;
-            default:
-                dDistance = 0;
-                break;
-        }
-        return (180 / PI) * atan2(dDistance, yDistance) + 90;
-    }
-
     public double getPSBlueAngle(PowerShot ps){
         double goalFieldAngle = towerDegreeError + Sensors.gyro.modAngle();
         double xDist = towerDistance * cos(toRadians(goalFieldAngle));
@@ -303,16 +280,17 @@ public class AimBotPipe extends OpenCvPipeline {
         double dDist = 0;
         switch (ps){
             case PS_CLOSE:
-                dDist = xDist - PS_CLOSE_DIST;
+                dDist = xDist + PS_BLUE_CLOSE_DIST;
                 break;
             case PS_MID:
-                dDist = xDist - PS_MID_DIST;
+                dDist = xDist + PS_BLUE_MID_DIST;
                 break;
             case PS_FAR:
-                dDist = xDist - PS_FAR_DIST;
+                dDist = xDist + PS_BLUE_FAR_DIST;
                 break;
         }
-        double psFieldAngle = toDegrees(atan2(yDist, dDist));
+        double psError = toDegrees(atan(dDist / yDist));
+        double psFieldAngle = 90 - psError;
         return psFieldAngle;
     }
 
@@ -326,13 +304,13 @@ public class AimBotPipe extends OpenCvPipeline {
         double dDist = 0;
         switch (ps){
             case PS_CLOSE:
-                dDist = xDist + PS_CLOSE_DIST;
+                dDist = xDist + PS_RED_CLOSE_DIST;
                 break;
             case PS_MID:
-                dDist = xDist + PS_MID_DIST;
+                dDist = xDist + PS_RED_MID_DIST;
                 break;
             case PS_FAR:
-                dDist = xDist + PS_FAR_DIST;
+                dDist = xDist + PS_RED_FAR_DIST;
                 break;
         }
         double psError = -atan(dDist / yDist);
@@ -359,15 +337,7 @@ public class AimBotPipe extends OpenCvPipeline {
         double theta = (towerHeight / IMG_HEIGHT) * .75;
         double distance = 100/Math.tan(theta);
         //distanceSum = distanceSum + distance - distanceBuffer.getValue(distance);
-        return distance / (1 + abs(Sensors.gyro.modAngle() - 90) * .00761);
-    }
-
-    public double getRawDistance2Goal() {
-        if (!isTowerFound() || towerRect.y == 0) return 0;
-        double towerHeight = TOWER_HEIGHT - towerRect.y;
-        double theta = (towerHeight / IMG_HEIGHT) * .75;
-        double distance = 100/Math.tan(theta);
-        return distance;
+        return distance / (1 + abs(Sensors.gyro.absModAngle() - 90) * .00761);
     }
 
     public double getRawDistance2Goal() {

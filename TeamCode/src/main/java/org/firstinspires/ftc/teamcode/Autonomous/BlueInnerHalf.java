@@ -23,6 +23,7 @@ import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Robot.closestTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 
 //Disabled
 @Autonomous(name = "BLUE Inner Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
@@ -34,6 +35,14 @@ public class BlueInnerHalf extends OpMode {
 	private final ElapsedTime mainTime = new ElapsedTime();
 	private static double ringCount = 0;
 	private final boolean ringsFound = false;
+
+	// powershot stuff
+	private double psFieldAngle1 = 0;
+	private double psFieldAngle2 = 0;
+	private double psFieldAngle3 = 0;
+	private double psError1 = 0;
+	private double psError2 = 0;
+	private double psError3 = 0;
 
 	// 0 RING DELAYS //
 	private static final double START0 = 0; private static final double POWERSHOT0 = 0; private static final double BOUNCEBACK0 = 0; private static final double CORNER0 = 0; private static final double WOBBLE0 = 0;
@@ -70,8 +79,8 @@ public class BlueInnerHalf extends OpMode {
 			else { Intake.intakeOff(); Intake.bumperRetract(); }
 		}
 		
-		telemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
-		telemetry.update();
+		multTelemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
+		multTelemetry.update();
 		
 		sleep(40);
 	}
@@ -105,42 +114,84 @@ public class BlueInnerHalf extends OpMode {
 
 					case state2Turn:
 						if (mainTime.seconds() > .8) {
-							Robot.turn(100, .6, .3);
-							if (Sensors.gyro.angleRange(94, 106)) newState(Main.state3PS1);
+							Robot.turn(100, 1, .3);
+							if (Sensors.gyro.angleRange(94, 106)) newState(Main.psDelay);
 						}
 						Shooter.setFeederCount(0);
 						break;
 
-					case breakpoint:
-						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
-						telemetry.addData("tower distance", Sensors.frontCamera.highGoalDistance());
+					case psDelay:
+						Robot.setPowerAuto(0,0,closestTarget(100));
+						Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID);
+						if(mainTime.seconds() > .5) newState(Main.breakpoint1);
+						break;
+
+					case breakpoint1:
+						multTelemetry.addData("current ps angle", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
 						if(operator.cross.press()) newState(Main.state3PS1);
 						break;
 
 					case state3PS1:
 						Shooter.powerShot();
-						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
-						telemetry.addData("tower distance", Sensors.frontCamera.highGoalDistance());
-						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
-						Shooter.feederState(mainTime.seconds() > .6 &&
+						psFieldAngle1 = Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID);
+						psError1 = Sensors.gyro.rawAngle() - psFieldAngle1;
+						multTelemetry.addData("PS aNGLE", psFieldAngle1);
+						multTelemetry.addData("PS Error", psError1);
+						multTelemetry.addData("tower distance", Sensors.frontCamera.highGoalDistance());
+						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID) - 3);
+						Shooter.feederState(mainTime.seconds() > 1 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
-						if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)  newState(Main.state4PS2);
+						if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)  newState(Main.breakpoint2);
+						break;
+
+					case breakpoint2:
+						Shooter.powerShot();
+						multTelemetry.addData("prev ps angle", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
+						multTelemetry.addData("current ps angle", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_FAR));
+						if(operator.cross.press()) newState(Main.state4PS2);
 						break;
 
 					case state4PS2:
 						Shooter.powerShot();
-						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_FAR));
+						psFieldAngle2 = Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_FAR);
+						psError2 = Sensors.gyro.rawAngle() - psFieldAngle2;
+						multTelemetry.addData("PS aNGLE", psFieldAngle2);
+						multTelemetry.addData("PS Error", psError2);
+						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_FAR) - 3);
 						Shooter.feederState(mainTime.seconds() > .6 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
-						if (mainTime.seconds() > .7 && Shooter.feederCount() > 1) newState(Main.state5PS3);
+						if (mainTime.seconds() > .7 && Shooter.feederCount() > 1) newState(Main.breakpoint3);
+						break;
+
+					case breakpoint3:
+						Shooter.powerShot();
+						multTelemetry.addData("prev ps angle", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_FAR));
+						multTelemetry.addData("current ps angle", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_CLOSE));
+						if(operator.cross.press()) newState(Main.state5PS3);
 						break;
 
 					case state5PS3:
 						Shooter.powerShot();
-						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_CLOSE));
+						psFieldAngle3 = Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_CLOSE);
+						psError3 = Sensors.gyro.rawAngle() - psFieldAngle3;
+						multTelemetry.addData("PS aNGLE", psFieldAngle3);
+						multTelemetry.addData("PS Error", psError3);
+						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_CLOSE) - 4);
 						Shooter.feederState(mainTime.seconds() > .6 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
-						if (mainTime.seconds() > .7 && Shooter.feederCount() > 3) newState(Main.delay2);
+						if (mainTime.seconds() > .7 && Shooter.feederCount() > 3) newState(Main.breakpoint4);
+						break;
+
+					case breakpoint4:
+						multTelemetry.addData("prev ps angle", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_CLOSE));
+						multTelemetry.addData("PS ANGLE 1", psFieldAngle1);
+						multTelemetry.addData("PS Error 1", psError1);
+						multTelemetry.addData("PS ANGLE 2", psFieldAngle2);
+						multTelemetry.addData("PS Error 2", psError2);
+						multTelemetry.addData("PS ANGLE 3", psFieldAngle3);
+						multTelemetry.addData("PS Error 3", psError3);
+
+						if(operator.cross.press()) newState(Main.delay2);
 						break;
 
 					case delay2:
@@ -149,21 +200,26 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state6Drive:
-						Robot.strafe(30, 88, 88, 1, .2, 0);
+						Robot.strafe(29, 88, 88, 1, .2, 0);
 						Intake.intakeOn(); Intake.bumperGroundRings();
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay3);
 						break;
 
 					case delay3:
-						if(mainTime.seconds() > BOUNCEBACK0) newState(Main.state8Turn);
+						if(mainTime.seconds() > BOUNCEBACK0) newState(Main.state7Turn);
+						break;
+
+					case state7Turn:
+						if (mainTime.seconds() > .8) {
+							Robot.turn(60, 1, .4);
+							if (Sensors.gyro.angleRange(55, 65)) newState(Main.state8Turn);
+						}
 						break;
 
 
 					case state8Turn:
-						if (mainTime.seconds() > .8) {
-							Robot.turn(180, 1, .2);
-							if (Sensors.gyro.angleRange(175, 185)) newState(Main.state9Drive);
-						}
+						Robot.turn(180, 1, .2);
+						if (Sensors.gyro.angleRange(175, 185)) newState(Main.state9Drive);
 						break;
 
 					case state9Drive:
@@ -177,7 +233,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state10Drive:
-						Robot.strafe(24, 180, 180, 1, .3, 0);
+						Robot.strafe(23, 180, 180, 1, .3, 0);
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete)
 							newState(Main.state11Drive);
 						break;
@@ -210,7 +266,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state14Drive:
-						Robot.strafe(16, 100, -80, 1, .3, 0);
+						Robot.strafe(17, 100, -80, 1, .3, 0);
 						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.state15Shoot);
 						Shooter.setFeederCount(0);
 						break;
@@ -254,18 +310,18 @@ public class BlueInnerHalf extends OpMode {
 		state12WobbleGoal, state12Drive, state13Turn, state13Drive, state14Drive, state15Drive, state15Shoot, state16Shoot, state16Drive, state17Shoot, state17Drive, state18Turn, state18Drive,
 		state18Shoot, state19Drive, state20Drive, state20WobbleGoal, state21Drive, stateFinished, state1Diagonal, state1Turn, state22Shoot, state22Turn, state3Shoot, state10Drive, state10Turn,
 		state14Turn, state17Wobble, state15Turn, state16Turn, state19Wobble, state20Turn, state95Drive, state22Drive, state165Turn, state115Drive, delay1, delay2, state23Drive, state4Turn,
-		state5Drive, state6Drive, delay4, state7Drive, state8Turn, state7Turn, delay5, state8Drive, state9Shoot, stat36PS1, state3PS1, state4PS2, state5PS3, state12Turn, breakpoint, delay3
+		state5Drive, state6Drive, delay4, state7Drive, state8Turn, state7Turn, delay5, state8Drive, state9Shoot, stat36PS1, state3PS1, state4PS2, state5PS3, state12Turn, breakpoint, psDelay, breakpoint1, breakpoint2, breakpoint3, breakpoint4, delay3
 	}
 	
 	private void loopTelemetry(){
-		telemetry.addData("current state: ", currentMainState);
-		telemetry.addData("drive", Robot.drive);
-		telemetry.addData("strafe", Robot.strafe);
-		telemetry.addData("turn", Robot.turn);
-		telemetry.addData("power", Robot.power);
-		telemetry.addData("ps angle", 0);
-		telemetry.addData("current angle", Sensors.gyro.modAngle());
-		telemetry.update();
+		multTelemetry.addData("current state: ", currentMainState);
+		multTelemetry.addData("drive", Robot.drive);
+		multTelemetry.addData("strafe", Robot.strafe);
+		multTelemetry.addData("turn", Robot.turn);
+		multTelemetry.addData("power", Robot.power);
+		multTelemetry.addData("ps angle", 0);
+		multTelemetry.addData("current angle", Sensors.gyro.modAngle());
+		multTelemetry.update();
 }
 }
 

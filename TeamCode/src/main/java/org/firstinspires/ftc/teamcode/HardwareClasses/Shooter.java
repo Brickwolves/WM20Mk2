@@ -24,9 +24,9 @@ public class Shooter {
     private static DcMotor shooterFront, shooterBack;
     private static Servo feeder, turret, feederLock;
     
-    public static PID highGoalPID = new PID(0.0002, 0.00005, 0.0001, 0.3, 50, false);
+    public static PID highGoalPID = new PID(0.0002, 0.00005, 0.0001, 0.3, 50, true);
     public static PID midGoalPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50, false);
-    public static PID powerShotPID = new PID(.0002, 0.00005, 0.0002, 0.3, 50,false);
+    public static PID powerShotPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50,false);
 
     private static final double TICKS_PER_ROTATION = 42;
     
@@ -39,7 +39,7 @@ public class Shooter {
     private static final double TURRET_SERVO_R = .935, TURRET_SERVO_L = .42, TURRET_SERVO_RANGE = TURRET_SERVO_R - TURRET_SERVO_L;
     private static final double TURRET_ANGLE_R = -22.5, TURRET_ANGLE_L = 39, TURRET_ANGLE_RANGE = TURRET_ANGLE_R - TURRET_ANGLE_L;
     
-    private static final int TOP_GOAL = 3200, POWER_SHOT = 2870, MID_GOAL = 2900;
+    private static final int TOP_GOAL = 3200, POWER_SHOT = 2830, MID_GOAL = 2900;
     
     private static boolean isFeederLocked;
     private static double shooterRPM, integralSumHigh, integralSumMid;
