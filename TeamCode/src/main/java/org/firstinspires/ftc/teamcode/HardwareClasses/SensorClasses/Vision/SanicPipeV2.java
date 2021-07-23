@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -58,6 +60,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
 
     // Helper Attributes
     private boolean viewportPaused;
+    private ElapsedTime time = new ElapsedTime();
 
     // Init Regular Mats
     private Mat modified = new Mat();
@@ -74,6 +77,9 @@ public class SanicPipeV2 extends OpenCvPipeline {
     /*
             RingFinding Attributes
                                         */
+    // Ring Count stuff
+    private boolean was_ring_height_set = false;
+    private int one_ring_height = 0;
 
     // Constants
     private int ring_count = 0;
@@ -84,6 +90,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        RING_AUTO_CALIBRATE_ON = (time.seconds() < 1) ? true : false;
         return (RING_AUTO_CALIBRATE_ON) ? autoCalibratePipe(input) : detectingPipe(input);
     }
 
@@ -191,16 +198,21 @@ public class SanicPipeV2 extends OpenCvPipeline {
             List<Rect> widest_rects = sortRectsByMaxOption(3, VisionUtils.RECT_OPTION.WIDTH, rects);
             Rect widest_rect = widest_rects.get(0);
             ringRect = widest_rect;
+            ringRect.y += horizonY; // We found a rectangle in half an image, need to offset it when we return a whole image
 
             // Calculate error
             int center_x = widest_rect.x + (widest_rect.width / 2);
             int center_y = widest_rect.y + (widest_rect.height / 2);
-            Point center = new Point(center_x, center_y + horizonY);
+            Point center = new Point(center_x, center_y);
             double pixel_error = (IMG_WIDTH / 2) - center_x;
-            degrees_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X); //JAMIE HAD TO ADD THIS
+            degrees_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X);
 
-            // Update ring count
-            ring_count = (widest_rect.height < 10) ? 1 : 4;
+            // Ring Count
+            if (!was_ring_height_set) {
+                one_ring_height = (int) 0.5 * ringRect.height;
+                was_ring_height_set = true;
+            }
+            ring_count = (ringRect.height > one_ring_height) ? 4 : 1;
 
             // Log center
             //String coords = "(" + center_x + ", " + center_y + ")";
@@ -212,7 +224,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
             Point text_center = new Point(5, IMG_HEIGHT - 50);
             putText(output, "Degree Error: " + round(degrees_error), text_center, font, 0.4, new Scalar(255, 255, 0));
             putText(output, "Pixel Error: " + pixel_error, new Point(5, IMG_HEIGHT - 40), font, 0.4, new Scalar(255, 255, 0));
-            line(output, center, new Point(center_x + pixel_error, center_y + horizonY), new Scalar(0, 0, 255), thickness);
+            line(output, center, new Point(center_x + pixel_error, center_y), new Scalar(0, 0, 255), thickness);
         }
 
         // Release all captures

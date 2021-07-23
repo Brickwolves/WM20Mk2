@@ -108,7 +108,7 @@ public class BlueOuterFull extends OpMode {
 						case state6PS1:
 							Shooter.powerShot();
 							Intake.bumperRollingRings();
-							Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE) - .4);
+							Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID) - .4);
 							Shooter.feederState(mainTime.seconds() > .6 &&
 									Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
 							if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)
@@ -326,7 +326,7 @@ public class BlueOuterFull extends OpMode {
 							Shooter.powerShot();
 							Intake.intakeOff();
 							Intake.bumperRollingRings();
-							Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE) - .4);
+							Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID) - .4);
 							Shooter.feederState(mainTime.seconds() > 1 &&
 									Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
 							if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)
@@ -528,7 +528,7 @@ public class BlueOuterFull extends OpMode {
 						//shoot power shot 1
 						case state6PS1:
 							Shooter.powerShot();
-							Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE) - .4);
+							Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID) - .4);
 							Shooter.feederState(mainTime.seconds() > .6 &&
 									Shooter.getRPM() > (Shooter.targetRPM - 60) && Shooter.getRPM() < (Shooter.targetRPM + 60));
 							if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)

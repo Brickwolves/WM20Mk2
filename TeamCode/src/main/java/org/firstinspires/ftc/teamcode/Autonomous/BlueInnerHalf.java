@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Intake;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PowerShot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Shooter;
@@ -113,16 +112,16 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case breakpoint:
-						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE));
+						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
 						telemetry.addData("tower distance", Sensors.frontCamera.highGoalDistance());
 						if(operator.cross.press()) newState(Main.state3PS1);
 						break;
 
 					case state3PS1:
 						Shooter.powerShot();
-						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE));
+						telemetry.addData("PS aNGLE", Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
 						telemetry.addData("tower distance", Sensors.frontCamera.highGoalDistance());
-						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MIDDLE));
+						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID));
 						Shooter.feederState(mainTime.seconds() > .6 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
 						if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)  newState(Main.state4PS2);

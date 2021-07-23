@@ -18,7 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.qualcomm.robotcore.util.Range.clip;
+import static java.lang.Math.atan;
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
 import static java.lang.Math.round;
+import static java.lang.Math.sin;
+import static java.lang.Math.toDegrees;
+import static java.lang.Math.toRadians;
 import static java.lang.StrictMath.PI;
 import static java.lang.StrictMath.abs;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_AUTO_CALIBRATE_ON;
@@ -43,7 +49,7 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.AXES.X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_WIDTH;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PS_CENTER_DIST;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PS_MID_DIST;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PS_CLOSE_DIST;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PS_FAR_DIST;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.RECT_OPTION.AREA;
@@ -267,15 +273,15 @@ public class AimBotPipe extends OpenCvPipeline {
      * @return
      */
     public double getPSDegreeError(PowerShot powerShot){
-        double yDistance = towerDistance * Math.cos((Sensors.gyro.modAngle() + towerDegreeError - 90) * (PI / 180));
+        double yDistance = towerDistance * cos((Sensors.gyro.modAngle() + towerDegreeError - 90) * (PI / 180));
         double xDistance = towerDistance * Math.sin((Sensors.gyro.modAngle() + towerDegreeError - 90) * (PI / 180));
         double dDistance;
         switch (powerShot) {
             case PS_CLOSE:
                 dDistance = xDistance - PS_CLOSE_DIST;
                 break;
-            case PS_MIDDLE:
-                dDistance = xDistance - PS_CENTER_DIST;
+            case PS_MID:
+                dDistance = xDistance - PS_MID_DIST;
                 break;
             case PS_FAR:
                 dDistance = xDistance - PS_FAR_DIST;
@@ -284,8 +290,56 @@ public class AimBotPipe extends OpenCvPipeline {
                 dDistance = 0;
                 break;
         }
-        return (180 / PI) * Math.atan2(dDistance, yDistance) + 90;
+        return (180 / PI) * atan2(dDistance, yDistance) + 90;
     }
+
+    public double getPSBlueAngle(PowerShot ps){
+        double goalFieldAngle = towerDegreeError + Sensors.gyro.modAngle();
+        double xDist = towerDistance * cos(toRadians(goalFieldAngle));
+        double yDist = towerDistance * sin(toRadians(goalFieldAngle));
+
+        // Calculate distance from powershot to 90, we do weird subtraction
+        // so that our signs work out
+        double dDist = 0;
+        switch (ps){
+            case PS_CLOSE:
+                dDist = xDist - PS_CLOSE_DIST;
+                break;
+            case PS_MID:
+                dDist = xDist - PS_MID_DIST;
+                break;
+            case PS_FAR:
+                dDist = xDist - PS_FAR_DIST;
+                break;
+        }
+        double psFieldAngle = toDegrees(atan2(yDist, dDist));
+        return psFieldAngle;
+    }
+
+    public double getPSRedAngle(PowerShot ps){
+        double goalFieldAngle = towerDegreeError + Sensors.gyro.modAngle();
+        double xDist = towerDistance * cos(toRadians(goalFieldAngle));
+        double yDist = towerDistance * sin(toRadians(goalFieldAngle));
+
+        // Calculate distance from powershot to 90, we do weird subtraction
+        // so that our signs work out
+        double dDist = 0;
+        switch (ps){
+            case PS_CLOSE:
+                dDist = xDist + PS_CLOSE_DIST;
+                break;
+            case PS_MID:
+                dDist = xDist + PS_MID_DIST;
+                break;
+            case PS_FAR:
+                dDist = xDist + PS_FAR_DIST;
+                break;
+        }
+        double psError = -atan(dDist / yDist);
+        double psFieldAngle = toDegrees(psError) - 90;
+        return psFieldAngle;
+    }
+
 
     public boolean isTowerFound(){
         return towerFound;
@@ -303,9 +357,17 @@ public class AimBotPipe extends OpenCvPipeline {
         if (!isTowerFound() || towerRect.y == 0) return 0;
         double towerHeight = TOWER_HEIGHT - towerRect.y;
         double theta = (towerHeight / IMG_HEIGHT) * .75;
-        double distance = 100/Math.tan(theta) - 0;
+        double distance = 100/Math.tan(theta);
         //distanceSum = distanceSum + distance - distanceBuffer.getValue(distance);
-        return distance / (1 + abs(Sensors.gyro.absModAngle() - 90) * .00761);
+        return distance / (1 + abs(Sensors.gyro.modAngle() - 90) * .00761);
+    }
+
+    public double getRawDistance2Goal() {
+        if (!isTowerFound() || towerRect.y == 0) return 0;
+        double towerHeight = TOWER_HEIGHT - towerRect.y;
+        double theta = (towerHeight / IMG_HEIGHT) * .75;
+        double distance = 100/Math.tan(theta);
+        return distance;
     }
 
     public Rect getTowerRect(){

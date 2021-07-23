@@ -97,8 +97,14 @@ public class CameraV2 {
 	}
 	
 	public double getPowerShotAngle(VisionUtils.PowerShot powerShot){
-		curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
-		return closestTarget(aimBotPipe.getPSDegreeError(powerShot));
+		if (Sensors.alliance == BLUE){
+			curTarget = BLUE_GOAL;
+			return closestTarget(aimBotPipe.getPSBlueAngle(powerShot));
+		}
+		else {
+			curTarget = RED_GOAL;
+			return closestTarget(aimBotPipe.getPSRedAngle(powerShot));
+		}
 	}
 
 
