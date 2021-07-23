@@ -21,10 +21,11 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.dilate_const;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.erode_const;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.AUTO;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_LEFT_X;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_RIGHT_X;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_LEFT_X;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_RIGHT_X;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_OUTER_X;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_INNER_X;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.HAS_SET_ONE_RING_HEIGHT;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_INNER_X;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_OUTER_X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_AUTO_CALIBRATE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_DEBUG_MODE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_INIT_RECT_HEIGHT;
@@ -79,7 +80,6 @@ public class SanicPipeV2 extends OpenCvPipeline {
                                         */
     // Ring Count stuff
     private boolean was_ring_height_set = false;
-    private int one_ring_height = 0;
 
     // Constants
     private int ring_count = 0;
@@ -90,7 +90,6 @@ public class SanicPipeV2 extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        RING_AUTO_CALIBRATE_ON = (time.seconds() < 1) ? true : false;
         return (RING_AUTO_CALIBRATE_ON) ? autoCalibratePipe(input) : detectingPipe(input);
     }
 
@@ -127,17 +126,17 @@ public class SanicPipeV2 extends OpenCvPipeline {
         int x = 0;
         int y = RING_Y;
         switch (AUTO){
-            case BLUE_LEFT:
-                x = BLUE_LEFT_X;
+            case BLUE_OUTER:
+                x = BLUE_OUTER_X;
                 break;
-            case BLUE_RIGHT:
-                x = BLUE_RIGHT_X;
+            case BLUE_INNER:
+                x = BLUE_INNER_X;
                 break;
-            case RED_LEFT:
-                x = RED_LEFT_X;
+            case RED_INNER:
+                x = RED_INNER_X;
                 break;
-            case RED_RIGHT:
-                x = RED_RIGHT_X;
+            case RED_OUTER:
+                x = RED_OUTER_X;
                 break;
         }
 
@@ -195,7 +194,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
         if (rects.size() > 0) {
 
             // Retrieve widest (closest) rect
-            List<Rect> widest_rects = sortRectsByMaxOption(3, VisionUtils.RECT_OPTION.WIDTH, rects);
+            List<Rect> widest_rects = sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.WIDTH, rects);
             Rect widest_rect = widest_rects.get(0);
             ringRect = widest_rect;
             ringRect.y += horizonY; // We found a rectangle in half an image, need to offset it when we return a whole image
@@ -208,18 +207,14 @@ public class SanicPipeV2 extends OpenCvPipeline {
             degrees_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X);
 
             // Ring Count
-            if (!was_ring_height_set) {
-                one_ring_height = (int) 0.5 * ringRect.height;
-                was_ring_height_set = true;
-            }
-            ring_count = (ringRect.height > one_ring_height) ? 4 : 1;
+            if (!HAS_SET_ONE_RING_HEIGHT) Dash_Sanic.ONE_RING_HEIGHT = (int) (0.5 * ringRect.height);
+            ring_count = (ringRect.height > Dash_Sanic.ONE_RING_HEIGHT) ? 4 : 1;
 
             // Log center
             //String coords = "(" + center_x + ", " + center_y + ")";
             //putText(output, coords, center, font, 0.5, color);
 
             // Log data on screen
-            widest_rect.y += horizonY;
             rectangle(output, widest_rect, red, thickness);
             Point text_center = new Point(5, IMG_HEIGHT - 50);
             putText(output, "Degree Error: " + round(degrees_error), text_center, font, 0.4, new Scalar(255, 255, 0));

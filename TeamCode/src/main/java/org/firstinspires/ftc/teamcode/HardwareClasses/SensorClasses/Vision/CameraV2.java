@@ -135,19 +135,18 @@ public class CameraV2 {
 		}
 	}
 
-	public void calibrateRingDetection(){
-		// Hold to autocalibrate on a color
-		switch (Controller.touchSensor.getCount()) {
-			case 1:
+	public void calibrateRingDetection(int numCounts){
+		switch (numCounts) {
+			case 0:
 				sanicPipe.switch2AutoCalibrate();
 				break;
 
-			case 2:
+			case 1:
 				sanicPipe.switch2Regular();
+				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = false;
 				break;
-
-			case 3:
-				Controller.touchSensor.resetCount();
+			case 2:
+				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
 				break;
 		}
 	}

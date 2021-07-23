@@ -31,7 +31,7 @@ public class VisionUtils {
     }
 
     public enum Auto {
-        BLUE_LEFT, BLUE_RIGHT, RED_LEFT, RED_RIGHT
+        BLUE_OUTER, BLUE_INNER, RED_INNER, RED_OUTER
     }
 
     public enum PowerShot {

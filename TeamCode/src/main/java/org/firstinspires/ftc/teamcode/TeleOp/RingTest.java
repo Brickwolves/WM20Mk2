@@ -48,7 +48,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import static com.qualcomm.robotcore.util.Range.clip;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_AUTO_CALIBRATE_ON;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.ONE_RING_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_AUTO_CALIBRATE_ON;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MAX_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
@@ -131,11 +134,15 @@ public class RingTest extends OpMode {
   public void controls(){
     controller.update();
 
-    cam.calibrateRingDetection();
+    cam.calibrateRingDetection(controller.cross.getCount());
 
     multTelemetry.addData("Status", "Run Time: " + runtime.toString());
     multTelemetry.addData("Mode", (RING_AUTO_CALIBRATE_ON) ? "Auto Calibration": "Detecting");
     multTelemetry.addData("Ring Count", cam.startingStackCount());
+    multTelemetry.addData("RING MAX", RING_MAX_THRESH);
+    multTelemetry.addData("RING MIN", RING_MIN_THRESH);
+    multTelemetry.addData("ONE RING HEIGHT", ONE_RING_HEIGHT);
+
     multTelemetry.update();
   }
 
