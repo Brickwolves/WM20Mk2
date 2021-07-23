@@ -64,7 +64,7 @@ public class Intake {
     
         currentIntakeState = IntakeState.OFF;
         currentStallState = StallState.START;
-        currentBumperState = BumperState.GROUND;
+        currentBumperState = BumperState.RETRACT;
     }
 
     
@@ -81,14 +81,14 @@ public class Intake {
         switch (currentBumperState) {
             
             case RETRACT:
-                if (deployToggle) { newState(BumperState.GROUND); break; }
-                if (rollingRings) { newState(BumperState.ROLLING); break; }
+                if (deployToggle) newState(BumperState.GROUND);
+                if (rollingRings) newState(BumperState.ROLLING);
                 bumperRetract();
                 break;
             
             case GROUND:
                 if (deployToggle) { newState(BumperState.RETRACT); newState(IntakeState.OFF); break; }
-                if (rollingRings) { newState(BumperState.ROLLING); break; }
+                if (rollingRings) newState(BumperState.ROLLING);
                 bumperGroundRings();
                 break;
     
@@ -185,7 +185,7 @@ public class Intake {
                 
             case ON:
                 if (intakeReverse) { intakeReverse(); break; }
-                if (intakeOnOff) newState(IntakeState.OFF);
+                if (intakeOnOff) { newState(IntakeState.OFF); newState(BumperState.GROUND); }
                 intakeOn();
                 break;
         }

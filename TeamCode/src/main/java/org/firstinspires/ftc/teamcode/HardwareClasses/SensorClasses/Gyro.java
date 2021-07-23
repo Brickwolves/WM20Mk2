@@ -28,17 +28,11 @@ public class Gyro {
     private double rateOfChange = 0;
     private double rateOfChangeShort = 0;
     
-    Alliance alliance;
-    
 
-    public void init(Alliance alliance) {
-        imu = new IMU("imu");
-        this.alliance = alliance;
-    }
+
     
     public void init() {
         imu = new IMU("imu");
-        this.alliance = null;
     }
     
     public void update(){
@@ -46,11 +40,11 @@ public class Gyro {
         rawAngle = imu.getAngle() - datum;
         modAngle = MathUtils.mod(rawAngle, 360);
     
-        if(alliance == Alliance.RED) {
+        if(Sensors.alliance == Alliance.RED) {
             absImuAngle = imuAngle + 180;
             absRawAngle = rawAngle + 180;
             absModAngle = MathUtils.mod(absRawAngle, 360);
-        }else if(alliance == Alliance.BLUE){
+        }else if(Sensors.alliance == Alliance.BLUE){
             absImuAngle = imuAngle;
             absRawAngle = rawAngle;
             absModAngle = modAngle;

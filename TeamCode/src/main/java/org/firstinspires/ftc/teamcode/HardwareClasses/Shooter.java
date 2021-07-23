@@ -25,7 +25,7 @@ public class Shooter {
     private static Servo feeder, turret, feederLock;
     
     public static PID highGoalPID = new PID(0.0002, 0.00005, 0.0001, 0.3, 50, false);
-    public static PID midGoalPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50, true);
+    public static PID midGoalPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50, false);
     public static PID powerShotPID = new PID(.0002, 0.00005, 0.0002, 0.3, 50,false);
 
     private static final double TICKS_PER_ROTATION = 42;
