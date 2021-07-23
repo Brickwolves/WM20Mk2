@@ -11,10 +11,10 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 public class Dash_AimBot {
 
     // Thresholding values
-    public static Scalar BLUE_MAX_THRESH = new Scalar(138, 255, 122);
-    public static Scalar BLUE_MIN_THRESH = new Scalar(78, 197, 62);
-    public static Scalar RED_MAX_THRESH = new Scalar(101, 203, 125);
-    public static Scalar RED_MIN_THRESH = new Scalar(1, 173, 95);
+    public static Scalar BLUE_MAX_THRESH = new Scalar(134, 255, 151);
+    public static Scalar BLUE_MIN_THRESH = new Scalar(74, 206, 91);
+    public static Scalar RED_MAX_THRESH = new Scalar(113, 199, 127);
+    public static Scalar RED_MIN_THRESH = new Scalar(13, 169, 97);
 
     // Margins for each value
     public static int YM = 50;

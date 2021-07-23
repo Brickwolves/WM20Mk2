@@ -7,7 +7,7 @@ public class Velocity_Equation_Constants {
 
     public static double mValueHigh = 90;
 
-    public static double kValueHigh = 2927.4;
+    public static double kValueHigh = 2900;
 
     public static double mValueMid = 8000;
 

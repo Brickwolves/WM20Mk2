@@ -28,8 +28,7 @@ public class Sensors {
 	
 	
 	public static void init(){
-
-		gyro.init(alliance);
+		gyro.init();
 
 		backCamera = new CameraV2("Back Camera");
 		frontCamera = new CameraV2("Front Camera", true);

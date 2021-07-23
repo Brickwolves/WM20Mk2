@@ -370,6 +370,14 @@ public class AimBotPipe extends OpenCvPipeline {
         return distance;
     }
 
+    public double getRawDistance2Goal() {
+        if (!isTowerFound() || towerRect.y == 0) return 0;
+        double towerHeight = TOWER_HEIGHT - towerRect.y;
+        double theta = (towerHeight / IMG_HEIGHT) * .75;
+        double distance = 100/Math.tan(theta) - 0;
+        return distance;
+    }
+
     public Rect getTowerRect(){
         return towerRect;
     }
