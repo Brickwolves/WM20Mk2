@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Intake;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Shooter;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Wobble;
@@ -19,6 +20,8 @@ import org.firstinspires.ftc.teamcode.utilities.Utils;
 
 import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Auto.BLUE_INNER;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Auto.RED_OUTER;
 
 //Disabled
 @Autonomous(name = "RED Outer Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
@@ -46,7 +49,10 @@ public class RedOuterHalf extends OpMode {
 		Utils.setOpMode(this);
 
 		Robot.init(); Sensors.init(); Shooter.init(); Intake.init(); Wobble.init();
+
+		// Set the alliance and the auto orientation
 		Sensors.alliance = Sensors.Alliance.RED;
+		Dash_Sanic.AUTO = RED_OUTER;
 		
 		operator = new Controller(gamepad2);
 
@@ -56,7 +62,9 @@ public class RedOuterHalf extends OpMode {
 		operator.update();
 		Shooter.resetFeeder(); Shooter.lockFeeder(); Shooter.shooterOff();
 
+		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
+		Sensors.backCamera.calibrateRingDetection(operator.square.getCount());
 
 		if (operator.RB.inputYet()) {
 			if (operator.RB.toggle()) Wobble.gripperGrip();

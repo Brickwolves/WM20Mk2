@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Intake;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Robot;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PowerShot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Shooter;
@@ -21,6 +22,8 @@ import org.firstinspires.ftc.teamcode.utilities.Utils;
 
 import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Auto.BLUE_INNER;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Auto.BLUE_OUTER;
 
 @Disabled
 @Autonomous(name = "Blue Outer Full", group = "Auto")
@@ -40,7 +43,10 @@ public class BlueOuterFull extends OpMode {
 		Utils.setOpMode(this);
 
 		Robot.init(); Sensors.init(); Shooter.init(); Intake.init(); Wobble.init();
+
+		// Set the alliance and the auto orientation
 		Sensors.alliance = Sensors.Alliance.BLUE;
+		Dash_Sanic.AUTO = BLUE_OUTER;
 
 		operator = new Controller(gamepad2);
 		Shooter.setTurretAngle(-27);
@@ -51,7 +57,9 @@ public class BlueOuterFull extends OpMode {
 		operator.update();
 		Shooter.resetFeeder();Shooter.lockFeeder();
 
+		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
+		Sensors.backCamera.calibrateRingDetection(operator.square.getCount());
 
 		if(operator.RB.toggle()) Wobble.gripperGrip();
 		else Wobble.gripperHalf();
