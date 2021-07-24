@@ -131,12 +131,14 @@ public class SanicPipeV2 extends OpenCvPipeline {
                 break;
             case BLUE_INNER:
                 x = BLUE_INNER_X;
+                y = 170;
                 break;
             case RED_INNER:
                 x = RED_INNER_X;
                 break;
             case RED_OUTER:
                 x = RED_OUTER_X;
+                y = 170;
                 break;
         }
 
@@ -207,7 +209,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
             degrees_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X);
 
             // Ring Count
-            if (!HAS_SET_ONE_RING_HEIGHT) Dash_Sanic.ONE_RING_HEIGHT = (int) (0.5 * ringRect.height);
+            if (!HAS_SET_ONE_RING_HEIGHT) Dash_Sanic.ONE_RING_HEIGHT = (int) (0.75 * ringRect.height);
             ring_count = (ringRect.height > Dash_Sanic.ONE_RING_HEIGHT) ? 4 : 1;
 
             // Log center
@@ -231,6 +233,9 @@ public class SanicPipeV2 extends OpenCvPipeline {
         return output;
     }
 
+    public Rect getRingRect(){
+        return ringRect;
+    }
 
     public double getDistance2Ring(){
         double pixelsSubtendedByRing = ringRect.y + ringRect.height;

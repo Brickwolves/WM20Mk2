@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.HardwareClasses;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot;
 import org.firstinspires.ftc.teamcode.utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
 
@@ -30,8 +31,14 @@ public class Sensors {
 	public static void init(){
 		gyro.init();
 
-		backCamera = new CameraV2("Back Camera");
-		frontCamera = new CameraV2("Front Camera", true);
+		if (Dash_AimBot.DISPLAY_FRONT){
+			backCamera = new CameraV2("Back Camera");
+			frontCamera = new CameraV2("Front Camera", true);
+		}
+		else {
+			frontCamera = new CameraV2("Front Camera");
+			backCamera = new CameraV2("Back Camera", true);
+		}
 	}
 	
 	public static void update(){

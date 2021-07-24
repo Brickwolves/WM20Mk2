@@ -63,7 +63,7 @@ public class BlueOuterHalf extends OpMode {
 
 		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
-		Sensors.backCamera.calibrateRingDetection(operator.square.getCount());
+		Sensors.backCamera.calibrateRingDetection(operator.square.press());
 
 		if (operator.RB.inputYet()) {
 			if (operator.RB.toggle()) Wobble.gripperGrip();

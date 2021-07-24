@@ -134,13 +134,14 @@ public class RingTest extends OpMode {
   public void controls(){
     controller.update();
 
-    cam.calibrateRingDetection(controller.cross.getCount());
+    cam.calibrateRingDetection(controller.square.press());
 
     multTelemetry.addData("Status", "Run Time: " + runtime.toString());
     multTelemetry.addData("Mode", (RING_AUTO_CALIBRATE_ON) ? "Auto Calibration": "Detecting");
     multTelemetry.addData("Ring Count", cam.startingStackCount());
     multTelemetry.addData("RING MAX", RING_MAX_THRESH);
     multTelemetry.addData("RING MIN", RING_MIN_THRESH);
+    multTelemetry.addData("Stack Height", cam.sanicPipe.getRingRect().height);
     multTelemetry.addData("ONE RING HEIGHT", ONE_RING_HEIGHT);
 
     multTelemetry.update();

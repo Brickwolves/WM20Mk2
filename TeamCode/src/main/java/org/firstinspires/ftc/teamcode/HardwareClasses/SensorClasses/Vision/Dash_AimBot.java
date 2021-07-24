@@ -45,6 +45,6 @@ public class Dash_AimBot {
     public static boolean TOWER_DEBUG_MODE_ON = false;
     public static boolean TOWER_AUTO_CALIBRATE_ON = false;
     public static int TOWER_INIT_RECT_SIDELENGTH = 10;
-
-
+    public static double horizonLowerRatio = 0.7;
+    public static boolean DISPLAY_FRONT = true;
 }

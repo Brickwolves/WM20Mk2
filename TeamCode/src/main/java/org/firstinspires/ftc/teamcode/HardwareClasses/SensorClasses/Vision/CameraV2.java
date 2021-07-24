@@ -11,10 +11,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Robot.closestTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MAX_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 
 public class CameraV2 {
 
@@ -23,6 +26,7 @@ public class CameraV2 {
 	private OpenCvCamera webcam;
 	private String id;
 	private boolean display;
+	private boolean runningAutoCal = false;
 	private ElapsedTime time = new ElapsedTime();
 
 	public CameraV2(String id, boolean display2Phone){
@@ -138,24 +142,32 @@ public class CameraV2 {
 		}
 	}
 
-	public void calibrateRingDetection(int numCounts){
-		switch (numCounts) {
-			case 0:
-				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
-				time.reset();
-				break;
+	public void calibrateRingDetection(boolean tap){
 
-			case 1:
-				sanicPipe.switch2AutoCalibrate();
-				break;
+		// If we tap square, run auto sequence once
+		if (tap) runningAutoCal = true;
 
-			case 2:
-				sanicPipe.switch2Regular();
-				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = false;
-				break;
-			case 3:
-				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
-				break;
+		// If we haven't started autocal
+		if (!runningAutoCal){
+			sanicPipe.switch2Regular();
+			Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
+			time.reset();
 		}
+
+		// Start up autocal sequence
+		else{
+			// First 0.5 seconds autocalibrate [0 -> 0.5]
+			// After 0.5, switch to regular and get one ring height for 0.5 [0.5 -> 1]
+			// Go back to original state after 1 second autocal sequence
+			if (time.seconds() < 5) sanicPipe.switch2AutoCalibrate();
+			else if (time.seconds() < 10) {
+				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = false;
+				sanicPipe.switch2Regular();
+			}
+			else runningAutoCal = false;
+		}
+		multTelemetry.addData("Ring Phase", runningAutoCal);
+		multTelemetry.addData("RING_MAX", RING_MAX_THRESH);
+		multTelemetry.addData("RING_MIN", RING_MIN_THRESH);
 	}
 }

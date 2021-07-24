@@ -46,6 +46,7 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.dilate_const;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.erode_const;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.goalWidth;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.horizonLineRatio;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.AXES.X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_WIDTH;
@@ -171,6 +172,11 @@ public class AimBotPipe extends OpenCvPipeline {
         IMG_HEIGHT = input.rows();
         IMG_WIDTH = input.cols();
 
+        // Take upper portion
+        double horizonLowerY = (int) IMG_HEIGHT * Dash_AimBot.horizonLowerRatio;
+        Rect topRect = new Rect(new Point(0, 0), new Point(IMG_WIDTH, horizonLowerY));
+        input = input.submat(topRect);
+
         // Convert & Copy to outPut image
         conversion_factor = (curTarget == BLUE_GOAL) ? Imgproc.COLOR_RGB2HSV : Imgproc.COLOR_RGB2YCrCb;
         cvtColor(input, modified, conversion_factor);
@@ -228,6 +234,7 @@ public class AimBotPipe extends OpenCvPipeline {
         // Logging Shapes and Degree & Pixel Data
         rectangle(output, towerRect, (curTarget == BLUE_GOAL) ? lightBlue : orange, thickness);
         line(output, center, new Point(center_x + pixel_error, center_y), new Scalar(0, 0, 255), thickness);
+        line(output, new Point(0, horizonLowerY), new Point(IMG_WIDTH, horizonLowerY), new Scalar(0, 255, 255), thickness);
         Point text_center = new Point(5, IMG_HEIGHT - 50);
         putText(output, "Degree Error: " + towerDegreeError, text_center, font, 0.4, new Scalar(255, 255, 0));
         putText(output, "Pixel Error: " + pixel_error, new Point(5, IMG_HEIGHT - 40), font, 0.4, new Scalar(255, 255, 0));
