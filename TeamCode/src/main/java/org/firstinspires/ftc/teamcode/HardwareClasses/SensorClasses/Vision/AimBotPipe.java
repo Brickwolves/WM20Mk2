@@ -150,7 +150,7 @@ public class AimBotPipe extends OpenCvPipeline {
 
         // Retrieve initRect
         int x = (int) (round(IMG_WIDTH / 2) - round(TOWER_INIT_RECT_SIDELENGTH /2.0));
-        int y = 140;
+        int y = 130;
         Rect initRect = new Rect(x, y, TOWER_INIT_RECT_SIDELENGTH, TOWER_INIT_RECT_SIDELENGTH);
 
         // Calc aveHSV w/i initRect

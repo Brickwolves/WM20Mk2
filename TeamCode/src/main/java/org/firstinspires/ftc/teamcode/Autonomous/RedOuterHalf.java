@@ -35,7 +35,7 @@ public class RedOuterHalf extends OpMode {
 	private final boolean ringsFound = false;
 
 	// 0 RING DELAYS //
-	private static final double START0 = 0; private static final double PRELOAD0 = 0; private static final double WOBBLE0 = 0; private static final double PARK0 = 0;
+	private static final double START0 = 15; private static final double PRELOAD0 = 0; private static final double WOBBLE0 = 0; private static final double PARK0 = 0;
 
 	// 1 RING DELAYS //
 	private static final double START1 = 0; private static final double PRELOAD1 = 0; private static final double STACK1 = 0;
@@ -85,8 +85,8 @@ public class RedOuterHalf extends OpMode {
 	public void start() {
 		Sensors.update();
 		mainTime.reset(); Robot.resetGyro(-90); Robot.resetWithoutEncoders();
-		ringCount = 0;
 		//ringCount = Sensors.backCamera.startingStackCount();
+		ringCount = 0;
 		Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
 		Intake.intakeOff(); Intake.bumperRetract();
 	}
@@ -276,9 +276,11 @@ public class RedOuterHalf extends OpMode {
 						break;
 
 				}
+				break;
 
 			case 2:
 				Robot.strafe(22, 90, -90, 1, .15, 0);
+				break;
 		}
 		
 		loopTelemetry();

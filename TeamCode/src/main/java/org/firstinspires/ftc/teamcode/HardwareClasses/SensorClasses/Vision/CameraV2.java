@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
@@ -21,6 +23,7 @@ public class CameraV2 {
 	private OpenCvCamera webcam;
 	private String id;
 	private boolean display;
+	private ElapsedTime time = new ElapsedTime();
 
 	public CameraV2(String id, boolean display2Phone){
 		this.id = id;
@@ -138,14 +141,19 @@ public class CameraV2 {
 	public void calibrateRingDetection(int numCounts){
 		switch (numCounts) {
 			case 0:
-				sanicPipe.switch2AutoCalibrate();
+				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
+				time.reset();
 				break;
 
 			case 1:
+				sanicPipe.switch2AutoCalibrate();
+				break;
+
+			case 2:
 				sanicPipe.switch2Regular();
 				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = false;
 				break;
-			case 2:
+			case 3:
 				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
 				break;
 		}

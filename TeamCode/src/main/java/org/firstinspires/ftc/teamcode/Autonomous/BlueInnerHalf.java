@@ -95,9 +95,9 @@ public class BlueInnerHalf extends OpMode {
 	public void start() {
 		Sensors.update();
 		mainTime.reset(); Robot.resetGyro(90); Robot.resetWithoutEncoders();
-		ringCount = 0;
 		Dash_AimBot.curTarget = BLUE_GOAL;
 		//ringCount = Sensors.backCamera.startingStackCount();
+		ringCount = 0;
 		Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
 		Intake.intakeOff(); Intake.bumperRetract();
 	}
@@ -130,7 +130,7 @@ public class BlueInnerHalf extends OpMode {
 					case psDelay:
 						Robot.setPowerAuto(0,0,closestTarget(100));
 						Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID);
-						if(mainTime.seconds() > .5) newState(Main.breakpoint1);
+						if(mainTime.seconds() > .5) newState(Main.state3PS1);
 						break;
 
 					case breakpoint1:
@@ -148,7 +148,7 @@ public class BlueInnerHalf extends OpMode {
 						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_MID) - 3);
 						Shooter.feederState(mainTime.seconds() > 1 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
-						if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)  newState(Main.breakpoint2);
+						if (mainTime.seconds() > .7 && Shooter.feederCount() > 0)  newState(Main.state4PS2);
 						break;
 
 					case breakpoint2:
@@ -167,7 +167,7 @@ public class BlueInnerHalf extends OpMode {
 						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_FAR) - 3);
 						Shooter.feederState(mainTime.seconds() > .6 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
-						if (mainTime.seconds() > .7 && Shooter.feederCount() > 1) newState(Main.breakpoint3);
+						if (mainTime.seconds() > .7 && Shooter.feederCount() > 1) newState(Main.state5PS3);
 						break;
 
 					case breakpoint3:
@@ -186,7 +186,7 @@ public class BlueInnerHalf extends OpMode {
 						Robot.setPowerVision(0, 0, Sensors.frontCamera.getPowerShotAngle(PowerShot.PS_CLOSE) - 4);
 						Shooter.feederState(mainTime.seconds() > .6 &&
 								Shooter.getRPM() > (Shooter.targetRPM - 50) && Shooter.getRPM() < (Shooter.targetRPM + 50));
-						if (mainTime.seconds() > .7 && Shooter.feederCount() > 3) newState(Main.breakpoint4);
+						if (mainTime.seconds() > .7 && Shooter.feederCount() > 3) newState(Main.delay2);
 						break;
 
 					case breakpoint4:

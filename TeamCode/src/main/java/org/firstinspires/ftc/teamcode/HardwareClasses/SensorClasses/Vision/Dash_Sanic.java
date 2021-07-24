@@ -37,5 +37,5 @@ public class Dash_Sanic {
     public static int BLUE_OUTER_X = 390;
     public static int BLUE_INNER_X = 0;
     public static int RED_INNER_X = ((int) VisionUtils.IMG_WIDTH) - RING_INIT_RECT_WIDTH;
-    public static int RED_OUTER_X = 50;
+    public static int RED_OUTER_X = 70;
 }
