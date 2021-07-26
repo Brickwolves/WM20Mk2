@@ -27,12 +27,13 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 //Disabled
 @Autonomous(name = "BLUE Outer Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
 public class BlueOuterHalf extends OpMode {
-	
+
 	private Controller operator;
-	
+
 	private Main currentMainState = Main.delay1;
 	private final ElapsedTime mainTime = new ElapsedTime();
 	private static double ringCount = 0;
+	private boolean wasCalibrated = false;
 
 	// 0 RING DELAYS //
 	private static final double START0 = 0; private static final double PRELOAD0 = 0; private static final double WOBBLE0 = 0; private static final double PARK0 = 0;
@@ -48,6 +49,7 @@ public class BlueOuterHalf extends OpMode {
 	@Override
 	public void init() {
 		Utils.setOpMode(this);
+		operator = new Controller(gamepad2);
 
 		Robot.init(); Sensors.init(); Shooter.init(); Intake.init(); Wobble.init();
 
@@ -63,7 +65,8 @@ public class BlueOuterHalf extends OpMode {
 
 		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
-		Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 3 && mainTime.seconds() < 3.9);
+		Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 5 && !wasCalibrated);
+		wasCalibrated = mainTime.seconds() > 5;
 		
 		telemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
 		telemetry.update();
@@ -85,7 +88,7 @@ public class BlueOuterHalf extends OpMode {
 	@RequiresApi(api = Build.VERSION_CODES.N)
 	@Override
 	public void loop() {
-		Sensors.update(); operator.update();
+		Sensors.update();
 		switch ((int) ringCount){
 			case 0:
 				switch (currentMainState){
@@ -159,7 +162,7 @@ public class BlueOuterHalf extends OpMode {
 						break;
 
 					case state8Turn:
-						if(mainTime.seconds() > .8) Robot.setPowerAuto(0, 0, 90);
+						if(mainTime.seconds() > .8) Robot.setPowerVision(0, 0, 90);
 						break;
 				}
 				break;
@@ -240,7 +243,7 @@ public class BlueOuterHalf extends OpMode {
 						break;
 
 					case state8Drive:
-						Robot.strafe(5, 90, 90, 1, .3, 0);
+						Robot.strafe(7, 90, 90, 1, .3, 0);
 						Shooter.setFeederCount(0);
 						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.state9Shoot);
 						break;
@@ -251,23 +254,18 @@ public class BlueOuterHalf extends OpMode {
 							Robot.setPowerVision(0, 0, Sensors.gyro.rawAngle() + Sensors.frontCamera.highGoalError());
 							Shooter.highGoal(true);
 							Shooter.feederState(abs(Sensors.frontCamera.highGoalError()) < 3 && Shooter.getRPM() > (Shooter.targetRPM - 60) && Shooter.getRPM() < (Shooter.targetRPM + 60));
-							if (Shooter.feederCount() >= 2) newState(Main.state10Turn);
+							if (Shooter.feederCount() >= 2) newState(Main.state10Drive);
 						}
 						break;
 
-					case state10Turn:
+					case state10Drive:
 						Shooter.shooterOff(); Shooter.resetFeeder(); Shooter.lockFeeder();
-						Robot.turn(-90, 1, .2);
-						if(Sensors.gyro.angleRange(-95, -85)) newState(Main.state11Drive);
-						break;
-
-					case state11Drive:
-						Robot.strafe(6, -90, 90, .7, .2, 0);
+						Robot.strafe(4, 90, 90, .7, .2, 0);
 						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.stateFinished);
 						break;
 
 					case stateFinished:
-						if(mainTime.seconds() > .7) Robot.setPowerAuto(0, 0, Robot.closestTarget(-90));
+						if(mainTime.seconds() > .7) Robot.setPowerVision(0, 0, Robot.closestTarget(90));
 						break;
 
 				}
@@ -382,7 +380,7 @@ public class BlueOuterHalf extends OpMode {
 						break;
 
 					case stateFinished:
-						if(mainTime.seconds() > .4) Robot.setPowerAuto(0, 0, -90);
+						if(mainTime.seconds() > .4) Robot.setPowerVision(0, 0, -90);
 						break;
 				}
 				break;

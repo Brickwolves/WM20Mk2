@@ -26,13 +26,13 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 //Disabled
 @Autonomous(name = "RED Outer Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
 public class RedOuterHalf extends OpMode {
-	
+
 	private Controller operator;
 	
 	private Main currentMainState = Main.delay1;
 	private final ElapsedTime mainTime = new ElapsedTime();
 	private static double ringCount = 0;
-	private final boolean ringsFound = false;
+	private boolean wasCalibrated = false;
 
 	// 0 RING DELAYS //
 	private static final double START0 = 0; private static final double PRELOAD0 = 0; private static final double WOBBLE0 = 0; private static final double PARK0 = 0;
@@ -50,6 +50,7 @@ public class RedOuterHalf extends OpMode {
 	@Override
 	public void init() {
 		Utils.setOpMode(this);
+		operator = new Controller(gamepad2);
 
 		Robot.init(); Sensors.init(); Shooter.init(); Intake.init(); Wobble.init();
 
@@ -66,7 +67,8 @@ public class RedOuterHalf extends OpMode {
 
 		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
-		Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 3 && mainTime.seconds() < 3.9);
+		Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 5 && !wasCalibrated);
+		wasCalibrated = mainTime.seconds() > 5;
 
 		telemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
 		telemetry.update();
@@ -79,7 +81,7 @@ public class RedOuterHalf extends OpMode {
 		Shooter.resetFeeder(); Shooter.lockFeeder();
 		Wobble.gripperGrip();
 
-		mainTime.reset(); Robot.resetGyro(90); Robot.resetWithoutEncoders();
+		mainTime.reset(); Robot.resetGyro(-90); Robot.resetWithoutEncoders();
 		ringCount = Sensors.backCamera.startingStackCount();
 		Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
 		Intake.intakeOff(); Intake.bumperRetract();
@@ -88,7 +90,7 @@ public class RedOuterHalf extends OpMode {
 	@RequiresApi(api = Build.VERSION_CODES.N)
 	@Override
 	public void loop() {
-		Sensors.update(); operator.update();
+		Sensors.update();
 		switch ((int) ringCount){
 			case 0:
 				switch (currentMainState){

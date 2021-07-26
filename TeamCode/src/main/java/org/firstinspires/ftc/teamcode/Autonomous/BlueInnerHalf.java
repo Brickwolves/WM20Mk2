@@ -30,13 +30,14 @@ import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 //Disabled
 @Autonomous(name = "BLUE Inner Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
 public class BlueInnerHalf extends OpMode {
-	
-	private Controller operator;
+
+	Controller operator;
 	
 	private Main currentMainState = Main.delay1;
 	private final ElapsedTime mainTime = new ElapsedTime();
 	private static double ringCount = 0;
 	private final boolean ringsFound = false;
+	private boolean wasCalibrated = false;
 
 	// 0 RING DELAYS //
 	private static final double START0 = 0; private static final double POWERSHOT0 = 0; private static final double BOUNCEBACK0 = 0; private static final double CORNER0 = 0; private static final double WOBBLE0 = 0;
@@ -49,6 +50,7 @@ public class BlueInnerHalf extends OpMode {
 	@Override
 	public void init() {
 		Utils.setOpMode(this);
+		operator = new Controller(gamepad2);
 
 		Robot.init(); Sensors.init(); Shooter.init(); Intake.init(); Wobble.init();
 
@@ -65,7 +67,8 @@ public class BlueInnerHalf extends OpMode {
 
 		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
-		Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 3 && mainTime.seconds() < 3.9);
+		Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 5 && !wasCalibrated);
+		wasCalibrated = mainTime.seconds() > 5;
 
 		telemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
 		telemetry.update();
@@ -87,7 +90,7 @@ public class BlueInnerHalf extends OpMode {
 	@RequiresApi(api = Build.VERSION_CODES.N)
 	@Override
 	public void loop() {
-		Sensors.update(); operator.update();
+		Sensors.update();
 		switch ((int) ringCount){
 			case 0:
 				switch (currentMainState) {
@@ -134,7 +137,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case delay2:
-						Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder(); Wobble.armFold();
+						Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder();
 						if(mainTime.seconds() > POWERSHOT0) newState(Main.state6Drive);
 						break;
 
@@ -225,7 +228,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case stateFinished:
-						Robot.setPowerAuto(0, 0, closestTarget(90));
+						Robot.setPowerVision(0, 0, closestTarget(90));
 						break;
 
 				}
@@ -284,12 +287,11 @@ public class BlueInnerHalf extends OpMode {
 						Shooter.shooterOff();
 						Shooter.lockFeeder();
 						Shooter.resetFeeder();
-						Wobble.armFold();
 						if (mainTime.seconds() > POWERSHOT0) newState(Main.state6Drive);
 						break;
 
 					case state6Drive:
-						Robot.strafe(29, 88, 88, 1, .2, 0);
+						Robot.strafe(28, 88, 88, 1, .2, 0);
 						Intake.intakeOn();
 						Intake.bumperGroundRings();
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete)
@@ -344,13 +346,13 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state13Drive:
-						Robot.strafe(2.5, 30, -150, .4, .2, 0);
+						Robot.strafe(4, 30, -150, .4, .2, 0);
 						if(Robot.isStrafeComplete && mainTime.seconds() > .1) newState(Main.delay5);
 						break;
 
 					case delay5:
 						if(mainTime.seconds() > .1) Wobble.gripperOpen();
-						if(mainTime.seconds() > .3) { Wobble.armFold(); Robot.strafe(5, 25, 25, .4, .2, 0); }
+						if(mainTime.seconds() > .3) { Wobble.armFold(); Robot.strafe(6, 25, 25, .4, .2, 0); }
 						if(mainTime.seconds() > .5) Wobble.gripperHalf();
 						if(mainTime.seconds() > .6 + WOBBLE1 && Robot.isStrafeComplete) newState(Main.state14Turn);
 						break;
@@ -382,7 +384,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case stateFinished:
-						Robot.setPowerAuto(0, 0, closestTarget(90));
+						Robot.setPowerVision(0, 0, closestTarget(90));
 						break;
 
 				}
@@ -447,7 +449,6 @@ public class BlueInnerHalf extends OpMode {
 						Shooter.shooterOff();
 						Shooter.lockFeeder();
 						Shooter.resetFeeder();
-						Wobble.armFold();
 						if (mainTime.seconds() > POWERSHOT0) newState(Main.state6Drive);
 						break;
 
@@ -547,13 +548,13 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state18Drive:
-						Robot.strafe(7, 90, 90, .8, .2, 0);
+						Robot.strafe(8, 90, 90, .8, .2, 0);
 						Shooter.shooterOff(); Shooter.resetFeeder(); Shooter.lockFeeder();
 						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.stateFinished);
 						break;
 
 					case stateFinished:
-						Robot.setPowerAuto(0, 0, closestTarget(90));
+						if(mainTime.seconds() > .6) Robot.setPowerVision(0, 0, closestTarget(90));
 						break;
 				}
 				break;

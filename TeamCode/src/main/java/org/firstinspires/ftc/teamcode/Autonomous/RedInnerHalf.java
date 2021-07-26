@@ -38,7 +38,7 @@ public class RedInnerHalf extends OpMode {
     private Main currentMainState = Main.delay1;
     private final ElapsedTime mainTime = new ElapsedTime();
     private static double ringCount = 0;
-    private final boolean ringsFound = false;
+    private boolean wasCalibrated = false;
 
     // 0 RING DELAYS //
     private static final double START0 = 0; private static final double POWERSHOT0 = 0; private static final double BOUNCEBACK0 = 0; private static final double CORNER0 = 0; private static final double WOBBLE0 = 0;
@@ -49,6 +49,7 @@ public class RedInnerHalf extends OpMode {
     @Override
     public void init() {
         Utils.setOpMode(this);
+        operator = new Controller(gamepad2);
 
         Robot.init(); Sensors.init(); Shooter.init(); Intake.init(); Wobble.init();
 
@@ -65,7 +66,8 @@ public class RedInnerHalf extends OpMode {
 
         // Calibrate the tower
         Sensors.frontCamera.calibrateTowerDetection();
-        Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 3 && mainTime.seconds() < 3.9);
+        Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 5 && !wasCalibrated);
+        wasCalibrated = mainTime.seconds() > 5;
 
         telemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
         telemetry.update();
@@ -78,7 +80,7 @@ public class RedInnerHalf extends OpMode {
         Shooter.resetFeeder(); Shooter.lockFeeder();
         Wobble.gripperGrip();
 
-        mainTime.reset(); Robot.resetGyro(90); Robot.resetWithoutEncoders();
+        mainTime.reset(); Robot.resetGyro(-90); Robot.resetWithoutEncoders();
         ringCount = Sensors.backCamera.startingStackCount();
         Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
         Intake.intakeOff(); Intake.bumperRetract();
@@ -87,7 +89,7 @@ public class RedInnerHalf extends OpMode {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void loop() {
-        Sensors.update(); operator.update();
+        Sensors.update();
         switch ((int) ringCount){
             case 0:
                 switch (currentMainState) {
@@ -134,7 +136,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case delay2:
-                        Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder(); Wobble.armFold();
+                        Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder();
                         if(mainTime.seconds() > POWERSHOT0) newState(Main.state6Drive);
                         break;
 
@@ -226,7 +228,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case stateFinished:
-                        Robot.setPowerAuto(0, 0, closestTarget(-90));
+                        Robot.setPowerVision(0, 0, closestTarget(-90));
                         break;
 
                 }
@@ -278,7 +280,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case delay2:
-                        Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder(); Wobble.armFold();
+                        Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder();
                         if(mainTime.seconds() > POWERSHOT1) newState(Main.state6Drive);
                         break;
 
@@ -373,7 +375,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case stateFinished:
-                        Robot.setPowerAuto(0, 0, closestTarget(-90));
+                        Robot.setPowerVision(0, 0, closestTarget(-90));
                         break;
 
                 }
@@ -425,7 +427,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case delay2:
-                        Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder(); Wobble.armFold();
+                        Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder();
                         if(mainTime.seconds() > POWERSHOT1) newState(Main.state6Drive);
                         break;
 
@@ -529,7 +531,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case stateFinished:
-                        Robot.setPowerAuto(0, 0, closestTarget(-90));
+                        Robot.setPowerVision(0, 0, closestTarget(-90));
                         break;
                 }
                 break;
