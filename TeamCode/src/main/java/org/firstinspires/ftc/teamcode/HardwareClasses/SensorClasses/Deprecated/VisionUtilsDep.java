@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
@@ -142,3 +143,4 @@ public class VisionUtilsDep {
     }
 
 }
+*/

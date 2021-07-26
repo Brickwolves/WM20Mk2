@@ -159,8 +159,8 @@ public class CameraV2 {
 			// First 0.5 seconds autocalibrate [0 -> 0.5]
 			// After 0.5, switch to regular and get one ring height for 0.5 [0.5 -> 1]
 			// Go back to original state after 1 second autocal sequence
-			if (time.seconds() < 5) sanicPipe.switch2AutoCalibrate();
-			else if (time.seconds() < 10) {
+			if (time.seconds() < 0.5) sanicPipe.switch2AutoCalibrate();
+			else if (time.seconds() < 1) {
 				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = false;
 				sanicPipe.switch2Regular();
 			}

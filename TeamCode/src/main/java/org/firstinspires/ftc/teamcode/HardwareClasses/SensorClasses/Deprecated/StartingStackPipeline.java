@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import org.opencv.core.Core;
@@ -79,4 +80,4 @@ public class StartingStackPipeline extends OpenCvPipeline {
 	public int getStackAnalysis() { return avgBottom; }
 	
 	public int getRingCount() { return ringCount; }
-}
+}*/

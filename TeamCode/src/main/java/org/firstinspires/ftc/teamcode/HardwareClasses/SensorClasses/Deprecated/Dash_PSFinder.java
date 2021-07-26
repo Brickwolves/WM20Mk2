@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -21,3 +22,4 @@ public class Dash_PSFinder {
     public static double horizonLineRatio = 0.0;
 
 }
+*/

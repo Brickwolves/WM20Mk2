@@ -38,14 +38,6 @@ public class BlueInnerHalf extends OpMode {
 	private static double ringCount = 0;
 	private final boolean ringsFound = false;
 
-	// powershot stuff
-	private double psFieldAngle1 = 0;
-	private double psFieldAngle2 = 0;
-	private double psFieldAngle3 = 0;
-	private double psError1 = 0;
-	private double psError2 = 0;
-	private double psError3 = 0;
-
 	// 0 RING DELAYS //
 	private static final double START0 = 0; private static final double POWERSHOT0 = 0; private static final double BOUNCEBACK0 = 0; private static final double CORNER0 = 0; private static final double WOBBLE0 = 0;
 
@@ -64,38 +56,29 @@ public class BlueInnerHalf extends OpMode {
 		Sensors.alliance = Sensors.Alliance.BLUE;
 		Dash_Sanic.AUTO = BLUE_INNER;
 
-		operator = new Controller(gamepad2);
-
+		mainTime.reset();
 	}
-	
+
 	public void init_loop() {
 		operator.update();
-		Shooter.resetFeeder(); Shooter.lockFeeder(); Shooter.shooterOff();
+		Shooter.shooterOff(); Intake.intakeOff();
 
 		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
-		Sensors.backCamera.calibrateRingDetection(operator.square.press());
+		Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 3 && mainTime.seconds() < 3.9);
 
-		if (operator.RB.inputYet()) {
-			if (operator.RB.toggle()) Wobble.gripperGrip();
-			else Wobble.gripperHalf();
-		}
+		telemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
+		telemetry.update();
 
-		if (operator.cross.inputYet()) {
-			if (operator.cross.toggle()) { Intake.intakeStallControl(); Intake.bumperGroundRings(); }
-			else { Intake.intakeOff(); Intake.bumperRetract(); }
-		}
-		
-		multTelemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());
-		multTelemetry.update();
-		
 		sleep(40);
 	}
-	
+
 	public void start() {
 		Sensors.update();
+		Shooter.resetFeeder(); Shooter.lockFeeder();
+		Wobble.gripperGrip();
+
 		mainTime.reset(); Robot.resetGyro(90); Robot.resetWithoutEncoders();
-		Dash_AimBot.curTarget = BLUE_GOAL;
 		ringCount = Sensors.backCamera.startingStackCount();
 		Shooter.setFeederCount(0); Shooter.setTurretAngle(0);
 		Intake.intakeOff(); Intake.bumperRetract();

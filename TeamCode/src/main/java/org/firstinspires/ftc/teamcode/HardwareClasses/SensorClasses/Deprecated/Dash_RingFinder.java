@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -20,4 +21,4 @@ public class Dash_RingFinder {
     public static int dilate_const = 5;
     public static double horizonLineRatio = 0.5;
 
-}
+}*/

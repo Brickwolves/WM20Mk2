@@ -39,7 +39,7 @@ public class Shooter {
     private static final double TURRET_SERVO_R = .935, TURRET_SERVO_L = .42, TURRET_SERVO_RANGE = TURRET_SERVO_R - TURRET_SERVO_L;
     private static final double TURRET_ANGLE_R = -22.5, TURRET_ANGLE_L = 39, TURRET_ANGLE_RANGE = TURRET_ANGLE_R - TURRET_ANGLE_L;
     
-    private static final int TOP_GOAL = 3200, POWER_SHOT = 2830, MID_GOAL = 2900;
+    private static final int TOP_GOAL = 3200, POWER_SHOT = 2810, MID_GOAL = 2900;
     
     private static boolean isFeederLocked;
     private static double shooterRPM, integralSumHigh, integralSumMid;

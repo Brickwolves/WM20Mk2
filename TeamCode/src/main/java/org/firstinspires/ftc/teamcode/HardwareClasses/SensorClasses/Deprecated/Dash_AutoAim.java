@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -24,3 +25,4 @@ public class Dash_AutoAim {
     public static double horizonLineRatio = .7;
 
 }
+*/

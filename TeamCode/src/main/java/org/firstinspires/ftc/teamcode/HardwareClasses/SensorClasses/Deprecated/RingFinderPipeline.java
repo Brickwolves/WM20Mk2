@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Deprecated;
 
 import org.opencv.core.Mat;
@@ -127,11 +128,13 @@ public class RingFinderPipeline extends OpenCvPipeline
             }
 
 
-            /*
+            */
+/*
 
                             L O G G I N G
 
-                                                       */
+                                                       *//*
+
 
             // Log center
             //String coords = "(" + center_x + ", " + center_y + ")";
@@ -143,14 +146,16 @@ public class RingFinderPipeline extends OpenCvPipeline
             putText(output, "Pixel Error: " + pixel_error, new Point(5, IMG_HEIGHT - 40), font, 0.4, new Scalar(255, 255, 0));
             line(output, center, new Point(center_x + pixel_error, center_y), new Scalar(0, 0, 255), thickness);
 
-            /*
+            */
+/*
             Utils.multTelemetry.addData("Ring Count", ring_count);
             Utils.multTelemetry.addData("Pixel Error", pixel_error);
             Utils.multTelemetry.addData("Degree Error", degrees_error);
             Utils.multTelemetry.addData("IMU Angle", RingFinder.imu.getAngle());
             //Utils.multTelemetry.addData("Distance2Object", distance2Ring);
             Utils.multTelemetry.update();
-             */
+             *//*
+
         }
 
         // Release all captures
@@ -181,10 +186,12 @@ public class RingFinderPipeline extends OpenCvPipeline
         return degrees_error;
     }
 
-    /*@Override
+    */
+/*@Override
     public void onViewportTapped() {
         viewportPaused = !viewportPaused;
         if (viewportPaused)     webcam.pauseViewport();
         else                    webcam.resumeViewport();
-    }*/
-}
+    }*//*
+
+}*/
