@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.PowerShot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
+import org.firstinspires.ftc.teamcode.utilities.Velocity_Equation_Constants;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -344,7 +345,7 @@ public class AimBotPipe extends OpenCvPipeline {
         double theta = (towerHeight / IMG_HEIGHT) * .75;
         double distance = 100/Math.tan(theta);
         //distanceSum = distanceSum + distance - distanceBuffer.getValue(distance);
-        return distance / (1 + abs(Sensors.gyro.absModAngle() - 90) * .00761);
+        return distance / (1 + abs(Sensors.gyro.absModAngle() - 90) * Velocity_Equation_Constants.distanceAdjustment);
     }
 
     public double getRawDistance2Goal() {

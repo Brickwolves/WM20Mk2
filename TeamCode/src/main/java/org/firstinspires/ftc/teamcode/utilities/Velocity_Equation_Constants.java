@@ -5,12 +5,16 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Velocity_Equation_Constants {
 
-    public static double mValueHigh = 90;
+    public static double distanceAdjustment = .006;
 
-    public static double kValueHigh = 2950;
+    public static double mValueHigh = 1.5;
+
+    public static double bValueHigh = 2880;
+
+    public static double kValueHigh = 50;
 
     public static double mValueMid = 8000;
 
-    public static double kValueMid = 1400;
+    public static double bValueMid = 1400;
 
 }

@@ -25,10 +25,10 @@ public class Intake {
     
     public static PID intakePID = new PID(.0012, 0.000, 0.000, 0, 50);
     
-    private final static double RETRACTED = 0.325, ROLLING_RINGS = .15, GROUND_RINGS = 0.045;
+    private final static double RETRACTED = 0.325, ROLLING_RINGS = .15, GROUND_RINGS = 0.04;
     private final static double SERVO_DIFF = .025;
     
-    private final static double INTAKE_ON = .9;
+    private final static double INTAKE_ON = 1;
     private final static double INTAKE_REVERSE = .65;
     
     private final static double TICKS_PER_ROTATION = 384.5;

@@ -14,9 +14,8 @@ import org.firstinspires.ftc.teamcode.utilities.PID;
 import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
 import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
 
-import static org.firstinspires.ftc.teamcode.utilities.MathUtils.degCos;
-import static org.firstinspires.ftc.teamcode.utilities.MathUtils.degTan;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Velocity_Equation_Constants.*;
 
 public class Shooter {
@@ -24,7 +23,7 @@ public class Shooter {
     private static DcMotor shooterFront, shooterBack;
     private static Servo feeder, turret, feederLock;
     
-    public static PID highGoalPID = new PID(0.0002, 0.00005, 0.0001, 0.3, 50, true);
+    public static PID highGoalPID = new PID(0.00026, 0.00003, 0.00006, 0.3, 50, true);
     public static PID midGoalPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50, false);
     public static PID powerShotPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50,false);
 
@@ -211,7 +210,7 @@ public class Shooter {
         if(towerDistance < 160 || !Sensors.frontCamera.isHighGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)) {
             RPM = TOP_GOAL;
         }else{
-            RPM = (int) ((int) Math.sqrt(mValueHigh * towerDistance) + kValueHigh);
+            RPM = (int) ((int) Math.pow(mValueHigh * (towerDistance - kValueHigh), 1.6) + bValueHigh);
         }
 
 
@@ -225,7 +224,7 @@ public class Shooter {
         if(towerDistance < 160 || !Sensors.frontCamera.isMidGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
             RPM = MID_GOAL;
         }else{
-            RPM = (int) ((int) Math.sqrt(mValueMid * towerDistance) + kValueMid);
+            RPM = (int) ((int) Math.sqrt(mValueMid * towerDistance + bValueMid));
         }
         setRPM(RPM, midGoalPID);
     }
@@ -281,17 +280,19 @@ public class Shooter {
     //PID STUFF
     
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void setRPM(int targetRPM, PID pid){
+    public static void setRPM(int targetRPM, PID pid) {
         Shooter.targetRPM = targetRPM;
-        
-        pid.setFComponent(targetRPM / 5500.0);
-        
-        double shooterPower = pid.update(targetRPM - updateRPM());
-        
-        if(getRPM() < targetRPM * .9) pid.setIntegralSum(targetRPM * .3);
-        
-        shooterPower = Range.clip(shooterPower,0.0, 1.0);
+
+        pid.setFComponent(targetRPM / 5150.0);
+
+        double shooterPower = pid.update((targetRPM - updateRPM()));
+
+        if (getRPM() < targetRPM * .92) {
+            pid.setIntegralSum(targetRPM * .3);
+        }
+        shooterPower = Range.clip(shooterPower, 0.0, targetRPM / 3529.0);
         setPower(shooterPower);
+
     }
     
     
@@ -305,6 +306,7 @@ public class Shooter {
         double deltaRotations = deltaTicks / TICKS_PER_ROTATION;
         
         shooterRPM = Math.abs(deltaRotations / deltaMinutes);
+        multTelemetry.addData("measured rpm", shooterRPM);
         
         return shooterRPM;
     }
