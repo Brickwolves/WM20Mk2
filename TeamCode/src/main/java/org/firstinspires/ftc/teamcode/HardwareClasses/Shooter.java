@@ -11,9 +11,11 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.utilities.PID;
+import org.firstinspires.ftc.teamcode.utilities.PID_Constants;
 import org.firstinspires.ftc.teamcode.utilities.RingBuffer;
 import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
 
+import static org.firstinspires.ftc.teamcode.utilities.MathUtils.pow;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Velocity_Equation_Constants.*;
@@ -23,7 +25,7 @@ public class Shooter {
     private static DcMotor shooterFront, shooterBack;
     private static Servo feeder, turret, feederLock;
     
-    public static PID highGoalPID = new PID(0.00026, 0.00003, 0.00006, 0.3, 50, true);
+    public static PID highGoalPID = new PID(0.0003, 0.0015, -0.000032, 0.3, 100, true);
     public static PID midGoalPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50, false);
     public static PID powerShotPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50,false);
 
@@ -283,14 +285,16 @@ public class Shooter {
     public static void setRPM(int targetRPM, PID pid) {
         Shooter.targetRPM = targetRPM;
 
-        pid.setFComponent(targetRPM / 5150.0);
+        pid.setFComponent(targetRPM * PID_Constants.f);
+        double shooterPower = pid.update(pow(targetRPM - updateRPM(), .7));
 
-        double shooterPower = pid.update((targetRPM - updateRPM()));
+        multTelemetry.addData("shoter rom", shooterRPM);
+        multTelemetry.addData("tornget", targetRPM);
 
         if (getRPM() < targetRPM * .92) {
             pid.setIntegralSum(targetRPM * .3);
         }
-        shooterPower = Range.clip(shooterPower, 0.0, targetRPM / 3529.0);
+        shooterPower = Range.clip(shooterPower, 0.0, 1);
         setPower(shooterPower);
 
     }
@@ -306,8 +310,6 @@ public class Shooter {
         double deltaRotations = deltaTicks / TICKS_PER_ROTATION;
         
         shooterRPM = Math.abs(deltaRotations / deltaMinutes);
-        multTelemetry.addData("measured rpm", shooterRPM);
-        
         return shooterRPM;
     }
     

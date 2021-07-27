@@ -5,6 +5,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -17,6 +18,7 @@ public class PID {
     private double fComponent;
     private double result = 0;
     public double integralSum = 0;
+    public boolean wasIntegralReset = false;
     private int integralLength;
     public double pComponent; public double iComponent; public double dComponent;
 
@@ -56,9 +58,12 @@ public class PID {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public double update(double error){
 
-        integralSum += error;
-        if(integralLength != 0){ integralSum -= integralBuffer.getValue(error); }
-
+        if(!wasIntegralReset) {
+            integralSum += error;
+            if (integralLength != 0) {
+                integralSum -= integralBuffer.getValue(error);
+            }
+        }
 
         
         double currentTime = System.currentTimeMillis();
@@ -68,11 +73,11 @@ public class PID {
         
         if(!debugMode) {
             pComponent = error * proportional;
-            iComponent = integralSum * integral;
+            iComponent = Range.clip(integralSum * integral, -.007, .007);
             dComponent = (rateOfChange * derivative);
         }else{
             pComponent = error * PID_Constants.p;
-            iComponent = integralSum * PID_Constants.i;
+            iComponent = Range.clip(integralSum * PID_Constants.i, -.007, .0070);
             dComponent = (rateOfChange * PID_Constants.d);
         }
         
@@ -81,7 +86,7 @@ public class PID {
             dashboardTelemetry.addData("Integral", iComponent);
             dashboardTelemetry.addData("Derivative", dComponent);
         }
-        
+        wasIntegralReset = false;
         this.result = pComponent + iComponent + dComponent + fComponent;
         return result;
     }
@@ -96,9 +101,11 @@ public class PID {
     
     public void resetIntegralSum(){
         integralSum = 0;
+        wasIntegralReset = true;
     }
     
     public void setIntegralSum(double integralSum){
         this.integralSum = integralSum;
+        wasIntegralReset = true;
     }
 }
