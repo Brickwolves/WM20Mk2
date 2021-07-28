@@ -37,8 +37,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.CuttleFish;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.SanicPipeV2;
+import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -49,56 +51,21 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
-@TeleOp(name = "VisionTest", group = "Concept")
-public class VisionTest extends OpMode {
+@TeleOp(name = "Calibration", group="Concept")
+public class Calibration extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
-  private OpenCvCamera webcam;
-  private SanicPipeV2 sanicPipeV2 = new SanicPipeV2();
-  private Controller controller;
-  private DcMotor fl, fr, bl, br;
+  private CameraV2 cam;
+
+  private Controller operator;
 
   @Override
   public void init() {
     setOpMode(this);
+    operator = new Controller(gamepad2);
+    Sensors.init();
 
-
-    controller = new Controller(gamepad1);
-
-    initMotors();
-    initCameras();
-
-  }
-  public void initCameras(){
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Back Camera"), cameraMonitorViewId);
-    webcam.openCameraDeviceAsync(() -> webcam.startStreaming(432, 240, OpenCvCameraRotation.UPRIGHT));
-    webcam.setPipeline(sanicPipeV2);
-  }
-
-  public void initMotors(){
-    fl = hardwareMap.get(DcMotor.class, "frontleft");
-    fr = hardwareMap.get(DcMotor.class, "frontright");
-    bl = hardwareMap.get(DcMotor.class, "backleft");
-    br = hardwareMap.get(DcMotor.class, "backright");
-
-    fr.setDirection(DcMotorSimple.Direction.FORWARD);
-    fl.setDirection(DcMotorSimple.Direction.REVERSE);
-    br.setDirection(DcMotorSimple.Direction.FORWARD);
-    bl.setDirection(DcMotorSimple.Direction.REVERSE);
-
-    fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-  }
-
-  public void setPowerTele(double y, double x, double r, double p){
-    fr.setPower((y - x - r) * p);
-    fl.setPower((y + x + r) * p);
-    br.setPower((y + x - r) * p);
-    bl.setPower((y - x - r) * p);
   }
 
 
@@ -108,7 +75,8 @@ public class VisionTest extends OpMode {
      */
   @Override
   public void init_loop() {
-    controls();
+    operator.update();
+    Sensors.frontCamera.calibrateTowerDetection();
   }
 
   /*
@@ -126,23 +94,7 @@ public class VisionTest extends OpMode {
    */
   @Override
   public void loop() {
-    controls();
-  }
 
-  public void controls(){
-    controller.update();
-
-    double power = clip(gamepad1.right_trigger, 0.3, 0.8);
-
-    cuttle_x += controller.rightStick.X();
-    cuttle_y += controller.rightStick.Y();
-
-
-
-    setPowerTele(controller.rightStick.Y(), controller.rightStick.X(), controller.leftStick.X(), power);
-
-    multTelemetry.addData("Status", "Run Time: " + runtime.toString());
-    multTelemetry.update();
   }
 
 }

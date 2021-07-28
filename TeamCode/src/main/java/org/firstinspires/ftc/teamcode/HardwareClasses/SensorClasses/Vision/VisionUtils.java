@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision;
 
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
-import org.openftc.easyopencv.OpenCvCamera;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,13 +232,9 @@ public class VisionUtils {
             contours.remove(largest_index);
             if (contours.size() == 0) break;
         }
-
         for (MatOfPoint cnt : contours){
             cnt.release();
         }
-
         return new_contours;
     }
-
-
 }
