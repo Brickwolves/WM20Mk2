@@ -257,7 +257,8 @@ public class Shooter {
                 if (midGoal) newState(ShooterState.MID_GOAL);
                 if (highGoal) newState(ShooterState.OFF);
                 highGoal(visionAim);
-                turretAim();
+                if(visionAim) turretAim();
+                else setTurretAngle(0);
                 break;
                 
             case MID_GOAL:

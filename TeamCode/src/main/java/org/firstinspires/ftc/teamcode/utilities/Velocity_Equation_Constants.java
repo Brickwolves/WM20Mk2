@@ -9,7 +9,7 @@ public class Velocity_Equation_Constants {
 
     public static double mValueHigh = .05;
 
-    public static double bValueHigh = 3040;
+    public static double bValueHigh = 3025;
 
     public static double kValueHigh = 50;
 
