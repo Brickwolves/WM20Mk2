@@ -46,8 +46,10 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import static com.qualcomm.robotcore.util.Range.clip;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2.writeThreshValues;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_x;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_y;
+import static org.firstinspires.ftc.teamcode.utilities.Loggers.CSVReader.reloadThresholds;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
@@ -97,4 +99,10 @@ public class Calibration extends OpMode {
 
   }
 
+  @Override
+  public void stop() {
+
+    writeThreshValues();
+
+  }
 }

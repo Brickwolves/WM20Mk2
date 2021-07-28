@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2.reloadThresholds;
 
 public class Sensors {
 	
@@ -30,6 +31,9 @@ public class Sensors {
 	
 	public static void init(){
 		gyro.init();
+
+		// Read threshold values from file on robot and save them to static variables
+		reloadThresholds();
 
 		if (Dash_AimBot.DISPLAY_FRONT){
 			backCamera = new CameraV2("Back Camera");

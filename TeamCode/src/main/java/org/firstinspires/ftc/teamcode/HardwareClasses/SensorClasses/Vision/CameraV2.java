@@ -9,13 +9,23 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Robot.closestTarget;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MAX_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.BLUE_MIN_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MAX_THRESH;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
+import static org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader.LOG_DIR;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.gridLogger;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 
@@ -54,6 +64,90 @@ public class CameraV2 {
 		// Set the pipeline depending on id
 		if (id.equals("Front Camera")) webcam.setPipeline(aimBotPipe);
 		else webcam.setPipeline(sanicPipe);
+	}
+
+
+	public static void reloadThresholds(){
+		String splitBy = ",";
+		try
+		{
+			//parsing a CSV file into BufferedReader class constructor
+			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR));
+
+			// header
+			// hsv max
+			// hsv min
+			// ycrcb max
+			// ycrcb min
+			// each row has four items, last one is time
+
+
+			String headers = br.readLine();
+
+			// update blue goal max hsv
+			String[] max_blue_thresh = br.readLine().split(splitBy);
+			for (int i=0; i < max_blue_thresh.length - 1; i++){
+				BLUE_MAX_THRESH.val[i] = Double.parseDouble(max_blue_thresh[i]);
+			}
+
+			// update blue goal min hsv
+			String[] min_blue_thresh = br.readLine().split(splitBy);
+			for (int i=0; i < min_blue_thresh.length - 1; i++){
+				BLUE_MIN_THRESH.val[i] = Double.parseDouble(min_blue_thresh[i]);
+			}
+
+			// update blue goal max hsv
+			String[] max_red_thresh = br.readLine().split(splitBy);
+			for (int i=0; i < max_red_thresh.length - 1; i++){
+				RED_MAX_THRESH.val[i] = Double.parseDouble(max_red_thresh[i]);
+			}
+
+			// update blue goal min hsv
+			String[] min_red_thresh = br.readLine().split(splitBy);
+			for (int i=0; i < min_red_thresh.length - 1; i++){
+				RED_MIN_THRESH.val[i] = Double.parseDouble(min_red_thresh[i]);
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void writeThreshValues(){
+
+		String[] headers = {"ONE", "TWO", "THREE"};
+
+		// Add blue max thresh values
+		for (int i=0; i < BLUE_MAX_THRESH.val.length - 1; i++){
+			gridLogger.add(headers[i], BLUE_MAX_THRESH.val[i]);
+		}
+
+		gridLogger.writeRow();
+
+
+		// Add blue mainthresh values
+		for (int i=0; i < BLUE_MIN_THRESH.val.length - 1; i++){
+			gridLogger.add(headers[i], BLUE_MIN_THRESH.val[i]);
+		}
+
+		gridLogger.writeRow();
+
+
+		// Add blue max thresh values
+		for (int i=0; i < RED_MAX_THRESH.val.length - 1; i++){
+			gridLogger.add(headers[i], RED_MAX_THRESH.val[i]);
+		}
+
+		gridLogger.writeRow();
+
+
+		// Add blue mainthresh values
+		for (int i=0; i < RED_MIN_THRESH.val.length - 1; i++){
+			gridLogger.add(headers[i], RED_MIN_THRESH.val[i]);
+		}
+
+		gridLogger.writeRow();
 	}
 
 	public void stopVision(){ webcam.closeCameraDevice(); }

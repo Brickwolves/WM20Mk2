@@ -9,6 +9,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utilities.Loggers.Clock;
+import org.firstinspires.ftc.teamcode.utilities.Loggers.FileLogWriter;
+import org.firstinspires.ftc.teamcode.utilities.Loggers.GridLogger;
+import org.firstinspires.ftc.teamcode.utilities.Loggers.LogWriter;
+import org.firstinspires.ftc.teamcode.utilities.Loggers.TestClock;
 
 import static java.lang.Math.floorMod;
 import static java.lang.Math.pow;
@@ -24,6 +29,11 @@ public class Utils {
     public static Telemetry dashboardTelemetry = dashboard.getTelemetry();
     public static MultipleTelemetry multTelemetry;
     public static TelemetryPacket packet;
+
+    // Writers
+    public static LogWriter writer = new FileLogWriter("log.csv");
+    public static Clock testClock = new TestClock();
+    public static GridLogger gridLogger = new GridLogger(writer, testClock);
 
 
     private static boolean isLinearOpMode;
@@ -51,15 +61,6 @@ public class Utils {
     public static boolean isActive(){
         if (isLinearOpMode) return linearOpMode.opModeIsActive();
         return true;
-    }
-
-    public static void log(String label, Object obj){
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put(label, obj);
-    }
-
-    public static void updateLog(){
-        dashboard.sendTelemetryPacket(packet);
     }
 
     public static void breakpoint(boolean continue_on){
