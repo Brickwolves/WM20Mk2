@@ -326,8 +326,8 @@ public class RedOuterHalf extends OpMode {
 						break;
 
 					case state6Shoot:
-						if(Robot.currentInches % 2 == 0) Intake.bumperPos(.036);
-						else Intake.bumperPos(.06);
+						if(Math.round(Robot.currentInches) % 2 == 0) Intake.bumperPos(.036);
+						else Intake.bumperPos(.08);
 						Wobble.armTele();
 						Robot.strafe(16, Sensors.gyro.rawAngle() + Sensors.frontCamera.highGoalError(), -90, .1, .1, 0);
 						Shooter.turretAim(); Shooter.highGoal(true);
@@ -349,7 +349,7 @@ public class RedOuterHalf extends OpMode {
 						break;
 
 					case state12Drive:
-						Robot.strafe(25, 65, -115, 1, .3, 0);
+						Robot.strafe(28, 65, -115, 1, .3, 0);
 						if(Robot.currentInches > 19) Wobble.armPosition(.15);
 						if(mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay4);
 						break;
