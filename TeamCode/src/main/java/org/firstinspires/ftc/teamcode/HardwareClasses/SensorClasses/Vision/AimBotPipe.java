@@ -343,7 +343,7 @@ public class AimBotPipe extends OpenCvPipeline {
         if (!isTowerFound() || towerRect.y == 0) return 0;
         double towerHeight = TOWER_HEIGHT - towerRect.y;
         double theta = (towerHeight / IMG_HEIGHT) * .75;
-        double distance = 100/Math.tan(theta);
+        double distance = (curTarget == RED_GOAL) ? 100/Math.tan(theta) - 10 : 100/Math.tan(theta);
         //distanceSum = distanceSum + distance - distanceBuffer.getValue(distance);
         return distance / (1 + abs(Sensors.gyro.absModAngle() - 90) * Velocity_Equation_Constants.distanceAdjustment);
     }

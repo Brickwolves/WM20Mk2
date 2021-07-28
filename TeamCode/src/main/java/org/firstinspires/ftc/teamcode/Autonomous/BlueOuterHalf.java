@@ -312,43 +312,27 @@ public class BlueOuterHalf extends OpMode {
 
 					case state5Drive:
 						Robot.strafe(11, 90, 0, 1, .2, 0);
+						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state6Drive);
+						break;
+
+					case state6Drive:
+						Wobble.armTele();
+						//Intake.intakeOn();
+						Shooter.highGoal(true);
+						Robot.strafe(3, 90, 90, .5, .2, 0);
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state6Shoot);
 						break;
 
 					case state6Shoot:
+						Intake.bumperPos(.036);
 						Wobble.armTele();
-						Robot.strafe(9, Sensors.gyro.rawAngle() + Sensors.frontCamera.highGoalError(), 90, .1, .1, 0);
+						Robot.strafe(16, Sensors.gyro.rawAngle() + Sensors.frontCamera.highGoalError(), 90, .1, .1, 0);
 						Shooter.turretAim(); Shooter.highGoal(true);
 						Intake.intakeOn();
-						Shooter.feederState(abs(Sensors.frontCamera.highGoalError()) < 3 && Shooter.getRPM() > (Shooter.targetRPM - 60) && Shooter.getRPM() < (Shooter.targetRPM + 60) && Robot.currentInches < 8);
-						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state7Drive);
-						break;
-
-					case state7Drive:
-						Robot.strafe(.7, 90, -90, .1, .1, 0);
-						Shooter.turretAim(); Shooter.highGoal(true);
-						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state8Shoot);
-						break;
-
-					case state8Shoot:
-						Robot.strafe(9, Sensors.gyro.rawAngle() + Sensors.frontCamera.highGoalError(), 90, .1, .1, 0);
-						Shooter.turretAim(); Shooter.highGoal(true);
-						Shooter.feederState(abs(Sensors.frontCamera.highGoalError()) < 3 && Shooter.getRPM() > (Shooter.targetRPM - 60) && Shooter.getRPM() < (Shooter.targetRPM + 60) && Robot.currentInches < 8);
-						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state9Drive);
-						break;
-
-					case state9Drive:
-						Robot.strafe(.7, 90, -90, .1, .1, 0);
-						Shooter.turretAim(); Shooter.highGoal(true);
-						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state10Shoot);
-						break;
-
-					case state10Shoot:
-						Robot.strafe(9, Sensors.gyro.rawAngle() + Sensors.frontCamera.highGoalError(), 90, .1, .1, 0);
-						Shooter.turretAim(); Shooter.highGoal(true);
-						Shooter.feederState(abs(Sensors.frontCamera.highGoalError()) < 3 && Shooter.getRPM() > (Shooter.targetRPM - 60) && Shooter.getRPM() < (Shooter.targetRPM + 60) && Robot.currentInches < 8);
+						Shooter.feederState(abs(Sensors.frontCamera.highGoalError()) < 3 && Shooter.getRPM() > (Shooter.targetRPM - 60) && Shooter.getRPM() < (Shooter.targetRPM + 60));
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay3);
 						break;
+
 
 					case delay3:
 						if(mainTime.seconds() > STACK4) newState(Main.state11Turn);
@@ -362,7 +346,7 @@ public class BlueOuterHalf extends OpMode {
 						break;
 
 					case state12Drive:
-						Robot.strafe(26, -73, 107, 1, .3, 0);
+						Robot.strafe(30, -73, 107, 1, .3, 0);
 						if(Robot.currentInches > 19) Wobble.armPosition(.15);
 						if(mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay4);
 						break;
@@ -376,11 +360,16 @@ public class BlueOuterHalf extends OpMode {
 
 					case state13Drive:
 						Robot.strafe(14, -90, -90, 1, .2, 0);
-						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.stateFinished);
+						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.state14Turn);
+						break;
+
+					case state14Turn:
+						if(mainTime.seconds() > .8) Robot.turn(90, 1, .3);
+						if(Sensors.gyro.angleRange(85, 95)) newState(Main.stateFinished);
 						break;
 
 					case stateFinished:
-						if(mainTime.seconds() > .4) Robot.setPowerVision(0, 0, -90);
+						Robot.setPowerVision(0, 0, Robot.closestTarget(90));
 						break;
 				}
 				break;

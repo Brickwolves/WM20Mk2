@@ -25,9 +25,9 @@ public class Shooter {
     private static DcMotor shooterFront, shooterBack;
     private static Servo feeder, turret, feederLock;
     
-    public static PID highGoalPID = new PID(0.0003, 0.0015, -0.000032, 0.3, 100, true);
-    public static PID midGoalPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50, false);
-    public static PID powerShotPID = new PID(.0002, 0.00005, 0.00007, 0.3, 50,false);
+    public static PID highGoalPID = new PID(0.00029, 0.00003, -0.000047, 0.3, 100, true);
+    public static PID midGoalPID = new PID(.00029, 0.00003, -0.000047, 0.3, 100, false);
+    public static PID powerShotPID = new PID(.00029, 0.00003, -0.000047, 0.3, 100,false);
 
     private static final double TICKS_PER_ROTATION = 42;
     
