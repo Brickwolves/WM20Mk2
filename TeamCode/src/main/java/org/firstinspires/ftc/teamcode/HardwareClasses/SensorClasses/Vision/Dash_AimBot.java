@@ -22,7 +22,7 @@ public class Dash_AimBot {
     public static int CbM = 15;     // Lighter conditions
     public static int HM = 30;   // 5
     public static int SM = 30;  // 10
-    public static int VM = 30;  // 10
+    public static int VM = 30;  // 105
 
     // Tuning constants to eliminate noise
     public static int blur = 5;
