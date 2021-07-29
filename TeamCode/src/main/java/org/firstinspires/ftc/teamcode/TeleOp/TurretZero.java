@@ -47,6 +47,7 @@ import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 
 
 @TeleOp(name = "Turret Zero", group = "TeleOp")
+@Disabled
 public class TurretZero extends OpMode {
 
   Servo turret;

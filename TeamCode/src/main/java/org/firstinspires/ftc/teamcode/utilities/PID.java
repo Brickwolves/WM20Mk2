@@ -73,11 +73,11 @@ public class PID {
         
         if(!debugMode) {
             pComponent = error * proportional;
-            iComponent = Range.clip(integralSum * integral, -.007, .007);
+            iComponent = Range.clip(integralSum * integral, -.005, .005);
             dComponent = (rateOfChange * derivative);
         }else{
             pComponent = error * PID_Constants.p;
-            iComponent = Range.clip(integralSum * PID_Constants.i, -.007, .0070);
+            iComponent = Range.clip(integralSum * PID_Constants.i, -.005, .005);
             dComponent = (rateOfChange * PID_Constants.d);
         }
         

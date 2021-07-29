@@ -31,9 +31,9 @@ public class Dash_AimBot {
     public static int goalWidth = 100;
 
     // PowerShots
-    public static double PS_BLUE_CLOSE_DIST = 10;
-    public static double PS_BLUE_MID_DIST = 35;
-    public static double PS_BLUE_FAR_DIST = 52;
+    public static double PS_BLUE_CLOSE_DIST = 11;
+    public static double PS_BLUE_MID_DIST = 34;
+    public static double PS_BLUE_FAR_DIST = 50;
 
     public static double PS_RED_CLOSE_DIST = 40;
     public static double PS_RED_MID_DIST = 58;

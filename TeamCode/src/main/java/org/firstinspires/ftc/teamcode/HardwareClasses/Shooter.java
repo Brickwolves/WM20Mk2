@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.AimBotPipe;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils;
 import org.firstinspires.ftc.teamcode.utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.utilities.PID;
 import org.firstinspires.ftc.teamcode.utilities.PID_Constants;
@@ -19,13 +21,15 @@ import static org.firstinspires.ftc.teamcode.utilities.MathUtils.pow;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Velocity_Equation_Constants.*;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
+
 
 public class Shooter {
     
     private static DcMotor shooterFront, shooterBack;
     private static Servo feeder, turret, feederLock;
     
-    public static PID highGoalPID = new PID(0.00029, 0.00003, -0.000047, 0.3, 100, true);
+    public static PID highGoalPID = new PID(0.00023, 0.00003, -0.000047, 0.3, 100, true);
     public static PID midGoalPID = new PID(.00029, 0.00003, -0.000047, 0.3, 100, false);
     public static PID powerShotPID = new PID(.00029, 0.00003, -0.000047, 0.3, 100,false);
 
@@ -40,7 +44,7 @@ public class Shooter {
     private static final double TURRET_SERVO_R = .935, TURRET_SERVO_L = .42, TURRET_SERVO_RANGE = TURRET_SERVO_R - TURRET_SERVO_L;
     private static final double TURRET_ANGLE_R = -22.5, TURRET_ANGLE_L = 39, TURRET_ANGLE_RANGE = TURRET_ANGLE_R - TURRET_ANGLE_L;
     
-    private static final int TOP_GOAL = 3200, POWER_SHOT = 2810, MID_GOAL = 2900;
+    private static final int TOP_GOAL = 3200, POWER_SHOT = 2800, MID_GOAL = 2900;
     
     private static boolean isFeederLocked;
     private static double shooterRPM, integralSumHigh, integralSumMid;
@@ -206,27 +210,31 @@ public class Shooter {
     
     
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void highGoal(boolean autoPower){
+    public static void highGoal(boolean autoPower, int rpmOffset){
         double towerDistance = Sensors.frontCamera.highGoalDistance();
         int RPM;
+        rpmOffset += (curTarget == VisionUtils.Target.BLUE_GOAL) ? 40 : 0;
         if(towerDistance < 160 || !Sensors.frontCamera.isHighGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)) {
             RPM = TOP_GOAL;
         }else{
-            RPM = (int) ((int) Math.pow(mValueHigh * (towerDistance - kValueHigh), 1.6) + bValueHigh);
+            RPM = (int) ((int) Math.pow(highMValue * (towerDistance - highKValue), 1.6) + highBValue) + rpmOffset;
         }
-
-
         setRPM(RPM, highGoalPID);
+    }
+
+    public static void highGoal(boolean autoPower){
+        highGoal(autoPower, 0);
     }
     
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void midGoal(boolean autoPower){
         double towerDistance = Sensors.frontCamera.midGoalDistance();
         int RPM;
+        int rpmOffset = (curTarget == VisionUtils.Target.BLUE_GOAL) ? 0 : -40;
         if(towerDistance < 160 || !Sensors.frontCamera.isMidGoalFound() || !autoPower || !Sensors.gyro.absAngleRange(67.5, 127.5)){
             RPM = MID_GOAL;
         }else{
-            RPM = (int) ((int) Math.sqrt(mValueMid * towerDistance + bValueMid));
+            RPM = (int) ((int) Math.pow(midMValue * (towerDistance - midKValue), 1.6) + midBValue) + rpmOffset;
         }
         setRPM(RPM, midGoalPID);
     }

@@ -28,8 +28,8 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 
 //Disabled
-@Autonomous(name = "BLUE Inner Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
-public class BlueInnerHalf extends OpMode {
+@Autonomous(name = "BLUE Inside", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
+public class BlueInside extends OpMode {
 
 	Controller operator;
 	
@@ -43,7 +43,10 @@ public class BlueInnerHalf extends OpMode {
 	private static final double START0 = 0; private static final double POWERSHOT0 = 0; private static final double BOUNCEBACK0 = 0; private static final double CORNER0 = 0; private static final double WOBBLE0 = 0;
 
 	// 1 RING DELAYS //
-	private static final double START1 = 0; private static final double PRELOAD1 = 0; private static final double STACK1 = 0;private static final double WOBBLE1 = 0;
+	private static final double START1 = 0; private static final double POWERSHOT1 = 0; private static final double BOUNCEBACK1 = 0; private static final double CORNER1 = 0; private static final double WOBBLE1 = 0;
+
+	//4 RING DELAYS //
+	private static final double START4 = 0; private static final double POWERSHOT4 = 0; private static final double BOUNCEBACK4 = 0; private static final double CORNER4 = 0; private static final double WOBBLE4 = 0;
 
 
 
@@ -141,7 +144,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state6Drive:
-						Robot.strafe(29, 88, 88, 1, .2, 0);
+						Robot.strafe(27, 88, 88, 1, .2, 0);
 						Intake.intakeOn(); Intake.bumperGroundRings();
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay3);
 						break;
@@ -290,7 +293,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state6Drive:
-						Robot.strafe(28, 88, 88, 1, .2, 0);
+						Robot.strafe(27, 88, 88, 1, .2, 0);
 						Intake.intakeOn();
 						Intake.bumperGroundRings();
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete)
@@ -452,7 +455,7 @@ public class BlueInnerHalf extends OpMode {
 						break;
 
 					case state6Drive:
-						Robot.strafe(29, 88, 88, 1, .2, 0);
+						Robot.strafe(27, 88, 88, 1, .2, 0);
 						Intake.intakeOn(); Intake.bumperGroundRings();
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete)
 							newState(Main.delay3);
@@ -507,19 +510,23 @@ public class BlueInnerHalf extends OpMode {
 					case state13Turn:
 						Wobble.armPosition(.15);
 						Robot.turn(-40, 1, 1);
-						if (Sensors.gyro.angleRange(-45, -35)) newState(Main.delay5);
+						if (Sensors.gyro.angleRange(-45, -35)) newState(Main.state13Drive);
+						break;
+
+					case state13Drive:
+						Robot.strafe(.5, -40, 140, .2, .2, 0);
+						if(mainTime.seconds() > .1 && Robot.isStrafeComplete) newState(Main.delay5);
 						break;
 
 					case delay5:
-						Robot.setPowerAuto(0, 0, closestTarget(-40));
 						if(mainTime.seconds() > .1) Wobble.gripperOpen();
-						if(mainTime.seconds() > .3) Wobble.armFold();
+						if(mainTime.seconds() > .3) Wobble.armFold(); Robot.setPowerAuto(0, 0, closestTarget(-40));
 						if(mainTime.seconds() > .5) Wobble.gripperHalf();
 						if(mainTime.seconds() > .6 + WOBBLE1) newState(Main.state14Drive);
 						break;
 
 					case state14Drive:
-						Robot.strafe(12, -35, -35, 1, .3, 0);
+						Robot.strafe(15.5, -35, -35, 1, .3, 0);
 						if (mainTime.seconds() > .2 && Robot.isStrafeComplete)
 							newState(Main.state15Turn);
 						break;

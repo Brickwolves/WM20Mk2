@@ -30,8 +30,8 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 
 //Disabled
-@Autonomous(name = "RED Inner Half", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
-public class RedInnerHalf extends OpMode {
+@Autonomous(name = "RED Inside", group = "Auto", preselectTeleOp = "Wolfpack TeleOp")
+public class RedInside extends OpMode {
 
     private Controller operator;
 
@@ -42,7 +42,12 @@ public class RedInnerHalf extends OpMode {
 
     // 0 RING DELAYS //
     private static final double START0 = 0; private static final double POWERSHOT0 = 0; private static final double BOUNCEBACK0 = 0; private static final double CORNER0 = 0; private static final double WOBBLE0 = 0;
+
+    // 1 RING DELAYS //
     private static final double START1 = 0; private static final double POWERSHOT1 = 0; private static final double BOUNCEBACK1 = 0; private static final double CORNER1 = 0; private static final double WOBBLE1 = 0;
+
+    // 4 RING DELAYS //
+    private static final double START4 = 0; private static final double POWERSHOT4 = 0; private static final double BOUNCEBACK4 = 0; private static final double CORNER4 = 0; private static final double WOBBLE4 = 0;
 
 
 
@@ -140,7 +145,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case state6Drive:
-                        Robot.strafe(28, -90, -90, 1, .2, 0);
+                        Robot.strafe(27, -90, -90, 1, .2, 0);
                         Intake.intakeOn(); Intake.bumperGroundRings();
                         if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay3);
                         break;
@@ -172,7 +177,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case state10Drive:
-                        Robot.strafe(23, -180, -180, 1, .3, 0);
+                        Robot.strafe(21, -180, -180, 1, .3, 0);
                         if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state11Drive);
                         break;
 
@@ -284,7 +289,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case state6Drive:
-                        Robot.strafe(28, -90, -90, 1, .2, 0);
+                        Robot.strafe(27, -90, -90, 1, .2, 0);
                         Intake.intakeOn(); Intake.bumperGroundRings();
                         if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay3);
                         break;
@@ -316,7 +321,7 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case state10Drive:
-                        Robot.strafe(23, -180, -180, 1, .3, 0);
+                        Robot.strafe(21, -180, -180, 1, .3, 0);
                         if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state11Drive);
                         break;
 
@@ -384,7 +389,7 @@ public class RedInnerHalf extends OpMode {
             case 4:
                 switch (currentMainState) {
                     case delay1:
-                        if (mainTime.seconds() >= START1) newState(Main.state1Drive);
+                        if (mainTime.seconds() >= START4) newState(Main.state1Drive);
                         break;
 
                     case state1Drive:
@@ -427,17 +432,17 @@ public class RedInnerHalf extends OpMode {
 
                     case delay2:
                         Shooter.shooterOff(); Shooter.lockFeeder(); Shooter. resetFeeder();
-                        if(mainTime.seconds() > POWERSHOT1) newState(Main.state6Drive);
+                        if(mainTime.seconds() > POWERSHOT4) newState(Main.state6Drive);
                         break;
 
                     case state6Drive:
-                        Robot.strafe(28, -90, -90, 1, .2, 0);
+                        Robot.strafe(27, -90, -90, 1, .2, 0);
                         Intake.intakeOn(); Intake.bumperGroundRings();
                         if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.delay3);
                         break;
 
                     case delay3:
-                        if(mainTime.seconds() > BOUNCEBACK1) newState(Main.state7Turn);
+                        if(mainTime.seconds() > BOUNCEBACK4) newState(Main.state7Turn);
                         break;
 
                     case state7Turn:
@@ -459,11 +464,11 @@ public class RedInnerHalf extends OpMode {
                         break;
 
                     case delay4:
-                        if(mainTime.seconds() > CORNER1) newState(Main.state10Drive);
+                        if(mainTime.seconds() > CORNER4) newState(Main.state10Drive);
                         break;
 
                     case state10Drive:
-                        Robot.strafe(23, -180, -180, 1, .3, 0);
+                        Robot.strafe(21, -180, -180, 1, .3, 0);
                         if (mainTime.seconds() > .2 && Robot.isStrafeComplete) newState(Main.state11Drive);
                         break;
 
@@ -492,7 +497,7 @@ public class RedInnerHalf extends OpMode {
                         if(mainTime.seconds() > .1) Wobble.gripperOpen();
                         if(mainTime.seconds() > .3) Wobble.armFold();
                         if(mainTime.seconds() > .5) Wobble.gripperHalf();
-                        if(mainTime.seconds() > .6 + WOBBLE1) newState(Main.state14Drive);
+                        if(mainTime.seconds() > .6 + WOBBLE4) newState(Main.state14Drive);
                         break;
 
                     case state14Drive:
