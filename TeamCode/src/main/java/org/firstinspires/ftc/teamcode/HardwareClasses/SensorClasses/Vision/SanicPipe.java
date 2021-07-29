@@ -61,7 +61,7 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 //import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 //import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Deprecated.Dash_Shooter.SHOOTER_COEFF;
 
-public class SanicPipeV2 extends OpenCvPipeline {
+public class SanicPipe extends OpenCvPipeline {
 
     // Helper Attributes
     private boolean viewportPaused;
@@ -196,7 +196,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
             degrees_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X);
 
             // Ring Count
-            HAS_SET_ONE_RING_HEIGHT = !(time.seconds() < 3);
+            HAS_SET_ONE_RING_HEIGHT = !(time.seconds() < 5);
             if (!HAS_SET_ONE_RING_HEIGHT) Dash_Sanic.ONE_RING_HEIGHT = (int) (0.75 * ringRect.height);
             ring_count = (ringRect.height > Dash_Sanic.ONE_RING_HEIGHT) ? 4 : 1;
 

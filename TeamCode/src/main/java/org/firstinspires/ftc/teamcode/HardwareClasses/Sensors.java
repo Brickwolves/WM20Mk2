@@ -4,19 +4,19 @@ package org.firstinspires.ftc.teamcode.HardwareClasses;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Camera;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot;
 import org.firstinspires.ftc.teamcode.utilities.MathUtils;
 import org.firstinspires.ftc.teamcode.utilities.RingBufferOwen;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2.reloadThresholds;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Camera.reloadThresholds;
 
 public class Sensors {
 	
 	public static Gyro gyro = new Gyro();
-	public static CameraV2 frontCamera, backCamera;
+	public static Camera frontCamera, backCamera;
 	//public static REVColorSensor hopperColor;
 	private static long currentTimeMillis;
 	
@@ -38,12 +38,12 @@ public class Sensors {
 		reloadThresholds();
 
 		if (Dash_AimBot.DISPLAY_FRONT){
-			backCamera = new CameraV2("Back Camera");
-			frontCamera = new CameraV2("Front Camera", true);
+			backCamera = new Camera("Back Camera");
+			frontCamera = new Camera("Front Camera", true);
 		}
 		else {
-			frontCamera = new CameraV2("Front Camera");
-			backCamera = new CameraV2("Back Camera", true);
+			frontCamera = new Camera("Front Camera");
+			backCamera = new Camera("Back Camera", true);
 		}
 
 		sensorTime.reset();

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish;
+package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish;
 
 import com.acmerobotics.dashboard.config.Config;
 

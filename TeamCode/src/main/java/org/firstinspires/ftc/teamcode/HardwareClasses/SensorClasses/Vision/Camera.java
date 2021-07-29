@@ -25,7 +25,6 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.HAS_SET_ONE_RING_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
@@ -36,10 +35,10 @@ import static org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader.LOG_D
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 
-public class CameraV2 {
+public class Camera {
 
 	public AimBotPipe aimBotPipe = new AimBotPipe();
-	public SanicPipeV2 sanicPipe = new SanicPipeV2();
+	public SanicPipe sanicPipe = new SanicPipe();
 	private OpenCvCamera webcam;
 	private String id;
 	private boolean display;
@@ -57,7 +56,7 @@ public class CameraV2 {
 	public Clock testClock1 = new TestClock();
 	public GridLogger ringGridLogger = new GridLogger(writer1, testClock1);
 
-	public CameraV2(String id, boolean display2Phone){
+	public Camera(String id, boolean display2Phone){
 		this.id = id;
 
 		// If we enabled display, add the cameraMonitorViewId to the creation of our webcam
@@ -73,7 +72,7 @@ public class CameraV2 {
 
 		time.reset();
 	}
-	public CameraV2(String id){
+	public Camera(String id){
 		this.id = id;
 
 		webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, id));
@@ -390,10 +389,6 @@ public class CameraV2 {
 		}
 	}
 
-	public void saveOneRingHeight(){
-		HAS_SET_ONE_RING_HEIGHT = !(time.seconds() < 1);
-	}
-
 	public void calibrateRingDetection(){
 		switch (Controller.touchSensor.getCount()){
 			case 0:
@@ -416,9 +411,9 @@ public class CameraV2 {
 				break;
 		}
 
-		multTelemetry.addData("Ring Phase", Controller.touchSensor.getCount());
+		//multTelemetry.addData("Ring Phase", Controller.touchSensor.getCount());
 		multTelemetry.addData("RING_COUNT", sanicPipe.getRingCount());
-		multTelemetry.addData("RING_MAX", RING_MAX_THRESH);
-		multTelemetry.addData("RING_MIN", RING_MIN_THRESH);
+		//multTelemetry.addData("RING_MAX", RING_MAX_THRESH);
+		//multTelemetry.addData("RING_MIN", RING_MIN_THRESH);
 	}
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish;
+package org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish;
 
 import android.os.Environment;
 
@@ -19,12 +19,12 @@ import static com.qualcomm.robotcore.util.Range.clip;
 import static java.lang.Math.round;
 import static java.lang.StrictMath.abs;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.CUTTLE_DEBUG_MODE_ON;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.bw_thresh;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_h;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_w;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_x;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_y;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish.Dash_CuttleFish.CUTTLE_DEBUG_MODE_ON;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish.Dash_CuttleFish.bw_thresh;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish.Dash_CuttleFish.cuttle_h;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish.Dash_CuttleFish.cuttle_w;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish.Dash_CuttleFish.cuttle_x;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.$$$OpCuttleFish.Dash_CuttleFish.cuttle_y;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.AXES.X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_WIDTH;

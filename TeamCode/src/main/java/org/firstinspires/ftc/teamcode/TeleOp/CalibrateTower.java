@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Camera;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader;
@@ -46,7 +46,7 @@ public class CalibrateTower extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
-  private CameraV2 cam;
+  private Camera cam;
 
   private Controller operator;
 

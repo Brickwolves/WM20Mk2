@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.utilities.Utils;
 
 import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Auto.BLUE_INNER;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Auto.BLUE_OUTER;
 
 @Disabled
