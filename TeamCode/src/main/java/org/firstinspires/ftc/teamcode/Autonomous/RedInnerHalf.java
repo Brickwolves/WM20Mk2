@@ -66,7 +66,6 @@ public class RedInnerHalf extends OpMode {
 
         // Calibrate the tower
         Sensors.frontCamera.calibrateTowerDetection();
-        Sensors.backCamera.calibrateRingDetection(mainTime.seconds() > 5 && !wasCalibrated);
         wasCalibrated = mainTime.seconds() > 5;
 
         telemetry.addData("Ring Count = ", Sensors.backCamera.startingStackCount());

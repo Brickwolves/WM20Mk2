@@ -19,13 +19,16 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.HAS_SET_ONE_RING_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.RED_GOAL;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.Sensors.Alliance.BLUE;
+import static org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader.FILE_NAME;
 import static org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader.LOG_DIR;
-import static org.firstinspires.ftc.teamcode.utilities.Utils.gridLogger;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.towerGridLogger;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.ringGridLogger;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 
@@ -52,6 +55,8 @@ public class CameraV2 {
 		// Set the pipeline depending on id
 		if (id.equals("Front Camera")) webcam.setPipeline(aimBotPipe);
 		else webcam.setPipeline(sanicPipe);
+
+		time.reset();
 	}
 	public CameraV2(String id){
 		this.id = id;
@@ -64,15 +69,62 @@ public class CameraV2 {
 		// Set the pipeline depending on id
 		if (id.equals("Front Camera")) webcam.setPipeline(aimBotPipe);
 		else webcam.setPipeline(sanicPipe);
+
+		time.reset();
 	}
 
-
 	public static void reloadThresholds(){
+		reloadRingThresholds();
+		reloadTowerThresholds();
+	}
+
+	public static void reloadRingThresholds(){
+		FILE_NAME = "ring.csv";
+
 		String splitBy = ",";
 		try
 		{
 			//parsing a CSV file into BufferedReader class constructor
-			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR));
+			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR + FILE_NAME));
+
+			// header
+			// hsv max
+			// hsv min
+			// ycrcb max
+			// ycrcb min
+			// each row has four items, last one is time
+
+
+			String headers = br.readLine();
+
+			// update ring goal max hsv
+			String[] max_ring_thresh = br.readLine().split(splitBy);
+			for (int i=0; i < max_ring_thresh.length - 1; i++){
+				RING_MAX_THRESH.val[i] = Double.parseDouble(max_ring_thresh[i]);
+			}
+
+			// update ring goal min hsv
+			String[] min_ring_thresh = br.readLine().split(splitBy);
+			for (int i=0; i < min_ring_thresh.length - 1; i++){
+				RING_MIN_THRESH.val[i] = Double.parseDouble(min_ring_thresh[i]);
+			}
+
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void reloadTowerThresholds(){
+
+		FILE_NAME = "log.csv";
+
+		String splitBy = ",";
+		try
+		{
+			//parsing a CSV file into BufferedReader class constructor
+			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR + FILE_NAME));
 
 			// header
 			// hsv max
@@ -96,13 +148,13 @@ public class CameraV2 {
 				BLUE_MIN_THRESH.val[i] = Double.parseDouble(min_blue_thresh[i]);
 			}
 
-			// update blue goal max hsv
+			// update red goal max hsv
 			String[] max_red_thresh = br.readLine().split(splitBy);
 			for (int i=0; i < max_red_thresh.length - 1; i++){
 				RED_MAX_THRESH.val[i] = Double.parseDouble(max_red_thresh[i]);
 			}
 
-			// update blue goal min hsv
+			// update red goal min hsv
 			String[] min_red_thresh = br.readLine().split(splitBy);
 			for (int i=0; i < min_red_thresh.length - 1; i++){
 				RED_MIN_THRESH.val[i] = Double.parseDouble(min_red_thresh[i]);
@@ -114,48 +166,72 @@ public class CameraV2 {
 		}
 	}
 
-	public static void writeThreshValues(){
+	public static void writeTowerThreshValues(){
+
+		FILE_NAME = "log.csv";
 
 		String[] headers = {"ONE", "TWO", "THREE"};
 
 		// Add blue max thresh values
 		for (int i=0; i < BLUE_MAX_THRESH.val.length - 1; i++){
-			gridLogger.add(headers[i], BLUE_MAX_THRESH.val[i]);
+			towerGridLogger.add(headers[i], BLUE_MAX_THRESH.val[i]);
 		}
-
-		gridLogger.writeRow();
+		towerGridLogger.writeRow();
 
 
 		// Add blue mainthresh values
 		for (int i=0; i < BLUE_MIN_THRESH.val.length - 1; i++){
-			gridLogger.add(headers[i], BLUE_MIN_THRESH.val[i]);
+			towerGridLogger.add(headers[i], BLUE_MIN_THRESH.val[i]);
 		}
+		towerGridLogger.writeRow();
 
-		gridLogger.writeRow();
 
-
-		// Add blue max thresh values
+		// Add RED max thresh values
 		for (int i=0; i < RED_MAX_THRESH.val.length - 1; i++){
-			gridLogger.add(headers[i], RED_MAX_THRESH.val[i]);
+			towerGridLogger.add(headers[i], RED_MAX_THRESH.val[i]);
 		}
+		towerGridLogger.writeRow();
 
-		gridLogger.writeRow();
 
-
-		// Add blue mainthresh values
+		// Add RED mainthresh values
 		for (int i=0; i < RED_MIN_THRESH.val.length - 1; i++){
-			gridLogger.add(headers[i], RED_MIN_THRESH.val[i]);
+			towerGridLogger.add(headers[i], RED_MIN_THRESH.val[i]);
 		}
+		towerGridLogger.writeRow();
 
-		gridLogger.writeRow();
+		towerGridLogger.stop();
+	}
+
+	public static void writeRingThreshValues(){
+
+		FILE_NAME = "ring.csv";
+
+		String[] headers = {"ONE", "TWO", "THREE"};
+
+		// Add ring max thresh values
+		for (int i=0; i < RING_MAX_THRESH.val.length - 1; i++){
+			ringGridLogger.add(headers[i], RING_MAX_THRESH.val[i]);
+		}
+		ringGridLogger.writeRow();
+
+
+
+		// Add ring min thresh values
+		for (int i=0; i < RING_MIN_THRESH.val.length - 1; i++){
+			ringGridLogger.add(headers[i], RING_MIN_THRESH.val[i]);
+		}
+		ringGridLogger.writeRow();
+
+
+		ringGridLogger.stop();
 	}
 
 	public void stopVision(){ webcam.closeCameraDevice(); }
 
 	public void optimizeView(){ webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW); }
-	
+
 	public void optimizeEfficiency(){ webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.MAXIMIZE_EFFICIENCY); }
-	
+
 	public int startingStackCount(){ return sanicPipe.getRingCount(); }
 
 	public enum VisionOption {
@@ -167,26 +243,26 @@ public class CameraV2 {
 	}
 
 	public double highGoalError() {
-	    curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
+		curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
 		return aimBotPipe.getGoalDegreeError() + Math.abs(Sensors.gyro.absModAngle() - 90) * .05;
 	}
-	
+
 	public double midGoalError() {
 		curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
 		return aimBotPipe.getGoalDegreeError() + Math.abs(Sensors.gyro.absModAngle() - 90) * .05;
 	}
-	
+
 	public double highGoalDistance() {
 		curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
 		return aimBotPipe.getDistance2Goal();
 	}
-	
+
 	public double midGoalDistance() {
 		curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
 		return aimBotPipe.getDistance2Goal();
 	}
-	
-	
+
+
 	public boolean isHighGoalFound(){
 		curTarget = (Sensors.alliance == BLUE) ? BLUE_GOAL : RED_GOAL;
 		return aimBotPipe.isTowerFound();
@@ -196,7 +272,7 @@ public class CameraV2 {
 		curTarget = (Sensors.alliance == BLUE) ? RED_GOAL : BLUE_GOAL;
 		return aimBotPipe.isTowerFound();
 	}
-	
+
 	public double getPowerShotAngle(VisionUtils.PowerShot powerShot){
 		if (Sensors.alliance == BLUE){
 			curTarget = BLUE_GOAL;
@@ -236,31 +312,34 @@ public class CameraV2 {
 		}
 	}
 
-	public void calibrateRingDetection(boolean tap){
+	public void saveOneRingHeight(){
+		HAS_SET_ONE_RING_HEIGHT = !(time.seconds() < 1);
+	}
 
-		// If we tap square, run auto sequence once
-		if (tap) runningAutoCal = true;
-
-		// If we haven't started autocal
-		if (!runningAutoCal){
-			sanicPipe.switch2Regular();
-			Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
-			time.reset();
-		}
-
-		// Start up autocal sequence
-		else{
-			// First 0.5 seconds autocalibrate [0 -> 0.5]
-			// After 0.5, switch to regular and get one ring height for 0.5 [0.5 -> 1]
-			// Go back to original state after 1 second autocal sequence
-			if (time.seconds() < 0.5) sanicPipe.switch2AutoCalibrate();
-			else if (time.seconds() < 1) {
+	public void calibrateRingDetection(){
+		switch (Controller.touchSensor.getCount()){
+			case 0:
+				sanicPipe.switch2Regular();
+				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
+				break;
+			case 1:
+				sanicPipe.switch2AutoCalibrate();
+				time.reset();
+				break;
+			case 2:
 				Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = false;
 				sanicPipe.switch2Regular();
-			}
-			else runningAutoCal = false;
+				if (time.seconds() > 1) {
+					Dash_Sanic.HAS_SET_ONE_RING_HEIGHT = true;
+				}
+				break;
+			case 3:
+				Controller.touchSensor.resetCount();
+				break;
 		}
-		multTelemetry.addData("Ring Phase", runningAutoCal);
+
+		multTelemetry.addData("Ring Phase", Controller.touchSensor.getCount());
+		multTelemetry.addData("RING_COUNT", sanicPipe.getRingCount());
 		multTelemetry.addData("RING_MAX", RING_MAX_THRESH);
 		multTelemetry.addData("RING_MIN", RING_MIN_THRESH);
 	}

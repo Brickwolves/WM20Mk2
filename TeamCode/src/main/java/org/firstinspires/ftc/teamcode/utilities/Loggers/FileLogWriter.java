@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader.FILE_NAME;
 import static org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader.LOG_DIR;
 
 public class FileLogWriter implements LogWriter {
@@ -35,7 +36,7 @@ public class FileLogWriter implements LogWriter {
 
     private void openFile() {
         try {
-            File file = new File(LOG_DIR);
+            File file = new File(LOG_DIR + FILE_NAME);
             if (file.exists()) {
                 file.delete();
             }

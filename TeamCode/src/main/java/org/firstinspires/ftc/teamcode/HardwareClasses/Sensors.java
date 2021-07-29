@@ -43,6 +43,8 @@ public class Sensors {
 			frontCamera = new CameraV2("Front Camera");
 			backCamera = new CameraV2("Back Camera", true);
 		}
+
+		// backCamera.saveOneRingHeight();
 	}
 	
 	public static void update(){

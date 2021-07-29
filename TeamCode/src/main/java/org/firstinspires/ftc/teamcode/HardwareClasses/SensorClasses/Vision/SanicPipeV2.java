@@ -17,6 +17,7 @@ import java.util.List;
 import static com.qualcomm.robotcore.util.Range.clip;
 import static java.lang.Math.round;
 import static java.lang.StrictMath.tan;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_INIT_RECT_SIDELENGTH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.blur;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.dilate_const;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.erode_const;
@@ -123,25 +124,8 @@ public class SanicPipeV2 extends OpenCvPipeline {
         GaussianBlur(modified, modified, new Size(blur, blur), 0);
 
         // Retrieve initRect
-        int x = 0;
-        int y = RING_Y;
-        switch (AUTO){
-            case BLUE_OUTER:
-                x = BLUE_OUTER_X;
-                break;
-            case BLUE_INNER:
-                x = BLUE_INNER_X;
-                y = 170;
-                break;
-            case RED_INNER:
-                x = RED_INNER_X;
-                break;
-            case RED_OUTER:
-                x = RED_OUTER_X;
-                y = 170;
-                break;
-        }
-
+        int x = (int) (round(IMG_WIDTH / 2) - round(RING_INIT_RECT_HEIGHT /2.0));
+        int y = 180;
         Rect initRect = new Rect(x, y, RING_INIT_RECT_WIDTH, RING_INIT_RECT_HEIGHT);
 
         // Calc aveHSV w/i initRect

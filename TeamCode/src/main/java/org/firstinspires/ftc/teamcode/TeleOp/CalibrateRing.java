@@ -31,30 +31,20 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Controller;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.CuttleFish;
-import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.SanicPipeV2;
+import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot;
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader;
 
-import static com.qualcomm.robotcore.util.Range.clip;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2.writeThreshValues;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_x;
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.OpCuttleFish.Dash_CuttleFish.cuttle_y;
-import static org.firstinspires.ftc.teamcode.utilities.Loggers.CSVReader.reloadThresholds;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2.writeRingThreshValues;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
-@TeleOp(name = "Calibration", group="Concept")
-public class Calibration extends OpMode {
+@TeleOp(name = "Calibrate Ring", group="Concept")
+public class CalibrateRing extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
 
@@ -66,6 +56,8 @@ public class Calibration extends OpMode {
   public void init() {
     setOpMode(this);
     operator = new Controller(gamepad2);
+    Dash_AimBot.DISPLAY_FRONT = false;
+    Dash_Reader.FILE_NAME = "ring.csv";
     Sensors.init();
 
   }
@@ -78,7 +70,9 @@ public class Calibration extends OpMode {
   @Override
   public void init_loop() {
     operator.update();
-    Sensors.frontCamera.calibrateTowerDetection();
+    Sensors.backCamera.calibrateRingDetection();
+
+    multTelemetry.update();
   }
 
   /*
@@ -102,7 +96,7 @@ public class Calibration extends OpMode {
   @Override
   public void stop() {
 
-    writeThreshValues();
+    writeRingThreshValues();
 
   }
 }

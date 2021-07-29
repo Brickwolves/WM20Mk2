@@ -14,7 +14,7 @@ public class Dash_Sanic {
     // Margins for each value
     public static int YM = 100;
     public static int CrM = 100;
-    public static int CbM = 30;
+    public static int CbM = 20;
 
     // Threshold tuning
     public static int blur = 75;

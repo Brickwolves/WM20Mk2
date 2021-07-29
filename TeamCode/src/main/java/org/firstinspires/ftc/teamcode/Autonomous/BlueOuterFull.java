@@ -59,7 +59,6 @@ public class BlueOuterFull extends OpMode {
 
 		// Calibrate the tower
 		Sensors.frontCamera.calibrateTowerDetection();
-		Sensors.backCamera.calibrateRingDetection(operator.square.press());
 
 		if(operator.RB.toggle()) Wobble.gripperGrip();
 		else Wobble.gripperHalf();
