@@ -12,7 +12,7 @@ public class Dash_Sanic {
     public static Scalar RING_MIN_THRESH = new Scalar(0, 0, 0);
 
     // Margins for each value
-    public static int YM = 100;
+    public static int YM = 50;
     public static int CrM = 100;
     public static int CbM = 20;
 

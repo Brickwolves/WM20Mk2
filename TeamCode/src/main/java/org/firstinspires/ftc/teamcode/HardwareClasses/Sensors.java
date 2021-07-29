@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.HardwareClasses;
 
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Gyro;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2;
 import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot;
@@ -27,7 +29,7 @@ public class Sensors {
 	private static double frRPM, flRPM, brRPM, blRPM;
 	
 	public static Alliance alliance = Alliance.BLUE;
-	
+	private static ElapsedTime sensorTime = new ElapsedTime();
 	
 	public static void init(){
 		gyro.init();
@@ -44,7 +46,7 @@ public class Sensors {
 			backCamera = new CameraV2("Back Camera", true);
 		}
 
-		// backCamera.saveOneRingHeight();
+		sensorTime.reset();
 	}
 	
 	public static void update(){

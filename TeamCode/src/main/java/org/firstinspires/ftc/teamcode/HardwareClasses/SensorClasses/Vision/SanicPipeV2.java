@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.qualcomm.robotcore.util.Range.clip;
+import static java.lang.Math.multiplyExact;
 import static java.lang.Math.round;
 import static java.lang.StrictMath.tan;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.TOWER_INIT_RECT_SIDELENGTH;
@@ -25,6 +26,7 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_OUTER_X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.BLUE_INNER_X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.HAS_SET_ONE_RING_HEIGHT;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.ONE_RING_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_INNER_X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RED_OUTER_X;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_AUTO_CALIBRATE_ON;
@@ -40,6 +42,7 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.IMG_WIDTH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.pixels2Degrees;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.sortRectsByMaxOption;
+import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.Core.mean;
 import static org.opencv.core.CvType.CV_8U;
@@ -193,6 +196,7 @@ public class SanicPipeV2 extends OpenCvPipeline {
             degrees_error = pixels2Degrees(pixel_error, VisionUtils.AXES.X);
 
             // Ring Count
+            HAS_SET_ONE_RING_HEIGHT = !(time.seconds() < 3);
             if (!HAS_SET_ONE_RING_HEIGHT) Dash_Sanic.ONE_RING_HEIGHT = (int) (0.75 * ringRect.height);
             ring_count = (ringRect.height > Dash_Sanic.ONE_RING_HEIGHT) ? 4 : 1;
 
@@ -206,7 +210,20 @@ public class SanicPipeV2 extends OpenCvPipeline {
             putText(output, "Degree Error: " + round(degrees_error), text_center, font, 0.4, new Scalar(255, 255, 0));
             putText(output, "Pixel Error: " + pixel_error, new Point(5, IMG_HEIGHT - 40), font, 0.4, new Scalar(255, 255, 0));
             line(output, center, new Point(center_x + pixel_error, center_y), new Scalar(0, 0, 255), thickness);
+
+            // draw one ring height
+            int lineLvl =  widest_rect.y + widest_rect.height - ONE_RING_HEIGHT;
+            Point leftRing = new Point(widest_rect.x, lineLvl);
+            Point rightRing = new Point(widest_rect.x + widest_rect.width, lineLvl);
+            line(output, leftRing, rightRing, new Scalar(255, 0, 255), 2);
+
+            // log has set one ring
+            multTelemetry.addData("ONE_RING_HEIGHT", ONE_RING_HEIGHT);
+            multTelemetry.addData("RING_HEIGHT", widest_rect.height);
         }
+
+        // log ring count
+        putText(output, "Ring Count: " + ring_count, new Point(5, IMG_HEIGHT - 80), font, 0.4, new Scalar(255, 255, 0));
 
         // Release all captures
         input.release();

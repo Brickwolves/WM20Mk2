@@ -231,7 +231,6 @@ public class AimBotPipe extends OpenCvPipeline {
         towerDegreeError = pixels2Degrees(pixel_error, X);
         towerDistance = getDistance2Goal();
 
-
         // Logging Shapes and Degree & Pixel Data
         rectangle(output, towerRect, (curTarget == BLUE_GOAL) ? lightBlue : orange, thickness);
         line(output, center, new Point(center_x + pixel_error, center_y), new Scalar(0, 0, 255), thickness);

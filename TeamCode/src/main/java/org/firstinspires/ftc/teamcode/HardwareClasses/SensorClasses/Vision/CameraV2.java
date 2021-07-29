@@ -20,6 +20,7 @@ import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Visio
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.RED_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_AimBot.curTarget;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.HAS_SET_ONE_RING_HEIGHT;
+import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.ONE_RING_HEIGHT;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MAX_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_Sanic.RING_MIN_THRESH;
 import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.VisionUtils.Target.BLUE_GOAL;
@@ -85,7 +86,7 @@ public class CameraV2 {
 		try
 		{
 			//parsing a CSV file into BufferedReader class constructor
-			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR + FILE_NAME));
+			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR + "ring.csv"));
 
 			// header
 			// hsv max
@@ -96,6 +97,7 @@ public class CameraV2 {
 
 
 			String headers = br.readLine();
+			System.out.println("RING: " + headers);
 
 			// update ring goal max hsv
 			String[] max_ring_thresh = br.readLine().split(splitBy);
@@ -124,7 +126,7 @@ public class CameraV2 {
 		try
 		{
 			//parsing a CSV file into BufferedReader class constructor
-			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR + FILE_NAME));
+			BufferedReader br = new BufferedReader(new FileReader(LOG_DIR + "log.csv"));
 
 			// header
 			// hsv max
@@ -135,6 +137,7 @@ public class CameraV2 {
 
 
 			String headers = br.readLine();
+			System.out.println("TOWER: " + headers);
 
 			// update blue goal max hsv
 			String[] max_blue_thresh = br.readLine().split(splitBy);

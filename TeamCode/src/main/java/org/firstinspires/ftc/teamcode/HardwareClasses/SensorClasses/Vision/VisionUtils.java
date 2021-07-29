@@ -48,78 +48,13 @@ public class VisionUtils {
         return (axe == AXES.X) ? pixels * (X_FOV / IMG_WIDTH) : pixels * (Y_FOV / IMG_HEIGHT);
     }
 
-    public static int getMaxIndex(List<Rect> rects, RECT_OPTION option){
-        int alpha_index = 0;
-        double max = Integer.MIN_VALUE;
-        double cur = 0;
-        for (int i=0; i < rects.size(); i++){
-
-            switch (option){
-                case X:
-                    cur = rects.get(i).x;
-                    break;
-
-                case Y:
-                    cur = rects.get(i).y;
-                    break;
-
-                case WIDTH:
-                    cur = rects.get(i).width;
-                    break;
-
-                case HEIGHT:
-                    cur = rects.get(i).height;
-                    break;
-
-                case AREA:
-                    cur = rects.get(i).width * rects.get(i).height;
-                    break;
-
-            }
-            if (cur > max) {
-                max = cur;
-                alpha_index = i;
-            }
-        }
-        return alpha_index;
-    }
-
-    public static int getMinIndex(List<Rect> rects, RECT_OPTION option){
-        int beta_index = 0;
-        double min = Integer.MAX_VALUE;
-        double cur = 0;
-        for (int i=0; i < rects.size(); i++){
-
-            switch (option){
-                case X:
-                    cur = rects.get(i).x;
-                    break;
-
-                case Y:
-                    cur = rects.get(i).y;
-                    break;
-
-                case WIDTH:
-                    cur = rects.get(i).width;
-                    break;
-
-                case HEIGHT:
-                    cur = rects.get(i).height;
-                    break;
-
-                case AREA:
-                    cur = rects.get(i).width * rects.get(i).height;
-                    break;
-            }
-            if (cur < min) {
-                min = cur;
-                beta_index = i;
-            }
-        }
-        return beta_index;
-    }
-
-
+    /**
+     * Sorts n number of rectangles by RECT_OPTION in ascending order
+     * @param n
+     * @param option
+     * @param rects
+     * @return
+     */
     public static List<Rect> sortRectsByMinOption(int n, RECT_OPTION option, List<Rect> rects){
         List<Rect> sorted_rects = new ArrayList<>();
         for (int j=0; j < n; j++){
@@ -132,6 +67,13 @@ public class VisionUtils {
         return sorted_rects;
     }
 
+    /**
+     * Sorts n number of rectangles by RECT_OPTION in descending order
+     * @param n
+     * @param option
+     * @param rects
+     * @return
+     */
     public static List<Rect> sortRectsByMaxOption(int n, RECT_OPTION option, List<Rect> rects){
         List<Rect> sorted_rects = new ArrayList<>();
         for (int j=0; j < n; j++){
@@ -145,7 +87,11 @@ public class VisionUtils {
     }
 
 
-
+    /**
+     * Sorts contours by x-coordinate in ascending order
+     * @param contours
+     * @return
+     */
     public static int findLeftMostContourIndex(List<MatOfPoint> contours){
         int index = 0;
         double minX = Integer.MAX_VALUE;
@@ -160,6 +106,12 @@ public class VisionUtils {
         return index;
     }
 
+    /**
+     * Sorts n number of contours by x-coordinate in ascending order
+     * @param n
+     * @param contours
+     * @return
+     */
     public static List<MatOfPoint> findNLeftMostContours(int n, List<MatOfPoint> contours){
         List<MatOfPoint> widest_contours = new ArrayList<>();
         for (int j=0; j < n; j++){
@@ -237,4 +189,90 @@ public class VisionUtils {
         }
         return new_contours;
     }
+
+
+
+    /**
+     * Searches for the index of the item who's RECT_OPTION is the greatest
+     * @param rects
+     * @param option
+     * @return
+     */
+    public static int getMaxIndex(List<Rect> rects, RECT_OPTION option){
+        int alpha_index = 0;
+        double max = Integer.MIN_VALUE;
+        double cur = 0;
+        for (int i=0; i < rects.size(); i++){
+
+            switch (option){
+                case X:
+                    cur = rects.get(i).x;
+                    break;
+
+                case Y:
+                    cur = rects.get(i).y;
+                    break;
+
+                case WIDTH:
+                    cur = rects.get(i).width;
+                    break;
+
+                case HEIGHT:
+                    cur = rects.get(i).height;
+                    break;
+
+                case AREA:
+                    cur = rects.get(i).width * rects.get(i).height;
+                    break;
+
+            }
+            if (cur > max) {
+                max = cur;
+                alpha_index = i;
+            }
+        }
+        return alpha_index;
+    }
+
+    /**
+     * Searches for the index of the item who's RECT_OPTION is the least
+     * @param rects
+     * @param option
+     * @return
+     */
+    public static int getMinIndex(List<Rect> rects, RECT_OPTION option){
+        int beta_index = 0;
+        double min = Integer.MAX_VALUE;
+        double cur = 0;
+        for (int i=0; i < rects.size(); i++){
+
+            switch (option){
+                case X:
+                    cur = rects.get(i).x;
+                    break;
+
+                case Y:
+                    cur = rects.get(i).y;
+                    break;
+
+                case WIDTH:
+                    cur = rects.get(i).width;
+                    break;
+
+                case HEIGHT:
+                    cur = rects.get(i).height;
+                    break;
+
+                case AREA:
+                    cur = rects.get(i).width * rects.get(i).height;
+                    break;
+            }
+            if (cur < min) {
+                min = cur;
+                beta_index = i;
+            }
+        }
+        return beta_index;
+    }
+
 }
