@@ -39,7 +39,6 @@ import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader;
 
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2.writeRingThreshValues;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
@@ -96,7 +95,7 @@ public class CalibrateRing extends OpMode {
   @Override
   public void stop() {
 
-    writeRingThreshValues();
+    Sensors.backCamera.writeRingThreshValues();
 
   }
 }

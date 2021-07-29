@@ -24,8 +24,12 @@ public class TestWriter implements LogWriter {
         stopCalled = true;
     }
 
-    public boolean isStopCalled(){
+    @Override
+    public boolean isWriting() {
         return stopCalled;
     }
 
+    public boolean isStopCalled(){
+        return stopCalled;
+    }
 }

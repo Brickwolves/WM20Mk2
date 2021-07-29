@@ -64,5 +64,10 @@ public class FileLogWriter implements LogWriter {
             closeFile();
         }
     }
+
+    @Override
+    public boolean isWriting() {
+        return writing;
+    }
 }
 

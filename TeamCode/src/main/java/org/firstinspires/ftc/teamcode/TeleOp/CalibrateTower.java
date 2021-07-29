@@ -39,7 +39,6 @@ import org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.Dash_
 import org.firstinspires.ftc.teamcode.HardwareClasses.Sensors;
 import org.firstinspires.ftc.teamcode.utilities.Loggers.Dash_Reader;
 
-import static org.firstinspires.ftc.teamcode.HardwareClasses.SensorClasses.Vision.CameraV2.writeTowerThreshValues;
 import static org.firstinspires.ftc.teamcode.utilities.Utils.setOpMode;
 
 @TeleOp(name = "Calibrate Tower", group="Concept")
@@ -93,7 +92,11 @@ public class CalibrateTower extends OpMode {
   @Override
   public void stop() {
 
-    writeTowerThreshValues();
+
+    Sensors.frontCamera.writeTowerThreshValues();
+    while (Sensors.frontCamera.towerGridLogger.isWriting()){
+
+    }
 
   }
 }

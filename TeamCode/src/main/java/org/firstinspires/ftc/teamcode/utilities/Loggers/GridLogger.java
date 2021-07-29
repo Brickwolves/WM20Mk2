@@ -71,4 +71,8 @@ public class GridLogger {
     public void stop(){
         writer.stop();
     }
+
+    public boolean isWriting(){
+        return writer.isWriting();
+    }
 }

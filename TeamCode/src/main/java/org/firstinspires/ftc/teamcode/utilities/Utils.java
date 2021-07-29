@@ -30,17 +30,6 @@ public class Utils {
     public static MultipleTelemetry multTelemetry;
     public static TelemetryPacket packet;
 
-    // Writers
-    public static LogWriter writer = new FileLogWriter("log.csv");
-    public static Clock testClock = new TestClock();
-    public static GridLogger towerGridLogger = new GridLogger(writer, testClock);
-
-    // Writers
-    public static LogWriter writer1 = new FileLogWriter("ring.csv");
-    public static Clock testClock1 = new TestClock();
-    public static GridLogger ringGridLogger = new GridLogger(writer1, testClock1);
-
-
     private static boolean isLinearOpMode;
 
     // Only use if it is in fact a LinearOpMode
